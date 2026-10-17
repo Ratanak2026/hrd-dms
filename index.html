@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ប្រព័ន្ធគ្រប់គ្រងឯកសារ និងលេខវិញ្ញាបនបត្រ (DMS)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Kantumruy Pro & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- QR Code Generator & Scanner Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Kantumruy Pro"', '"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+            }
+        }
+        .print-only {
+            display: none;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col font-sans">
+
+    <!-- LOGIN MODAL / OVERLAY SCREEN -->
+    <div id="login-overlay" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6">
+            <div class="text-center space-y-2">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 text-2xl" id="login-brand-logo">
+                    🏛️
+                </div>
+                <h2 class="text-xl font-bold text-slate-900" id="login-brand-name">ក្រសួង / ស្ថាប័នរដ្ឋបាល</h2>
+                <p class="text-xs text-slate-500">ប្រព័ន្ធគ្រប់គ្រងឯកសារ និងលេខវិញ្ញាបនបត្រ (DMS)</p>
+            </div>
+
+            <!-- Role Quick Demo Selector -->
+            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs space-y-2">
+                <div class="flex justify-between items-center text-slate-500 font-semibold">
+                    <span>💡 ចុចជ្រើសរើសគណនីសាកល្បង៖</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="fillLoginForm('admin@domain.gov.kh', 'admin123', 'admin')" class="p-2 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 font-semibold text-left transition">
+                        <div class="font-bold flex items-center gap-1">👑 Admin</div>
+                        <div class="text-[10px] text-blue-600 font-normal">សិទ្ធិពេញលេញ (គ្រប់គ្រងបានទាំងអស់)</div>
+                    </button>
+                    <button type="button" onclick="fillLoginForm('user@domain.gov.kh', 'user123', 'user')" class="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 font-semibold text-left transition">
+                        <div class="font-bold flex items-center gap-1">👤 Normal User</div>
+                        <div class="text-[10px] text-emerald-600 font-normal">សិទ្ធិមើល ទាញយក & បោះពុម្ព</div>
+                    </button>
+                </div>
+            </div>
+
+            <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">អ៊ីមែល ឬ ឈ្មោះអ្នកប្រើប្រាស់ (Email / Username)</label>
+                    <input type="text" id="login-email" required placeholder="admin@domain.gov.kh" value="admin@domain.gov.kh" class="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ពាក្យសម្ងាត់ (Password)</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" value="admin123" class="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">តួនាទីក្នុងប្រព័ន្ធ (Role Permission)</label>
+                    <select id="login-role" class="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none font-medium bg-white">
+                        <option value="admin">👑 Administrator (សិទ្ធិគ្រប់គ្រង បន្ថែម កែប្រែ លុប)</option>
+                        <option value="user">👤 User Normal (សិទ្ធិត្រឹមពិនិត្យ មើល ទាញយក និងបោះពុម្ព)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-500/20 transition flex items-center justify-center gap-2">
+                    <span>🔐 ចូលប្រើប្រាស់ប្រព័ន្ធ (Sign In)</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Top Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 no-print shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
+            
+            <!-- Logo & Organization Title -->
+            <div class="flex items-center gap-3">
+                <div class="relative group cursor-pointer" onclick="openLogoSettingModal()" title="ចុចដើម្បីប្តូរឡូហ្គោស្ថាប័ន">
+                    <img id="nav-org-logo" src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=100&auto=format&fit=crop&q=60" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-xs">
+                    <div class="absolute inset-0 bg-black/40 rounded-xl items-center justify-center text-white text-[10px] hidden group-hover:flex">
+                        ⚙️
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 id="nav-org-title" class="text-sm sm:text-base font-bold text-slate-900 leading-tight">ក្រសួង / ស្ថាប័នរដ្ឋបាល</h1>
+                        <button onclick="openLogoSettingModal()" class="text-slate-400 hover:text-blue-600 text-xs" title="ប្តូរឈ្មោះ និងឡូហ្គោ">✏️</button>
+                    </div>
+                    <p class="text-[11px] text-slate-500 hidden sm:block">ប្រព័ន្ធគ្រប់គ្រងឯកសារ និងលេខវិញ្ញាបនបត្រ (DMS)</p>
+                </div>
+            </div>
+
+            <!-- Viewport Switcher, QR Scanner & User Status -->
+            <div class="flex items-center gap-2">
+                <!-- QR Scanner Button -->
+                <button onclick="openQrScannerModal()" class="px-2.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-semibold text-xs flex items-center gap-1.5 transition">
+                    <span>📷</span>
+                    <span class="hidden md:inline">ស្កេន QR</span>
+                </button>
+
+                <!-- Desktop / Mobile View Toggle -->
+                <div class="bg-slate-100 p-1 rounded-xl flex items-center border border-slate-200 text-xs font-semibold">
+                    <button onclick="setViewMode('desktop')" id="btn-desktop-view" class="px-2.5 py-1 rounded-lg bg-white text-blue-600 shadow-xs flex items-center gap-1 transition">
+                        <span>💻</span>
+                        <span class="hidden lg:inline">Web Desktop</span>
+                    </button>
+                    <button onclick="setViewMode('mobile')" id="btn-mobile-view" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1 transition">
+                        <span>📱</span>
+                        <span class="hidden lg:inline">Mobile App</span>
+                    </button>
+                </div>
+
+                <!-- Create New button (Admin Only) -->
+                <button onclick="openNewModal()" id="btn-header-create-new" class="admin-only px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs sm:text-sm flex items-center gap-1 shadow-sm transition">
+                    <span class="text-base leading-none">+</span>
+                    <span class="hidden sm:inline">បង្កើតថ្មី</span>
+                </button>
+
+                <!-- Current User Badge & Logout -->
+                <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
+                    <div class="text-right hidden sm:block">
+                        <div id="user-display-name" class="text-xs font-bold text-slate-800 leading-tight">Admin User</div>
+                        <span id="user-display-role" class="text-[10px] font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">👑 Admin</span>
+                    </div>
+                    <button onclick="handleLogout()" title="ចាកចេញ (Log out)" class="w-8 h-8 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 flex items-center justify-center text-xs transition">
+                        🚪
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div id="app-container" class="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 transition-all duration-300">
+        
+        <!-- Mobile Frame Wrapper -->
+        <div id="mobile-frame-container" class="w-full">
+            
+            <!-- Quick Summary Metrics Bar -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 no-print">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">ឯកសារសរុប</p>
+                        <h3 id="stat-total-docs" class="text-xl sm:text-2xl font-bold text-slate-800 mt-0.5">0</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
+                        📂
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">កំពុងដំណើរការ (ចេញ-ចូល)</p>
+                        <h3 id="stat-in-progress" class="text-xl sm:text-2xl font-bold text-amber-600 mt-0.5">0</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
+                        ⏳
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">វិញ្ញាបនបត្របានចុះបញ្ជី</p>
+                        <h3 id="stat-total-certs" class="text-xl sm:text-2xl font-bold text-emerald-600 mt-0.5">0</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+                        🏅
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-slate-500 font-medium">សិទ្ធិប្រើប្រាស់បច្ចុប្បន្ន</p>
+                        <h3 id="stat-current-role-badge" class="text-sm font-bold text-blue-600 mt-1">👑 Admin Mode</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg">
+                        🛡️
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation (4 Core Modules) -->
+            <div class="flex overflow-x-auto border-b border-slate-200 gap-2 mb-6 no-print scrollbar-none pb-1">
+                <button onclick="switchTab('docs')" id="tab-docs" class="tab-btn active px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap bg-blue-600 text-white shadow-xs transition flex items-center gap-2">
+                    <span>📁</span>
+                    <span>១. ការគ្រប់គ្រងឯកសារ</span>
+                </button>
+                <button onclick="switchTab('dispatch')" id="tab-dispatch" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap bg-white text-slate-600 hover:text-slate-900 border border-slate-200 transition flex items-center gap-2">
+                    <span>🔄</span>
+                    <span>២. តាមដានឯកសារចេញ-ចូល</span>
+                </button>
+                <button onclick="switchTab('certs')" id="tab-certs" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap bg-white text-slate-600 hover:text-slate-900 border border-slate-200 transition flex items-center gap-2">
+                    <span>📜</span>
+                    <span>៣. គ្រប់គ្រងលេខវិញ្ញាបនបត្រ</span>
+                </button>
+                <button onclick="switchTab('projects')" id="tab-projects" class="tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap bg-white text-slate-600 hover:text-slate-900 border border-slate-200 transition flex items-center gap-2">
+                    <span>✨</span>
+                    <span>៤. គម្រោងថ្មីត្រៀមដំណើរការ</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1: Document Vault -->
+            <section id="section-docs" class="tab-content block space-y-4">
+                <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-xs">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                        <div>
+                            <h2 class="text-base sm:text-lg font-bold text-slate-900">បញ្ជីឯកសារទូទៅ (Documents Repository)</h2>
+                            <p class="text-xs text-slate-500">បញ្ចូល, កែប្រែ (Update), មើល (View), ទាញយក (Download), បោះពុម្ព (Print) និងទាញចេញជា Excel</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <!-- Export Button -->
+                            <button onclick="exportDocsToCSV()" class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition">
+                                <span>📊</span>
+                                <span>Export Excel/CSV</span>
+                            </button>
+                            <div class="relative w-full sm:w-48">
+                                <input type="text" id="doc-search" oninput="renderDocs()" placeholder="ស្វែងរកឯកសារ..." class="w-full text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-2 focus:outline-none focus:border-blue-500 focus:bg-white transition">
+                                <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs">🔍</span>
+                            </div>
+                            <button onclick="openDocModal()" class="admin-only px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1 transition">
+                                <span>+ បញ្ចូលឯកសារ</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Document Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead>
+                                <tr class="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/60">
+                                    <th class="py-3 px-3">លេខកូដឯកសារ</th>
+                                    <th class="py-3 px-3">ឈ្មោះឯកសារ</th>
+                                    <th class="py-3 px-3">ប្រភេទ</th>
+                                    <th class="py-3 px-3">ទម្រង់ / ទំហំ</th>
+                                    <th class="py-3 px-3">កាលបរិច្ឆេទ</th>
+                                    <th class="py-3 px-3 text-center">សកម្មភាព (Actions)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="docs-table-body" class="divide-y divide-slate-100">
+                                <!-- Rendered dynamically by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: Document In-Out Tracking -->
+            <section id="section-dispatch" class="tab-content hidden space-y-4">
+                <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-xs">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                        <div>
+                            <h2 class="text-base sm:text-lg font-bold text-slate-900">ការតាមដានឯកសារចេញ-ចូល (In-Out Tracking)</h2>
+                            <p class="text-xs text-slate-500">តាមដានថ្ងៃខែឯកសារចូល ដល់ដំណាក់កាលណា និងកាលបរិច្ឆេទបញ្ចប់រួចរាល់</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <!-- Export Button -->
+                            <button onclick="exportDispatchToCSV()" class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition">
+                                <span>📊</span>
+                                <span>Export Excel/CSV</span>
+                            </button>
+                            <select id="dispatch-filter" onchange="renderDispatch()" class="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 focus:outline-none focus:border-blue-500">
+                                <option value="all">ស្ថានភាពទាំងអស់</option>
+                                <option value="in_review">កំពុងពិនិត្យ</option>
+                                <option value="at_leadership">នៅថ្នាក់ដឹកនាំ</option>
+                                <option value="completed">បញ្ចប់រួចរាល់</option>
+                            </select>
+                            <button onclick="openDispatchModal()" class="admin-only px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1 transition">
+                                <span>+ កត់ត្រាចេញ-ចូល</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Dispatch List -->
+                    <div id="dispatch-list" class="space-y-3">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: Certificate Registry -->
+            <section id="section-certs" class="tab-content hidden space-y-4">
+                <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-xs">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                        <div>
+                            <h2 class="text-base sm:text-lg font-bold text-slate-900">ការគ្រប់គ្រងលេខវិញ្ញាបនបត្រ (Certificates Registry)</h2>
+                            <p class="text-xs text-slate-500">គ្រប់គ្រងលេខសម្គាល់, ថ្ងៃខែចុះហត្ថលេខា, ប្រភេទ, បង្កើត QR Code និងបោះពុម្ពវិញ្ញាបនបត្រគំរូ</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <!-- Export Button -->
+                            <button onclick="exportCertsToCSV()" class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition">
+                                <span>📊</span>
+                                <span>Export Excel/CSV</span>
+                            </button>
+                            <div class="relative w-full sm:w-48">
+                                <input type="text" id="cert-search" oninput="renderCerts()" placeholder="ស្វែងរកតាមលេខ ឬឈ្មោះ..." class="w-full text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-2 focus:outline-none focus:border-blue-500 transition">
+                                <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs">🔍</span>
+                            </div>
+                            <button onclick="openCertModal()" class="admin-only px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1 transition shadow-xs">
+                                <span>+ ចុះបញ្ជីវិញ្ញាបនបត្រ</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Certificates Grid -->
+                    <div id="certs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: Future Projects -->
+            <section id="section-projects" class="tab-content hidden space-y-4">
+                <div class="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-6 shadow-xs">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                        <div>
+                            <h2 class="text-base sm:text-lg font-bold text-slate-900">គម្រោងថ្មីដែលត្រៀមដំណើរការ (Upcoming Projects & Modules)</h2>
+                            <p class="text-xs text-slate-500">រៀបចំ និងត្រៀមលក្ខណៈសម្រាប់គម្រោងពង្រីកប្រព័ន្ធបន្ទាប់</p>
+                        </div>
+                        <button onclick="openProjectModal()" class="admin-only px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-semibold whitespace-nowrap flex items-center gap-1 transition self-start sm:self-auto">
+                            <span>+ បន្ថែមគម្រោងថ្មី</span>
+                        </button>
+                    </div>
+
+                    <!-- Projects Grid -->
+                    <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- MODAL: Change Institution Logo & Name -->
+    <div id="modal-org-setting" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-base font-bold text-slate-900">កំណត់ឡូហ្គោ និងឈ្មោះស្ថាប័ន</h3>
+                <button onclick="closeModal('modal-org-setting')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            </div>
+            <form id="form-org-setting" onsubmit="saveOrgSettings(event)" class="space-y-4 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ឈ្មោះស្ថាប័ន / ក្រសួង / ក្រុមហ៊ុន</label>
+                    <input type="text" id="setting-org-name" required class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">បញ្ចូលឡូហ្គោស្ថាប័ន (Upload Image File)</label>
+                    <input type="file" id="setting-org-file" accept="image/*" onchange="previewUploadedLogo(event)" class="w-full border border-slate-200 rounded-xl p-2 text-xs">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ឬបញ្ចូល Link រូបភាពឡូហ្គោ (Image URL)</label>
+                    <input type="url" id="setting-org-url" placeholder="https://example.com/logo.png" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <img id="setting-logo-preview" src="" alt="Preview" class="w-12 h-12 rounded-lg object-cover border border-slate-300">
+                    <div>
+                        <div class="text-xs font-semibold text-slate-700">រូបភាពគំរូឡូហ្គោ</div>
+                        <div class="text-[11px] text-slate-500">នឹងបង្ហាញលើ Header និងវិញ្ញាបនបត្របោះពុម្ព</div>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-org-setting')" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-medium">បោះបង់</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition">រក្សាទុកការកែប្រែ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: QR Code Scanner & Verification -->
+    <div id="modal-qr-scanner" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">📷</span>
+                    <h3 class="text-base font-bold text-slate-900">ស្កេនផ្ទៀងផ្ទាត់ QR Code (QR Scanner)</h3>
+                </div>
+                <button onclick="closeQrScannerModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            </div>
+
+            <!-- Camera Viewfinder -->
+            <div class="space-y-3">
+                <div id="qr-reader" class="w-full overflow-hidden rounded-xl border border-slate-300 bg-slate-900 min-h-[220px]"></div>
+                
+                <div class="flex items-center gap-2">
+                    <button onclick="startQrCamera()" class="flex-1 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition">
+                        ▶️ បើកកាមេរ៉ាស្កេន
+                    </button>
+                    <button onclick="stopQrCamera()" class="py-2 px-3 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium text-xs transition">
+                        ⏹️ បិទ
+                    </button>
+                </div>
+
+                <!-- Verification Result Card -->
+                <div id="qr-scan-result" class="hidden p-4 rounded-xl border transition">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2 border-t border-slate-100">
+                <button type="button" onclick="closeQrScannerModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-white font-medium text-xs">បិទផ្ទាំង</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: View Certificate Details & QR Code -->
+    <div id="modal-view-cert" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4 text-center">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                <h3 class="text-sm font-bold text-slate-900">QR Code ផ្ទៀងផ្ទាត់វិញ្ញាបនបត្រ</h3>
+                <button onclick="closeModal('modal-view-cert')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            </div>
+            
+            <div class="space-y-3 py-2">
+                <div id="cert-qrcode-container" class="flex justify-center p-4 bg-slate-50 rounded-2xl border border-slate-200 inline-block mx-auto"></div>
+                <h4 id="view-cert-number" class="text-base font-bold font-mono text-blue-700">CERT-0000</h4>
+                <p id="view-cert-holder" class="text-sm font-semibold text-slate-800">ឈ្មោះសាមីខ្លួន</p>
+                <p id="view-cert-type" class="text-xs text-slate-500">ប្រភេទវិញ្ញាបនបត្រ</p>
+            </div>
+
+            <div class="flex items-center justify-center gap-2 pt-2 border-t border-slate-100">
+                <button id="btn-print-from-modal" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs flex items-center gap-1.5 transition">
+                    <span>🖨️ បោះពុម្ពវិញ្ញាបនបត្រផ្លូវការ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 1: Document Upload / Edit -->
+    <div id="modal-doc" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 id="modal-doc-title" class="text-base font-bold text-slate-900">បញ្ចូលឯកសារថ្មី</h3>
+                <button onclick="closeModal('modal-doc')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            </div>
+            <form id="form-doc" onsubmit="saveDoc(event)" class="space-y-3 text-xs sm:text-sm">
+                <input type="hidden" id="doc-id">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ឈ្មោះឯកសារ *</label>
+                    <input type="text" id="doc-name" required placeholder="ឧ. របាយការណ៍សវនកម្មប្រចាំឆ្នាំ ២០២៦" class="w-full border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">លេខកូដឯកសារ *</label>
+                        <input type="text" id="doc-code" required placeholder="DOC-2026-001" class="w-full border border-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ប្រភេទឯកសារ</label>
+                        <select id="doc-category" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                            <option value="កិច្ចសន្យា">កិច្ចសន្យា (Contract)</option>
+                            <option value="របាយការណ៍">របាយការណ៍ (Report)</option>
+                            <option value="លិខិតបទដ្ឋាន">លិខិតបទដ្ឋាន (Policy/Regulation)</option>
+                            <option value="លិខិតរដ្ឋបាល">លិខិតរដ្ឋបាល (Administrative)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ទម្រង់ហ្វាល (Format)</label>
+                        <select id="doc-format" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                            <option value="PDF">PDF</option>
+                            <option value="DOCX">Word (DOCX)</option>
+                            <option value="XLSX">Excel (XLSX)</option>
+                            <option value="SCAN">Scan Image (PNG/JPG)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ទំហំឯកសារ</label>
+                        <input type="text" id="doc-size" value="2.4 MB" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">កំណត់ចំណាំ / សេចក្តីសង្ខេប</label>
+                    <textarea id="doc-note" rows="2" placeholder="ព័ត៌មានលម្អិតបន្ថែម..." class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-doc')" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-medium">បោះបង់</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 shadow-sm transition">រក្សាទុក</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: In-Out Tracking Record -->
+    <div id="modal-dispatch" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 id="modal-dispatch-title" class="text-base font-bold text-slate-900">កត់ត្រាឯកសារចេញ-ចូលថ្មី</h3>
+                <button onclick="closeModal('modal-dispatch')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            </div>
+            <form id="form-dispatch" onsubmit="saveDispatch(event)" class="space-y-3 text-xs sm:text-sm">
+                <input type="hidden" id="dispatch-id">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">កម្មវត្ថុ / ឈ្មោះលិខិត *</label>
+                    <input type="text" id="dispatch-title" required placeholder="សំណើសុំការអនុម័តថវិកាប្រចាំត្រីមាស" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">លេខលិខិត / កូដ *</label>
+                        <input type="text" id="dispatch-code" required placeholder="IN-2026-089" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ប្រភេទចេញ-ចូល</label>
+                        <select id="dispatch-type" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                            <option value="ចូល">ឯកសារចូល (Incoming)</option>
+                            <option value="ចេញ">ឯកសារចេញ (Outgoing)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ថ្ងៃខែឯកសារចូល/ចេញ *</label>
+                        <input type="date" id="dispatch-in-date" required class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ថ្ងៃខែបញ្ចប់រួចរាល់ (បើមាន)</label>
+                        <input type="date" id="dispatch-done-date" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ដំណាក់កាលបច្ចុប្បន្ន (ដល់ណា?) *</label>
+                    <select id="dispatch-stage" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                        <option value="រដ្ឋបាលទទួល">១. រដ្ឋបាលទទួល (Reception / Logged)</option>
+                        <option value="កំពុងពិនិត្យបច្ចេកទេស">២. កំពុងពិនិត្យបច្ចេកទេស (Technical Review)</option>
+                        <option value="នៅថ្នាក់ដឹកនាំពិនិត្យសម្រេច">៣. នៅថ្នាក់ដឹកនាំពិនិត្យសម្រេច (Management Approval)</option>
+                        <option value="រង់ចាំចុះហត្ថលេខា">៤. រង់ចាំចុះហត្ថលេខា (Awaiting Signature)</option>
+                        <option value="បញ្ចប់រួចរាល់">៥. បញ្ចប់រួចរាល់ (Completed / Archived)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">បុគ្គល / នាយកដ្ឋានទទួលបន្ទុក</label>
+                    <input type="text" id="dispatch-handler" placeholder="ឧ. លោក សុខ វាសនា (ផ្នែកហិរញ្ញវត្ថុ)" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-dispatch')" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-medium">បោះបង់</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 shadow-sm transition">រក្សាទុក</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 3: Certificate Entry -->
+    <div id="modal-cert" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 id="modal-cert-title" class="text-base font-bold text-slate-900">ចុះបញ្ជីលេខវិញ្ញាបនបត្រ</h3>
+                <button onclick="closeModal('modal-cert')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            </div>
+            <form id="form-cert" onsubmit="saveCert(event)" class="space-y-3 text-xs sm:text-sm">
+                <input type="hidden" id="cert-id">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">លេខវិញ្ញាបនបត្រ (Certificate No.) *</label>
+                    <input type="text" id="cert-number" required placeholder="CERT-2026-KH-0042" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none font-mono">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ឈ្មោះម្ចាស់វិញ្ញាបនបត្រ / ស្ថាប័ន *</label>
+                    <input type="text" id="cert-holder" required placeholder="ឈ្មោះសាមីខ្លួន ឬក្រុមហ៊ុន" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ប្រភេទវិញ្ញាបនបត្រ *</label>
+                        <select id="cert-type" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                            <option value="វិញ្ញាបនបត្របញ្ជាក់ការសិក្សា">បញ្ជាក់ការសិក្សា / បណ្តុះបណ្តាល</option>
+                            <option value="វិញ្ញាបនបត្រចុះបញ្ជីអាជីវកម្ម">ចុះបញ្ជីអាជីវកម្ម / សហគ្រាស</option>
+                            <option value="វិញ្ញាបនបត្រគុណភាពស្តង់ដារ">គុណភាព / ស្តង់ដារ (ISO/Quality)</option>
+                            <option value="វិញ្ញាបនបត្រទទួលស្គាល់កិត្តិយស">លិខិតសរសើរ / កិត្តិយស</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">ថ្ងៃខែចុះហត្ថលេខា *</label>
+                        <input type="date" id="cert-date" required class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">អ្នកចុះហត្ថលេខា (Signatory)</label>
+                    <input type="text" id="cert-signer" placeholder="ឧ. ឯកឧត្តម ប្រធាននាយកដ្ឋាន" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-cert')" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-medium">បោះបង់</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 text-white font-medium hover:bg-emerald-700 shadow-sm transition">រក្សាទុក</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 4: Upcoming Project Entry -->
+    <div id="modal-project" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-base font-bold text-slate-900">បន្ថែមគម្រោងថ្មីដែលត្រៀមដំណើរការ</h3>
+                <button onclick="closeModal('modal-project')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            </div>
+            <form id="form-project" onsubmit="saveProject(event)" class="space-y-3 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ឈ្មោះគម្រោង / ប្រព័ន្ធ *</label>
+                    <input type="text" id="project-name" required placeholder="ឧ. ប្រព័ន្ធស្កេន QR Code បញ្ជាក់ភាពត្រឹមត្រូវ" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">កាលបរិច្ឆេទគ្រោងចាប់ផ្ដើម</label>
+                        <input type="date" id="project-target-date" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">អាទិភាព (Priority)</label>
+                        <select id="project-priority" class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none">
+                            <option value="ខ្ពស់">អាទិភាពខ្ពស់ (High)</option>
+                            <option value="មធ្យម">មធ្យម (Medium)</option>
+                            <option value="ធម្មតា">ធម្មតា (Low)</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ការពិពណ៌នាគោលដៅគម្រោង</label>
+                    <textarea id="project-desc" rows="3" placeholder="ព័ត៌មានលម្អិតពីគោលដៅមុខងារ..." class="w-full border border-slate-200 rounded-xl px-3 py-2 outline-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button type="button" onclick="closeModal('modal-project')" class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-medium">បោះបង់</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-purple-600 text-white font-medium hover:bg-purple-700 shadow-sm transition">រក្សាទុក</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 5: Document Preview / Details Modal -->
+    <div id="modal-view-doc" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-2xl rounded-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">📄</span>
+                    <h3 id="view-doc-title" class="text-base font-bold text-slate-900">ព័ត៌មានលម្អិតឯកសារ</h3>
+                </div>
+                <button onclick="closeModal('modal-view-doc')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+            </div>
+            
+            <div id="view-doc-content" class="space-y-4 text-xs sm:text-sm">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                <button onclick="printCurrentDocument()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium flex items-center gap-1.5 transition">
+                    <span>🖨️</span>
+                    <span>បោះពុម្ព (Print)</span>
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="mockDownload()" class="px-4 py-2 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 font-medium flex items-center gap-1.5 transition">
+                        <span>⬇️</span>
+                        <span>ទាញយក (Download)</span>
+                    </button>
+                    <button onclick="closeModal('modal-view-doc')" class="px-4 py-2 rounded-xl bg-slate-800 text-white font-medium hover:bg-slate-900 transition">បិទ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none text-xs sm:text-sm">
+        <span id="toast-icon">✅</span>
+        <span id="toast-msg">រក្សាទុកបានជោគជ័យ!</span>
+    </div>
+
+    <!-- PRINT ONLY TEMPLATE: Certificate Official View -->
+    <div id="print-area" class="print-only p-12 bg-white min-h-screen text-slate-900 font-sans">
+        <div class="border-8 border-double border-amber-600 p-8 rounded-2xl relative text-center space-y-6">
+            
+            <div class="flex justify-between items-center text-xs font-semibold text-slate-700">
+                <div class="flex items-center gap-2 text-left">
+                    <img id="print-org-logo" src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=100&auto=format&fit=crop&q=60" class="w-12 h-12 object-cover rounded-lg border border-slate-300">
+                    <div>
+                        <div class="font-bold text-slate-900" id="print-org-name">ក្រសួង / ស្ថាប័នរដ្ឋបាល</div>
+                        <div class="text-[10px] text-slate-500">Document Registry Office</div>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="font-bold">ព្រះរាជាណាចក្រកម្ពុជា</div>
+                    <div>ជាតិ សាសនា ព្រះមហាក្សត្រ</div>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <h1 class="text-2xl font-bold uppercase tracking-wide text-amber-800" id="print-cert-type">វិញ្ញាបនបត្រ</h1>
+                <p class="text-xs text-slate-500 mt-1">លេខសម្គាល់៖ <span id="print-cert-number" class="font-bold text-slate-900 font-mono">CERT-0000</span></p>
+            </div>
+            
+            <div class="py-6 space-y-3">
+                <p class="text-sm text-slate-600">វិញ្ញាបនបត្រនេះត្រូវបានចេញជូនចំពោះ៖</p>
+                <h2 id="print-cert-holder" class="text-2xl font-bold text-blue-900 border-b-2 border-slate-300 pb-2 inline-block px-12">លោក / លោកស្រី</h2>
+                <p class="text-xs text-slate-600 max-w-lg mx-auto pt-2" id="print-cert-body">
+                    ដែលបានបំពេញគ្រប់លក្ខខណ្ឌតម្រូវ ស្របតាមច្បាប់ និងបទប្បញ្ញត្តិរដ្ឋបាលជាធរមាន។
+                </p>
+            </div>
+
+            <div class="flex justify-between items-end pt-8 text-xs">
+                <div class="text-left space-y-1">
+                    <p class="text-slate-500 font-semibold text-[11px]">ស្កេនផ្ទៀងផ្ទាត់ (Official QR Verification)</p>
+                    <div id="print-qrcode-container" class="w-20 h-20 border border-slate-300 rounded p-1 bg-white flex items-center justify-center"></div>
+                </div>
+                <div class="text-right space-y-2">
+                    <p>រាជធានីភ្នំពេញ, ថ្ងៃចុះហត្ថលេខា៖ <span id="print-cert-date" class="font-semibold">01/01/2026</span></p>
+                    <p class="font-bold text-sm pt-6" id="print-cert-signer">ប្រធានអង្គភាព</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Organization Profile & Branding
+        let orgProfile = {
+            name: 'ក្រសួង / ស្ថាប័នរដ្ឋបាល',
+            logoUrl: 'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=100&auto=format&fit=crop&q=60'
+        };
+
+        // Current Logged In User State (admin / user)
+        let currentUser = {
+            email: 'admin@domain.gov.kh',
+            role: 'admin',
+            name: 'ថ្នាក់ដឹកនាំរដ្ឋបាល (Admin)'
+        };
+
+        // In-memory data store
+        let documents = [
+            { id: '1', code: 'DOC-2026-001', name: 'កិច្ចសន្យាផ្គត់ផ្គង់ប្រព័ន្ធបច្ចេកវិទ្យាព័ត៌មានវិទ្យា', category: 'កិច្ចសន្យា', format: 'PDF', size: '3.2 MB', date: '2026-03-12', note: 'កិច្ចសន្យាមានសុពលភាព ១ ឆ្នាំ ចុះហត្ថលេខាដោយភាគីទាំងពីរ' },
+            { id: '2', code: 'DOC-2026-002', name: 'របាយការណ៍សវនកម្មប្រចាំត្រីមាសទី១ ឆ្នាំ២០២៦', category: 'របាយការណ៍', format: 'PDF', size: '5.1 MB', date: '2026-03-28', note: 'របាយការណ៍បានឆ្លងកាត់ការត្រួតពិនិត្យផ្ទៃក្នុង' },
+            { id: '3', code: 'DOC-2026-003', name: 'សេចក្តីណែនាំស្តីពីការប្រើប្រាស់ហត្ថលេខាអេឡិចត្រូនិក', category: 'លិខិតបទដ្ឋាន', format: 'DOCX', size: '1.4 MB', date: '2026-04-02', note: 'ផ្សព្វផ្សាយអនុវត្តតាមបណ្តាមន្ទីរ និងអង្គភាពចំណុះ' }
+        ];
+
+        let dispatches = [
+            { id: '1', code: 'IN-2026-015', title: 'សំណើសុំបើកវគ្គបណ្តុះបណ្តាលសន្តិសុខបច្ចេកវិទ្យា', type: 'ចូល', inDate: '2026-04-10', doneDate: '2026-04-14', stage: 'បញ្ចប់រួចរាល់', handler: 'លោក ចាន់ រិទ្ធី' },
+            { id: '2', code: 'IN-2026-016', title: 'លិខិតស្នើសុំពិនិត្យការចុះបញ្ជីអាជីវកម្មថ្មី', type: 'ចូល', inDate: '2026-04-12', doneDate: '', stage: 'នៅថ្នាក់ដឹកនាំពិនិត្យសម្រេច', handler: 'កញ្ញា សុជាតា' },
+            { id: '3', code: 'OUT-2026-008', title: 'លិខិតអញ្ជើញចូលរួមកិច្ចប្រជុំពិគ្រោះយោបល់ពង្រីកប្រព័ន្ធ', type: 'ចេញ', inDate: '2026-04-15', doneDate: '', stage: 'រង់ចាំចុះហត្ថលេខា', handler: 'លោក វ៉ាន់នី' }
+        ];
+
+        let certificates = [
+            { id: '1', number: 'CERT-2026-0019', holder: 'ក្រុមហ៊ុន អង្គរ សូហ្វវែរ ឯ.ក', type: 'វិញ្ញាបនបត្រចុះបញ្ជីអាជីវកម្ម', date: '2026-03-15', signer: 'ឯកឧត្តម រដ្ឋលេខាធិការ' },
+            { id: '2', number: 'CERT-2026-0020', holder: 'កញ្ញា ម៉េង ស្រីពៅ', type: 'វិញ្ញាបនបត្របញ្ជាក់ការសិក្សា', date: '2026-04-01', signer: 'លោកប្រធានវិទ្យាស្ថាន' },
+            { id: '3', number: 'CERT-2026-0021', holder: 'មន្ទីរពេទ្យកម្ពុជា-ជប៉ុន', type: 'វិញ្ញាបនបត្រគុណភាពស្តង់ដារ', date: '2026-04-11', signer: 'គណៈកម្មការត្រួតពិនិត្យគុណភាព' }
+        ];
+
+        let projects = [
+            { id: '1', name: 'ប្រព័ន្ធផ្ទៀងផ្ទាត់ QR Code លើវិញ្ញាបនបត្រ', targetDate: '2026-06-30', priority: 'ខ្ពស់', desc: 'បង្កើត Public Verification Webpage ដើម្បីឱ្យអតិថិជន និងដៃគូអាចស្កេនផ្ទៀងផ្ទាត់លេខកូដវិញ្ញាបនបត្រពិតប្រាកដតាមទូរស័ព្ទ។' },
+            { id: '2', name: 'មុខងារ Digital Signature (e-Sign)', targetDate: '2026-08-15', priority: 'ខ្ពស់', desc: 'បញ្ចូលប្រព័ន្ធចុះហត្ថលេខាឌីជីថលលើឯកសារ PDF តាមរយៈទូរស័ព្ទដៃ និងថេប្លេតដោយសុវត្ថិភាព។' },
+            { id: '3', name: 'ការជូនដំណឹងតាម Telegram Bot & Push Notification', targetDate: '2026-09-01', priority: 'មធ្យម', desc: 'ផ្ញើសារស្វ័យប្រវត្តិទៅអ្នកកាន់ការងារពេលមានឯកសារចូលថ្មី ឬដល់វេនត្រូវពិនិត្យសម្រេច។' }
+        ];
+
+        let currentActiveDoc = null;
+        let html5QrCodeScanner = null;
+
+        // AUTHENTICATION & ROLE MANAGEMENT
+        function fillLoginForm(email, pass, role) {
+            document.getElementById('login-email').value = email;
+            document.getElementById('login-password').value = pass;
+            document.getElementById('login-role').value = role;
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const role = document.getElementById('login-role').value;
+
+            currentUser = {
+                email: email,
+                role: role,
+                name: role === 'admin' ? 'ថ្នាក់ដឹកនាំរដ្ឋបាល (Admin)' : 'បុគ្គលិកទូទៅ (Normal User)'
+            };
+
+            document.getElementById('login-overlay').classList.add('hidden');
+            applyUserRolePermissions();
+            showToast(`ចូលប្រើប្រាស់ជោគជ័យជា៖ ${role === 'admin' ? 'Admin 👑' : 'Normal User 👤'}`);
+        }
+
+        function handleLogout() {
+            document.getElementById('login-overlay').classList.remove('hidden');
+            showToast('បានចាកចេញពីប្រព័ន្ធ');
+        }
+
+        function applyUserRolePermissions() {
+            const isAdmin = currentUser.role === 'admin';
+            
+            // Header Display
+            document.getElementById('user-display-name').innerText = currentUser.name;
+            const roleBadge = document.getElementById('user-display-role');
+            const statRoleBadge = document.getElementById('stat-current-role-badge');
+            
+            if (isAdmin) {
+                roleBadge.innerHTML = '👑 Admin';
+                roleBadge.className = 'text-[10px] font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded';
+                statRoleBadge.innerHTML = '👑 Admin Mode';
+                statRoleBadge.className = 'text-sm font-bold text-blue-600 mt-1';
+            } else {
+                roleBadge.innerHTML = '👤 Normal User';
+                roleBadge.className = 'text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded';
+                statRoleBadge.innerHTML = '👤 View & Print Mode';
+                statRoleBadge.className = 'text-sm font-bold text-emerald-600 mt-1';
+            }
+
+            // Show or hide admin creation buttons
+            const adminButtons = document.querySelectorAll('.admin-only');
+            adminButtons.forEach(btn => {
+                if (isAdmin) {
+                    btn.classList.remove('hidden');
+                } else {
+                    btn.classList.add('hidden');
+                }
+            });
+
+            // Re-render modules to reflect permissions (edit/delete buttons)
+            renderDocs();
+            renderDispatch();
+            renderCerts();
+            renderProjects();
+        }
+
+        // CSV / EXCEL EXPORT ENGINE (UTF-8 with BOM for Khmer language support)
+        function downloadCSV(csvContent, fileName) {
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast(`បានទាញយកទិន្នន័យ៖ ${fileName}`);
+        }
+
+        function exportDocsToCSV() {
+            let csv = "លេខកូដឯកសារ,ឈ្មោះឯកសារ,ប្រភេទ,ទម្រង់,ទំហំ,កាលបរិច្ឆេទ,កំណត់ចំណាំ\n";
+            documents.forEach(d => {
+                csv += `"${d.code}","${d.name}","${d.category}","${d.format}","${d.size}","${d.date}","${d.note || ''}"\n`;
+            });
+            downloadCSV(csv, `Documents_Export_${new Date().toISOString().split('T')[0]}.csv`);
+        }
+
+        function exportDispatchToCSV() {
+            let csv = "លេខកូដ,ប្រភេទ,កម្មវត្ថុ,កាលបរិច្ឆេទចូល,ដំណាក់កាលបច្ចុប្បន្ន,បុគ្គលទទួលបន្ទុក,កាលបរិច្ឆេទបញ្ចប់\n";
+            dispatches.forEach(d => {
+                csv += `"${d.code}","${d.type}","${d.title}","${d.inDate}","${d.stage}","${d.handler || ''}","${d.doneDate || 'កំពុងដំណើរការ'}"\n`;
+            });
+            downloadCSV(csv, `Dispatch_In_Out_${new Date().toISOString().split('T')[0]}.csv`);
+        }
+
+        function exportCertsToCSV() {
+            let csv = "លេខវិញ្ញាបនបត្រ,ឈ្មោះម្ចាស់/ស្ថាប័ន,ប្រភេទវិញ្ញាបនបត្រ,ថ្ងៃចុះហត្ថលេខា,អ្នកចុះហត្ថលេខា\n";
+            certificates.forEach(c => {
+                csv += `"${c.number}","${c.holder}","${c.type}","${c.date}","${c.signer || ''}"\n`;
+            });
+            downloadCSV(csv, `Certificates_Registry_${new Date().toISOString().split('T')[0]}.csv`);
+        }
+
+        // BRANDING / LOGO CUSTOMIZATION
+        function openLogoSettingModal() {
+            document.getElementById('setting-org-name').value = orgProfile.name;
+            document.getElementById('setting-org-url').value = orgProfile.logoUrl.startsWith('data:') ? '' : orgProfile.logoUrl;
+            document.getElementById('setting-logo-preview').src = orgProfile.logoUrl;
+            openModal('modal-org-setting');
+        }
+
+        function previewUploadedLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('setting-logo-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveOrgSettings(e) {
+            e.preventDefault();
+            const name = document.getElementById('setting-org-name').value;
+            const previewSrc = document.getElementById('setting-logo-preview').src;
+            const url = document.getElementById('setting-org-url').value;
+
+            orgProfile.name = name;
+            if (url && url.trim() !== '') {
+                orgProfile.logoUrl = url.trim();
+            } else if (previewSrc) {
+                orgProfile.logoUrl = previewSrc;
+            }
+
+            // Update UI elements
+            document.getElementById('nav-org-title').innerText = orgProfile.name;
+            document.getElementById('nav-org-logo').src = orgProfile.logoUrl;
+            document.getElementById('print-org-name').innerText = orgProfile.name;
+            document.getElementById('print-org-logo').src = orgProfile.logoUrl;
+
+            showToast('បានកែប្រែឡូហ្គោ និងឈ្មោះស្ថាប័នជោគជ័យ!');
+            closeModal('modal-org-setting');
+        }
+
+        // QR CODE SCANNER (CAMERA & IMAGE SCAN)
+        function openQrScannerModal() {
+            openModal('modal-qr-scanner');
+            document.getElementById('qr-scan-result').classList.add('hidden');
+            startQrCamera();
+        }
+
+        function closeQrScannerModal() {
+            stopQrCamera();
+            closeModal('modal-qr-scanner');
+        }
+
+        function startQrCamera() {
+            const resultBox = document.getElementById('qr-scan-result');
+            resultBox.classList.add('hidden');
+
+            if (!html5QrCodeScanner) {
+                html5QrCodeScanner = new Html5Qrcode("qr-reader");
+            }
+
+            Html5Qrcode.getCameras().then(cameras => {
+                if (cameras && cameras.length) {
+                    const cameraId = cameras[cameras.length - 1].id; // Prefer back camera
+                    html5QrCodeScanner.start(
+                        cameraId,
+                        { fps: 10, qrbox: { width: 200, height: 200 } },
+                        (decodedText) => {
+                            handleQrScanSuccess(decodedText);
+                        },
+                        (errorMessage) => {
+                            // Scanner scanning frames, no action required
+                        }
+                    ).catch(err => {
+                        console.error("Camera open error: ", err);
+                        showToast("មិនអាចបើកកាមេរ៉ាបានទេ ឬពុំមានសិទ្ធិ Camera");
+                    });
+                } else {
+                    showToast("រកមិនឃើញកាមេរ៉ាលើឧបករណ៍នេះទេ");
+                }
+            }).catch(err => {
+                console.error("Camera init error: ", err);
+                showToast("សូមអនុញ្ញាតសិទ្ធិបើក Camera លើ Browser របស់អ្នក");
+            });
+        }
+
+        function stopQrCamera() {
+            if (html5QrCodeScanner) {
+                html5QrCodeScanner.stop().then(() => {
+                    html5QrCodeScanner.clear();
+                }).catch(err => {
+                    console.debug(err);
+                });
+            }
+        }
+
+        function handleQrScanSuccess(scannedData) {
+            stopQrCamera();
+            const resultBox = document.getElementById('qr-scan-result');
+            resultBox.classList.remove('hidden');
+
+            // Check if scanned data matches any certificate in repository
+            const matchedCert = certificates.find(c => 
+                c.number.toLowerCase() === scannedData.toLowerCase() || 
+                scannedData.includes(c.number)
+            );
+
+            if (matchedCert) {
+                resultBox.className = "p-4 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-900 space-y-2 text-xs";
+                resultBox.innerHTML = `
+                    <div class="flex items-center gap-2 text-emerald-700 font-bold text-sm">
+                        <span>✅ វិញ្ញាបនបត្រត្រឹមត្រូវស្របច្បាប់! (VERIFIED)</span>
+                    </div>
+                    <div class="space-y-1">
+                        <div>លេខវិញ្ញាបនបត្រ៖ <strong>${matchedCert.number}</strong></div>
+                        <div>ម្ចាស់វិញ្ញាបនបត្រ៖ <strong>${matchedCert.holder}</strong></div>
+                        <div>ប្រភេទ៖ <strong>${matchedCert.type}</strong></div>
+                        <div>កាលបរិច្ឆេទចុះហត្ថលេខា៖ <strong>${matchedCert.date}</strong></div>
+                    </div>
+                    <div class="pt-2">
+                        <button onclick="printCertificate('${matchedCert.id}')" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700">🖨️ បោះពុម្ពវិញ្ញាបនបត្រនេះ</button>
+                    </div>
+                `;
+                showToast("ស្កេនជោគជ័យ៖ រកឃើញវិញ្ញាបនបត្រត្រឹមត្រូវ!");
+            } else {
+                resultBox.className = "p-4 rounded-xl border border-amber-300 bg-amber-50 text-amber-900 space-y-1 text-xs";
+                resultBox.innerHTML = `
+                    <div class="flex items-center gap-2 text-amber-800 font-bold text-sm">
+                        <span>⚠️ លទ្ធផលទិន្នន័យស្កេន៖</span>
+                    </div>
+                    <p class="font-mono bg-white p-2 rounded border border-amber-200">${scannedData}</p>
+                    <p class="text-[11px] text-amber-700">មិនមានលេខសម្គាល់ត្រូវគ្នាក្នុងប្រព័ន្ធវិញ្ញាបនបត្របច្ចុប្បន្នឡើយ។</p>
+                `;
+                showToast("បានស្កេន QR Code");
+            }
+        }
+
+        // GENERATE QR CODE FOR CERTIFICATE
+        function openCertQrView(id) {
+            const cert = certificates.find(c => c.id === id);
+            if (!cert) return;
+
+            document.getElementById('view-cert-number').innerText = cert.number;
+            document.getElementById('view-cert-holder').innerText = cert.holder;
+            document.getElementById('view-cert-type').innerText = cert.type;
+            
+            const qrContainer = document.getElementById('cert-qrcode-container');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: cert.number,
+                width: 140,
+                height: 140,
+                colorDark : "#0f172a",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('btn-print-from-modal').onclick = function() {
+                closeModal('modal-view-cert');
+                printCertificate(cert.id);
+            };
+
+            openModal('modal-view-cert');
+        }
+
+        // View Mode Switcher: Desktop Web vs Mobile App Frame
+        function setViewMode(mode) {
+            const container = document.getElementById('app-container');
+            const btnDesktop = document.getElementById('btn-desktop-view');
+            const btnMobile = document.getElementById('btn-mobile-view');
+
+            if (mode === 'mobile') {
+                container.className = "flex-1 w-full max-w-md mx-auto p-3 transition-all duration-300 border-x-4 border-slate-300 bg-white min-h-[90vh] shadow-2xl rounded-3xl my-4";
+                btnMobile.className = "px-2.5 py-1 rounded-lg bg-blue-600 text-white shadow-xs flex items-center gap-1 transition";
+                btnDesktop.className = "px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1 transition";
+                showToast("ប្តូរទៅទម្រង់ Mobile App View");
+            } else {
+                container.className = "flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 transition-all duration-300";
+                btnDesktop.className = "px-2.5 py-1 rounded-lg bg-white text-blue-600 shadow-xs flex items-center gap-1 transition";
+                btnMobile.className = "px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1 transition";
+                showToast("ប្តូរទៅទម្រង់ Desktop Web View");
+            }
+        }
+
+        // Tab Navigation
+        function switchTab(tabKey) {
+            const tabs = ['docs', 'dispatch', 'certs', 'projects'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                const sec = document.getElementById(`section-${t}`);
+                if (t === tabKey) {
+                    btn.className = "tab-btn active px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap bg-blue-600 text-white shadow-xs transition flex items-center gap-2";
+                    sec.classList.remove('hidden');
+                    sec.classList.add('block');
+                } else {
+                    btn.className = "tab-btn px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap bg-white text-slate-600 hover:text-slate-900 border border-slate-200 transition flex items-center gap-2";
+                    sec.classList.add('hidden');
+                    sec.classList.remove('block');
+                }
+            });
+        }
+
+        // Refresh Summary Statistics
+        function updateStats() {
+            document.getElementById('stat-total-docs').innerText = documents.length;
+            const inProgress = dispatches.filter(d => d.stage !== 'បញ្ចប់រួចរាល់').length;
+            document.getElementById('stat-in-progress').innerText = inProgress;
+            document.getElementById('stat-total-certs').innerText = certificates.length;
+        }
+
+        // 1. Render Documents (Permission-aware)
+        function renderDocs() {
+            const query = (document.getElementById('doc-search')?.value || '').toLowerCase();
+            const tbody = document.getElementById('docs-table-body');
+            tbody.innerHTML = '';
+            const isAdmin = currentUser.role === 'admin';
+
+            const filtered = documents.filter(d => 
+                d.name.toLowerCase().includes(query) || 
+                d.code.toLowerCase().includes(query) ||
+                d.category.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-slate-400 text-xs">ពុំមានទិន្នន័យឯកសារឡើយ</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(doc => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                
+                // Admin has full buttons; normal user has View and Download only
+                const actionButtons = `
+                    <div class="inline-flex items-center gap-1.5">
+                        <button onclick="viewDoc('${doc.id}')" title="មើលឯកសារ (View)" class="p-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition">👁️</button>
+                        <button onclick="mockDownload('${doc.name}')" title="ទាញយក (Download)" class="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition">⬇️</button>
+                        ${isAdmin ? `
+                            <button onclick="editDoc('${doc.id}')" title="កែប្រែ (Update)" class="p-1.5 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 transition">✏️</button>
+                            <button onclick="deleteDoc('${doc.id}')" title="លុប (Delete)" class="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition">🗑️</button>
+                        ` : ''}
+                    </div>
+                `;
+
+                tr.innerHTML = `
+                    <td class="py-3 px-3 font-semibold text-blue-600 font-mono">${doc.code}</td>
+                    <td class="py-3 px-3 font-medium text-slate-900">${doc.name}</td>
+                    <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-medium">${doc.category}</span></td>
+                    <td class="py-3 px-3 text-slate-500">${doc.format} (${doc.size})</td>
+                    <td class="py-3 px-3 text-slate-500">${doc.date}</td>
+                    <td class="py-3 px-3 text-center whitespace-nowrap">
+                        ${actionButtons}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            updateStats();
+        }
+
+        // 2. Render In-Out Dispatch (Permission-aware)
+        function renderDispatch() {
+            const filter = document.getElementById('dispatch-filter')?.value || 'all';
+            const listContainer = document.getElementById('dispatch-list');
+            listContainer.innerHTML = '';
+            const isAdmin = currentUser.role === 'admin';
+
+            let filtered = dispatches;
+            if (filter === 'in_review') filtered = dispatches.filter(d => d.stage.includes('ពិនិត្យ'));
+            else if (filter === 'at_leadership') filtered = dispatches.filter(d => d.stage.includes('ថ្នាក់ដឹកនាំ'));
+            else if (filter === 'completed') filtered = dispatches.filter(d => d.stage === 'បញ្ចប់រួចរាល់');
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">ពុំមានកំណត់ត្រាចេញចូលត្រូវបង្ហាញឡើយ</div>`;
+                return;
+            }
+
+            filtered.forEach(item => {
+                const isDone = item.stage === 'បញ្ចប់រួចរាល់';
+                const statusBadge = isDone 
+                    ? `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">✅ បញ្ចប់រួចរាល់</span>`
+                    : `<span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800">⏳ ${item.stage}</span>`;
+
+                const div = document.createElement('div');
+                div.className = "p-4 rounded-xl border border-slate-200 bg-white hover:border-blue-300 transition space-y-3";
+                
+                const adminActionButtons = isAdmin ? `
+                    <div class="flex items-center gap-1">
+                        <button onclick="advanceStage('${item.id}')" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-medium">➡️ រុញទៅមុខ</button>
+                        <button onclick="editDispatch('${item.id}')" class="px-2 py-1 rounded-lg text-slate-500 hover:text-slate-800">កែប្រែ</button>
+                        <button onclick="deleteDispatch('${item.id}')" class="px-2 py-1 rounded-lg text-rose-500 hover:text-rose-700">លុប</button>
+                    </div>
+                ` : `
+                    <span class="text-xs text-slate-400 italic">សិទ្ធិមើលព័ត៌មាន</span>
+                `;
+
+                div.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold ${item.type === 'ចូល' ? 'bg-sky-100 text-sky-800' : 'bg-purple-100 text-purple-800'}">
+                                ${item.type === 'ចូល' ? '📥 ឯកសារចូល' : '📤 ឯកសារចេញ'}
+                            </span>
+                            <span class="font-mono text-xs font-semibold text-slate-500">${item.code}</span>
+                        </div>
+                        ${statusBadge}
+                    </div>
+
+                    <h4 class="font-bold text-slate-900 text-sm sm:text-base">${item.title}</h4>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg">
+                        <div>
+                            <span class="text-slate-400">កាលបរិច្ឆេទចូល៖</span> 
+                            <strong class="text-slate-800">${item.inDate}</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400">ទទួលបន្ទុក៖</span> 
+                            <strong class="text-slate-800">${item.handler || 'ទូទៅ'}</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400">កាលបរិច្ឆេទបញ្ចប់៖</span> 
+                            <strong class="${isDone ? 'text-emerald-700' : 'text-slate-500'}">${item.doneDate || 'កំពុងដំណើរការ'}</strong>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-1 text-xs">
+                        <div class="flex gap-1 text-[11px] text-slate-400">
+                            <span>ដំណាក់កាលបច្ចុប្បន្ន៖ <strong>${item.stage}</strong></span>
+                        </div>
+                        ${adminActionButtons}
+                    </div>
+                `;
+                listContainer.appendChild(div);
+            });
+            updateStats();
+        }
+
+        // 3. Render Certificates (Permission-aware)
+        function renderCerts() {
+            const query = (document.getElementById('cert-search')?.value || '').toLowerCase();
+            const grid = document.getElementById('certs-grid');
+            grid.innerHTML = '';
+            const isAdmin = currentUser.role === 'admin';
+
+            const filtered = certificates.filter(c => 
+                c.number.toLowerCase().includes(query) || 
+                c.holder.toLowerCase().includes(query) ||
+                c.type.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-8 text-center text-slate-400 text-xs">ពុំមានទិន្នន័យវិញ្ញាបនបត្រឡើយ</div>`;
+                return;
+            }
+
+            filtered.forEach(cert => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-4 rounded-2xl border border-slate-200/90 hover:border-emerald-400 transition shadow-xs flex flex-col justify-between";
+                
+                const adminOptions = isAdmin ? `
+                    <div class="flex gap-1">
+                        <button onclick="editCert('${cert.id}')" title="កែប្រែ" class="p-1.5 text-slate-500 hover:text-slate-800">✏️</button>
+                        <button onclick="deleteCert('${cert.id}')" title="លុប" class="p-1.5 text-rose-500 hover:text-rose-700">🗑️</button>
+                    </div>
+                ` : '';
+
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-semibold">
+                                ${cert.type}
+                            </span>
+                            <span class="text-xs font-mono font-bold text-slate-700">${cert.number}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm pt-1">${cert.holder}</h4>
+                        <div class="text-xs text-slate-500 space-y-1">
+                            <p>📅 ថ្ងៃចុះហត្ថលេខា៖ <strong>${cert.date}</strong></p>
+                            <p>✍️ ចុះហត្ថលេខាដោយ៖ <strong>${cert.signer || 'ថ្នាក់ដឹកនាំ'}</strong></p>
+                        </div>
+                    </div>
+                    <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="openCertQrView('${cert.id}')" title="បង្ហាញ QR Code" class="px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold flex items-center gap-1 transition">
+                                <span>📱 QR</span>
+                            </button>
+                            <button onclick="printCertificate('${cert.id}')" class="px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-semibold flex items-center gap-1 transition">
+                                <span>🖨️ បោះពុម្ព</span>
+                            </button>
+                        </div>
+                        ${adminOptions}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            updateStats();
+        }
+
+        // 4. Render Future Projects
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            grid.innerHTML = '';
+            const isAdmin = currentUser.role === 'admin';
+
+            projects.forEach(proj => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl border border-purple-100 hover:border-purple-300 transition shadow-xs flex flex-col justify-between";
+                
+                const deleteAction = isAdmin ? `
+                    <button onclick="deleteProject('${proj.id}')" class="text-rose-400 hover:text-rose-600">លុប</button>
+                ` : '';
+
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${proj.priority === 'ខ្ពស់' ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'}">
+                                អាទិភាព៖ ${proj.priority}
+                            </span>
+                            <span class="text-xs text-slate-400">📅 ${proj.targetDate || 'ត្រៀមឆាប់ៗ'}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm pt-1">${proj.name}</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">${proj.desc}</p>
+                    </div>
+                    <div class="pt-4 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span class="text-purple-600 font-semibold">✨ ដំណាក់កាលត្រៀម</span>
+                        ${deleteAction}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Generic Modal Helpers
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function openNewModal() {
+            if (currentUser.role !== 'admin') {
+                showToast('សុំទោស! មានតែគណនី Admin ប៉ុណ្ណោះដែលអាចបង្កើតថ្មីបាន');
+                return;
+            }
+            const activeTab = document.querySelector('.tab-btn.active').id;
+            if (activeTab === 'tab-docs') openDocModal();
+            else if (activeTab === 'tab-dispatch') openDispatchModal();
+            else if (activeTab === 'tab-certs') openCertModal();
+            else if (activeTab === 'tab-projects') openProjectModal();
+        }
+
+        // Notification Toast
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('opacity-0', 'translate-y-20');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-20');
+            }, 2600);
+        }
+
+        // Document Handlers
+        function openDocModal() {
+            if (currentUser.role !== 'admin') return;
+            document.getElementById('form-doc').reset();
+            document.getElementById('doc-id').value = '';
+            document.getElementById('modal-doc-title').innerText = 'បញ្ចូលឯកសារថ្មី';
+            document.getElementById('doc-code').value = 'DOC-2026-' + String(documents.length + 1).padStart(3, '0');
+            openModal('modal-doc');
+        }
+
+        function editDoc(id) {
+            if (currentUser.role !== 'admin') return;
+            const doc = documents.find(d => d.id === id);
+            if (!doc) return;
+            document.getElementById('doc-id').value = doc.id;
+            document.getElementById('doc-name').value = doc.name;
+            document.getElementById('doc-code').value = doc.code;
+            document.getElementById('doc-category').value = doc.category;
+            document.getElementById('doc-format').value = doc.format;
+            document.getElementById('doc-size').value = doc.size;
+            document.getElementById('doc-note').value = doc.note || '';
+            document.getElementById('modal-doc-title').innerText = 'កែប្រែព័ត៌មានឯកសារ';
+            openModal('modal-doc');
+        }
+
+        function saveDoc(e) {
+            e.preventDefault();
+            if (currentUser.role !== 'admin') return;
+
+            const id = document.getElementById('doc-id').value;
+            const name = document.getElementById('doc-name').value;
+            const code = document.getElementById('doc-code').value;
+            const category = document.getElementById('doc-category').value;
+            const format = document.getElementById('doc-format').value;
+            const size = document.getElementById('doc-size').value;
+            const note = document.getElementById('doc-note').value;
+            const today = new Date().toISOString().split('T')[0];
+
+            if (id) {
+                const idx = documents.findIndex(d => d.id === id);
+                if (idx !== -1) {
+                    documents[idx] = { ...documents[idx], name, code, category, format, size, note };
+                    showToast('បានកែប្រែឯកសារជោគជ័យ!');
+                }
+            } else {
+                documents.unshift({ id: String(Date.now()), name, code, category, format, size, date: today, note });
+                showToast('បានបញ្ចូលឯកសារថ្មីរួចរាល់!');
+            }
+
+            closeModal('modal-doc');
+            renderDocs();
+        }
+
+        function deleteDoc(id) {
+            if (currentUser.role !== 'admin') return;
+            documents = documents.filter(d => d.id !== id);
+            showToast('បានលុបឯកសាររួចរាល់');
+            renderDocs();
+        }
+
+        function viewDoc(id) {
+            const doc = documents.find(d => d.id === id);
+            if (!doc) return;
+            currentActiveDoc = doc;
+            document.getElementById('view-doc-title').innerText = doc.name;
+            document.getElementById('view-doc-content').innerHTML = `
+                <div class="p-4 bg-slate-50 rounded-xl space-y-2 border border-slate-200">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-400">លេខកូដឯកសារ៖</span>
+                        <span class="font-mono font-bold text-blue-600">${doc.code}</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-400">ប្រភេទឯកសារ៖</span>
+                        <span class="font-semibold text-slate-800">${doc.category}</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-400">ទម្រង់ & ទំហំ៖</span>
+                        <span class="text-slate-700">${doc.format} (${doc.size})</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-400">កាលបរិច្ឆេទបញ្ចូល៖</span>
+                        <span class="text-slate-700">${doc.date}</span>
+                    </div>
+                    <div class="pt-2 border-t border-slate-200 text-xs">
+                        <span class="text-slate-400 block mb-1">កំណត់ចំណាំ / ខ្លឹមសារសង្ខេប៖</span>
+                        <p class="text-slate-700 italic bg-white p-2.5 rounded-lg border border-slate-100">${doc.note || 'ពុំមានកំណត់ចំណាំបន្ថែមឡើយ'}</p>
+                    </div>
+                </div>
+                <div class="p-4 border border-dashed border-blue-300 rounded-xl bg-blue-50/50 text-center space-y-2">
+                    <span class="text-3xl">📄</span>
+                    <p class="text-xs font-semibold text-blue-900">ការមើលជាមុន (Document Preview)</p>
+                    <p class="text-[11px] text-blue-700">ឯកសារត្រូវបានរក្សាទុកក្នុងប្រព័ន្ធ និងរួចរាល់សម្រាប់ទាញយក</p>
+                </div>
+            `;
+            openModal('modal-view-doc');
+        }
+
+        function mockDownload(name) {
+            showToast(`កំពុងទាញយកហ្វាល៖ ${name || 'ឯកសារ'}...`);
+        }
+
+        function printCurrentDocument() {
+            window.print();
+        }
+
+        // Dispatch Handlers
+        const stagesList = [
+            "រដ្ឋបាលទទួល",
+            "កំពុងពិនិត្យបច្ចេកទេស",
+            "នៅថ្នាក់ដឹកនាំពិនិត្យសម្រេច",
+            "រង់ចាំចុះហត្ថលេខា",
+            "បញ្ចប់រួចរាល់"
+        ];
+
+        function openDispatchModal() {
+            if (currentUser.role !== 'admin') return;
+            document.getElementById('form-dispatch').reset();
+            document.getElementById('dispatch-id').value = '';
+            document.getElementById('modal-dispatch-title').innerText = 'កត់ត្រាឯកសារចេញ-ចូលថ្មី';
+            document.getElementById('dispatch-code').value = 'IN-2026-' + String(dispatches.length + 1).padStart(3, '0');
+            document.getElementById('dispatch-in-date').value = new Date().toISOString().split('T')[0];
+            openModal('modal-dispatch');
+        }
+
+        function editDispatch(id) {
+            if (currentUser.role !== 'admin') return;
+            const item = dispatches.find(d => d.id === id);
+            if (!item) return;
+            document.getElementById('dispatch-id').value = item.id;
+            document.getElementById('dispatch-title').value = item.title;
+            document.getElementById('dispatch-code').value = item.code;
+            document.getElementById('dispatch-type').value = item.type;
+            document.getElementById('dispatch-in-date').value = item.inDate;
+            document.getElementById('dispatch-done-date').value = item.doneDate || '';
+            document.getElementById('dispatch-stage').value = item.stage;
+            document.getElementById('dispatch-handler').value = item.handler || '';
+            document.getElementById('modal-dispatch-title').innerText = 'កែប្រែការតាមដានចេញ-ចូល';
+            openModal('modal-dispatch');
+        }
+
+        function saveDispatch(e) {
+            e.preventDefault();
+            if (currentUser.role !== 'admin') return;
+
+            const id = document.getElementById('dispatch-id').value;
+            const title = document.getElementById('dispatch-title').value;
+            const code = document.getElementById('dispatch-code').value;
+            const type = document.getElementById('dispatch-type').value;
+            const inDate = document.getElementById('dispatch-in-date').value;
+            const doneDate = document.getElementById('dispatch-done-date').value;
+            const stage = document.getElementById('dispatch-stage').value;
+            const handler = document.getElementById('dispatch-handler').value;
+
+            if (id) {
+                const idx = dispatches.findIndex(d => d.id === id);
+                if (idx !== -1) {
+                    dispatches[idx] = { ...dispatches[idx], title, code, type, inDate, doneDate, stage, handler };
+                    showToast('បានកែប្រែស្ថានភាពជោគជ័យ!');
+                }
+            } else {
+                dispatches.unshift({ id: String(Date.now()), title, code, type, inDate, doneDate, stage, handler });
+                showToast('បានកត់ត្រាចេញ-ចូលថ្មី!');
+            }
+
+            closeModal('modal-dispatch');
+            renderDispatch();
+        }
+
+        function advanceStage(id) {
+            if (currentUser.role !== 'admin') return;
+            const item = dispatches.find(d => d.id === id);
+            if (!item) return;
+            const currentIdx = stagesList.indexOf(item.stage);
+            if (currentIdx !== -1 && currentIdx < stagesList.length - 1) {
+                item.stage = stagesList[currentIdx + 1];
+                if (item.stage === 'បញ្ចប់រួចរាល់' && !item.doneDate) {
+                    item.doneDate = new Date().toISOString().split('T')[0];
+                }
+                showToast(`បានរុញទៅដំណាក់កាល៖ ${item.stage}`);
+                renderDispatch();
+            } else {
+                showToast(`ឯកសារនេះបានដល់ដំណាក់កាលបញ្ចប់រួចរាល់ហើយ`);
+            }
+        }
+
+        function deleteDispatch(id) {
+            if (currentUser.role !== 'admin') return;
+            dispatches = dispatches.filter(d => d.id !== id);
+            showToast('បានលុបកំណត់ត្រា');
+            renderDispatch();
+        }
+
+        // Certificate Handlers
+        function openCertModal() {
+            if (currentUser.role !== 'admin') return;
+            document.getElementById('form-cert').reset();
+            document.getElementById('cert-id').value = '';
+            document.getElementById('modal-cert-title').innerText = 'ចុះបញ្ជីលេខវិញ្ញាបនបត្រ';
+            document.getElementById('cert-number').value = 'CERT-2026-KH-' + String(certificates.length + 1).padStart(4, '0');
+            document.getElementById('cert-date').value = new Date().toISOString().split('T')[0];
+            openModal('modal-cert');
+        }
+
+        function editCert(id) {
+            if (currentUser.role !== 'admin') return;
+            const c = certificates.find(x => x.id === id);
+            if (!c) return;
+            document.getElementById('cert-id').value = c.id;
+            document.getElementById('cert-number').value = c.number;
+            document.getElementById('cert-holder').value = c.holder;
+            document.getElementById('cert-type').value = c.type;
+            document.getElementById('cert-date').value = c.date;
+            document.getElementById('cert-signer').value = c.signer || '';
+            document.getElementById('modal-cert-title').innerText = 'កែប្រែព័ត៌មានវិញ្ញាបនបត្រ';
+            openModal('modal-cert');
+        }
+
+        function saveCert(e) {
+            e.preventDefault();
+            if (currentUser.role !== 'admin') return;
+
+            const id = document.getElementById('cert-id').value;
+            const number = document.getElementById('cert-number').value;
+            const holder = document.getElementById('cert-holder').value;
+            const type = document.getElementById('cert-type').value;
+            const date = document.getElementById('cert-date').value;
+            const signer = document.getElementById('cert-signer').value;
+
+            if (id) {
+                const idx = certificates.findIndex(c => c.id === id);
+                if (idx !== -1) {
+                    certificates[idx] = { ...certificates[idx], number, holder, type, date, signer };
+                    showToast('បានកែប្រែវិញ្ញាបនបត្រជោគជ័យ!');
+                }
+            } else {
+                certificates.unshift({ id: String(Date.now()), number, holder, type, date, signer });
+                showToast('បានចុះបញ្ជីវិញ្ញាបនបត្រថ្មី!');
+            }
+
+            closeModal('modal-cert');
+            renderCerts();
+        }
+
+        function deleteCert(id) {
+            if (currentUser.role !== 'admin') return;
+            certificates = certificates.filter(c => c.id !== id);
+            showToast('បានលុបវិញ្ញាបនបត្រ');
+            renderCerts();
+        }
+
+        function printCertificate(id) {
+            const c = certificates.find(x => x.id === id);
+            if (!c) return;
+            
+            document.getElementById('print-cert-type').innerText = c.type;
+            document.getElementById('print-cert-number').innerText = c.number;
+            document.getElementById('print-cert-holder').innerText = c.holder;
+            document.getElementById('print-cert-date').innerText = c.date;
+            document.getElementById('print-cert-signer').innerText = c.signer || 'ប្រធានអង្គភាព';
+            document.getElementById('print-org-name').innerText = orgProfile.name;
+            document.getElementById('print-org-logo').src = orgProfile.logoUrl;
+
+            // Generate Print QR Code
+            const printQrBox = document.getElementById('print-qrcode-container');
+            printQrBox.innerHTML = '';
+            new QRCode(printQrBox, {
+                text: c.number,
+                width: 76,
+                height: 76,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.M
+            });
+
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        }
+
+        // Project Handlers
+        function openProjectModal() {
+            if (currentUser.role !== 'admin') return;
+            document.getElementById('form-project').reset();
+            openModal('modal-project');
+        }
+
+        function saveProject(e) {
+            e.preventDefault();
+            if (currentUser.role !== 'admin') return;
+
+            const name = document.getElementById('project-name').value;
+            const targetDate = document.getElementById('project-target-date').value;
+            const priority = document.getElementById('project-priority').value;
+            const desc = document.getElementById('project-desc').value;
+
+            projects.unshift({ id: String(Date.now()), name, targetDate, priority, desc });
+            showToast('បានបន្ថែមគម្រោងថ្មី!');
+            closeModal('modal-project');
+            renderProjects();
+        }
+
+        function deleteProject(id) {
+            if (currentUser.role !== 'admin') return;
+            projects = projects.filter(p => p.id !== id);
+            showToast('បានលុបគម្រោង');
+            renderProjects();
+        }
+
+        // Initialize Application
+        window.onload = function() {
+            // Apply Initial Role
+            applyUserRolePermissions();
+        };
+    </script>
+</body>
+</html>
