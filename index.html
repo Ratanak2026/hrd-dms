@@ -1948,24 +1948,42 @@
             setLibraryView('grid');
         };
     </script>
-    // ប្រព័ន្ធផ្ទុកទិន្នន័យស្វ័យប្រវត្តិកុំឱ្យបាត់បង់ (LocalStorage Persistence)
-const STORAGE_KEYS = {
-  DOCS: 'hrd_dms_documents',
-  DISPATCHES: 'hrd_dms_dispatches',
-  CERTS: 'hrd_dms_certificates',
-  PROJECTS: 'hrd_dms_projects'
-};
+<script>
+  // ==========================================
+  // ១. ដាក់កូដប្រព័ន្ធផ្ទុក LocalStorage នៅត្រង់នេះ (ខាងលើគេបង្អស់ក្នុង <script>)
+  // ==========================================
+  const STORAGE_KEYS = {
+    DOCS: 'hrd_dms_documents',
+    DISPATCHES: 'hrd_dms_dispatches',
+    CERTS: 'hrd_dms_certificates',
+    PROJECTS: 'hrd_dms_projects'
+  };
 
-function loadStoredData(key, defaultData) {
-  const saved = localStorage.getItem(key);
-  if (saved) {
-    try { return JSON.parse(saved); } catch (e) { return defaultData; }
+  function loadStoredData(key, defaultData) {
+    const saved = localStorage.getItem(key);
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { return defaultData; }
+    }
+    return defaultData;
   }
-  return defaultData;
-}
 
-function saveToStorage(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
+  function saveToStorage(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  // ==========================================
+  // ២. ទាញយកទិន្នន័យមកប្រើ (បើមានក្នុងម៉ាស៊ីន វានឹងទាញយកមក មិនបាត់បង់ទេ)
+  // ==========================================
+  let documentsData = loadStoredData(STORAGE_KEYS.DOCS, [
+    // ... ទិន្នន័យគំរូចាស់ៗរបស់អ្នក ...
+  ]);
+
+  let dispatchesData = loadStoredData(STORAGE_KEYS.DISPATCHES, [
+    // ... ទិន្នន័យគំរូចាស់ៗរបស់អ្នក ...
+  ]);
+
+  let certificatesData = loadStoredData(STORAGE_KEYS.CERTS, [
+    // ... ទិន្នន័យគំរូចាស់ៗរបស់អ្នក ...
+  ]);
 </body>
 </html>
