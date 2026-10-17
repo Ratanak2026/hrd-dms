@@ -1948,5 +1948,24 @@
             setLibraryView('grid');
         };
     </script>
+    // ប្រព័ន្ធផ្ទុកទិន្នន័យស្វ័យប្រវត្តិកុំឱ្យបាត់បង់ (LocalStorage Persistence)
+const STORAGE_KEYS = {
+  DOCS: 'hrd_dms_documents',
+  DISPATCHES: 'hrd_dms_dispatches',
+  CERTS: 'hrd_dms_certificates',
+  PROJECTS: 'hrd_dms_projects'
+};
+
+function loadStoredData(key, defaultData) {
+  const saved = localStorage.getItem(key);
+  if (saved) {
+    try { return JSON.parse(saved); } catch (e) { return defaultData; }
+  }
+  return defaultData;
+}
+
+function saveToStorage(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
 </body>
 </html>
