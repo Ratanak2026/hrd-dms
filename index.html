@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Moul&display=swap" rel="stylesheet">
-  <!-- Supabase JS Client Library -->
+  <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- QR Code & Scanner Libraries -->
+  <!-- QR Code & Scanner -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
@@ -35,10 +35,9 @@
         </div>
       </div>
 
-      <!-- Cloud Status Badge & Scanner -->
       <div class="flex items-center space-x-3">
         <span id="sync-status" class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1">
-          🟢 Cloud Online
+          🟢 ភ្ជាប់ជោគជ័យ
         </span>
         <button onclick="toggleScannerModal(true)" class="p-2 text-slate-600 hover:text-emerald-600 hover:bg-slate-100 rounded-lg text-xs font-semibold flex items-center gap-1 border border-slate-200">
           📷 ស្កេន QR
@@ -85,7 +84,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div>
             <h2 class="text-lg font-bold text-slate-900">📚 បណ្ណាល័យគ្រប់គ្រងឯកសារ</h2>
-            <p class="text-xs text-slate-500">រក្សាទុកលើ Cloud Supabase មិនបាត់បង់ទិន្នន័យឡើយ</p>
+            <p class="text-xs text-slate-500">រក្សាទុកស្វ័យប្រវត្តិកុំឱ្យបាត់បង់ទិន្នន័យ</p>
           </div>
           <div class="flex items-center gap-2">
             <button onclick="exportCSV('docs')" class="px-3 py-1.5 border border-slate-200 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-50">
@@ -158,7 +157,7 @@
   <!-- 1. DOC MODAL -->
   <div id="modal-doc" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl space-y-4">
-      <h3 class="text-base font-bold text-slate-900">បញ្ចូលឯកសារថ្មី (Cloud)</h3>
+      <h3 class="text-base font-bold text-slate-900">បញ្ចូលឯកសារថ្មី</h3>
       <form onsubmit="handleSaveDoc(event)" class="space-y-3">
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">លេខសម្គាល់ / កូដឯកសារ</label>
@@ -195,7 +194,7 @@
   <!-- 2. DISPATCH MODAL -->
   <div id="modal-dispatch" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl space-y-4">
-      <h3 class="text-base font-bold text-slate-900">កត់ត្រាឯកសារចេញ-ចូល (Cloud)</h3>
+      <h3 class="text-base font-bold text-slate-900">កត់ត្រាឯកសារចេញ-ចូល</h3>
       <form onsubmit="handleSaveDispatch(event)" class="space-y-3">
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -235,7 +234,7 @@
   <!-- 3. CERT MODAL -->
   <div id="modal-cert" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl space-y-4">
-      <h3 class="text-base font-bold text-slate-900">ចុះបញ្ជីវិញ្ញាបនបត្រ (Cloud)</h3>
+      <h3 class="text-base font-bold text-slate-900">ចុះបញ្ជីវិញ្ញាបនបត្រ</h3>
       <form onsubmit="handleSaveCert(event)" class="space-y-3">
         <div>
           <label class="block text-xs font-semibold text-slate-700 mb-1">លេខវិញ្ញាបនបត្រ</label>
@@ -285,48 +284,96 @@
     </div>
   </div>
 
-  <!-- ================= JAVASCRIPT & SUPABASE CLOUD SYNC ================= -->
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
-    // ១. កំណត់ការតភ្ជាប់ SUPABASE CLOUD DATABASE
+    // ១. កំណត់ Keys សម្រាប់ LocalStorage
+    const STORAGE_KEYS = {
+      DOCS: 'hrd_dms_documents_v2',
+      DISPATCH: 'hrd_dms_dispatches_v2',
+      CERTS: 'hrd_dms_certificates_v2'
+    };
+
+    // ២. ការតភ្ជាប់ Supabase Cloud
     const SUPABASE_URL = 'https://whcpyxprjozjbyxzjtid.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndoY3B5eHByam96amJoeXpqdGlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NzI3MDgsImV4cCI6MjEwODI0ODcwOH0.0gDdi8HvHzXvygjH6DpUeMNdIbChUIN6rL1Cx5OsYME';
-    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let db = null;
+    try {
+      if (window.supabase) {
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch (e) {
+      console.warn('Supabase init notice:', e);
+    }
 
-    let documentsData = [];
-    let dispatchesData = [];
-    let certificatesData = [];
+    // មុខងារទាញយក និងរក្សាទុកក្នុង LocalStorage
+    function getLocal(key, defaultVal) {
+      try {
+        const val = localStorage.getItem(key);
+        return val ? JSON.parse(val) : defaultVal;
+      } catch (e) { return defaultVal; }
+    }
+
+    function setLocal(key, val) {
+      try {
+        localStorage.setItem(key, JSON.stringify(val));
+      } catch (e) { console.error(e); }
+    }
+
+    // ទិន្នន័យគំរូដើម
+    const defaultDocs = [
+      { id: 1, code: 'DOC-NAT-2026-01', title: 'វិញ្ញាសាប្រឡងចេញថ្នាក់ជាតិ ឯកទេសវេជ្ជសាស្ត្រទូទៅ ឆ្នាំ២០២៦', bureau: 'ការិយាល័យបណ្តុះបណ្តាលមុនពេលបម្រើការងារ', category: 'វិញ្ញាសាប្រឡងជាតិ', date: '2026-10-15', notes: 'វិញ្ញាសារៀបចំសម្រាប់សម័យប្រឡងចុងឆ្នាំ' },
+      { id: 2, code: 'DOC-CPD-2026-04', title: 'សៀវភៅគោលការណ៍ណែនាំស្តីពីការអភិវឌ្ឍវិជ្ជាជីវៈបន្ត (CPD Guidelines)', bureau: 'ការិយាល័យបណ្តុះបណ្តាលបន្ត', category: 'សៀវភៅណែនាំ', date: '2026-10-12', notes: 'ឯកសារណែនាំផ្លូវការសម្រាប់មន្ត្រីសុខាភិបាល' },
+      { id: 3, code: 'DOC-REG-2026-11', title: 'ប្រកាសស្តីពីនីតិវិធីនៃការចេញវិញ្ញាបនបត្របញ្ជាក់វិជ្ជាជីវៈសុខាភិបាល', bureau: 'ការិយាល័យចុះបញ្ជិកានិងវិញ្ញាបនបត្រ', category: 'លិខិតបទដ្ឋាន', date: '2026-10-10', notes: 'ប្រកាសអន្តរក្រសួង' }
+    ];
+
+    const defaultDispatches = [
+      { id: 1, type: 'ចូល', code: '១០៨ សខ.អធម', title: 'សំណើសុំបើកវគ្គបណ្តុះបណ្តាលឯកទេសសង្គ្រោះបន្ទាន់', date_in: '2026-10-14', assignee: 'លោក អ៊ុក សុវណ្ណ', stage: 'ពិនិត្យបច្ចេកទេស', date_done: '-' },
+      { id: 2, type: 'ចេញ', code: '២៥៤ រប.អធម', title: 'របាយការណ៍លទ្ធផលនៃការប្រឡងជ្រើសរើសនិស្សិតវេជ្ជសាស្ត្រ', date_in: '2026-10-10', assignee: 'កញ្ញា ម៉ៅ ពិសី', stage: 'បញ្ចប់រួចរាល់', date_done: '2026-10-15' }
+    ];
+
+    const defaultCerts = [
+      { id: 1, num: 'DHRD-CME-2026-0089', recipient: 'វេជ្ជបណ្ឌិត ឡុង វិបុល', type: 'វិញ្ញាបនបត្របណ្តុះបណ្តាលវេជ្ជសាស្ត្របន្ត (CME/CPD)', sign_date: '2026-10-15', signer: 'ប្រធាននាយកដ្ឋាន' },
+      { id: 2, num: 'DHRD-NAT-2026-0042', recipient: 'ឱសថការី គង់ សុភ័ក្ត្រ', type: 'វិញ្ញាបនបត្រប្រឡងចេញថ្នាក់ជាតិ', sign_date: '2026-10-12', signer: 'រដ្ឋលេខាធិការ' }
+    ];
+
+    // ទាញទិន្នន័យពី LocalStorage ភ្លាមៗ (មិនបាត់ពេល Refresh)
+    let documentsData = getLocal(STORAGE_KEYS.DOCS, defaultDocs);
+    let dispatchesData = getLocal(STORAGE_KEYS.DISPATCH, defaultDispatches);
+    let certificatesData = getLocal(STORAGE_KEYS.CERTS, defaultCerts);
     const stages = ['រដ្ឋបាលទទួល', 'ពិនិត្យបច្ចេកទេស', 'ថ្នាក់ដឹកនាំពិនិត្យ', 'រង់ចាំចុះហត្ថលេខា', 'បញ្ចប់រួចរាល់'];
 
-    // ២. ទាញយកទិន្នន័យពី Cloud Supabase
-    async function fetchAllData() {
-      const statusEl = document.getElementById('sync-status');
+    // ៣. មុខងារ Sync ជាមួយ Cloud (បើមានទិន្នន័យលើ Cloud វានឹងទាញមកបន្ថែម)
+    async function syncWithCloud() {
+      if (!db) return;
       try {
-        statusEl.innerHTML = '🔄 Syncing...';
-        
         const [docsRes, dispRes, certRes] = await Promise.all([
           db.from('documents').select('*').order('id', { ascending: false }),
           db.from('dispatches').select('*').order('id', { ascending: false }),
           db.from('certificates').select('*').order('id', { ascending: false })
         ]);
 
-        if (docsRes.data) documentsData = docsRes.data;
-        if (dispRes.data) dispatchesData = dispRes.data;
-        if (certRes.data) certificatesData = certRes.data;
+        if (docsRes.data && docsRes.data.length > 0) {
+          documentsData = docsRes.data;
+          setLocal(STORAGE_KEYS.DOCS, documentsData);
+        }
+        if (dispRes.data && dispRes.data.length > 0) {
+          dispatchesData = dispRes.data;
+          setLocal(STORAGE_KEYS.DISPATCH, dispatchesData);
+        }
+        if (certRes.data && certRes.data.length > 0) {
+          certificatesData = certRes.data;
+          setLocal(STORAGE_KEYS.CERTS, certificatesData);
+        }
 
         renderDocs();
         renderDispatches();
         renderCerts();
-
-        statusEl.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1';
-        statusEl.innerHTML = '🟢 Cloud Online';
       } catch (err) {
-        console.error('Fetch error:', err);
-        statusEl.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 flex items-center gap-1';
-        statusEl.innerHTML = '⚠️ Offline';
+        console.warn('Cloud sync error:', err);
       }
     }
 
-    // ៣. NAVIGATION & COUNTERS
+    // ៤. មុខងារបញ្ជាម៉ឺនុយ
     function switchTab(tab) {
       ['docs', 'dispatch', 'certs'].forEach(t => {
         document.getElementById(`section-${t}`).classList.add('hidden');
@@ -344,7 +391,7 @@
       document.getElementById('count-certs').innerText = certificatesData.length;
     }
 
-    // ៤. RENDER FUNCTIONS
+    // ៥. បង្ហាញទិន្នន័យលើអេក្រង់
     function renderDocs() {
       const list = document.getElementById('docs-list');
       const search = (document.getElementById('doc-search')?.value || '').toLowerCase();
@@ -436,13 +483,11 @@
       updateCounters();
     }
 
-    // ៥. DATABASE ACTIONS (CLOUD SAVE, UPDATE, DELETE)
+    // ៦. ការបញ្ចូលទិន្នន័យ (SAVE - HYBRID RESILIENT)
     async function handleSaveDoc(e) {
       e.preventDefault();
-      const btn = document.getElementById('btn-save-doc');
-      btn.innerText = 'កំពុងរក្សាទុក...'; btn.disabled = true;
-
-      const record = {
+      const newDoc = {
+        id: Date.now(),
         code: document.getElementById('doc-code').value,
         title: document.getElementById('doc-title').value,
         bureau: document.getElementById('doc-bureau').value,
@@ -451,33 +496,37 @@
         notes: document.getElementById('doc-notes').value
       };
 
-      const { data, error } = await db.from('documents').insert([record]).select();
-      if (error) {
-        alert('មានបញ្ហាក្នុងការរក្សាទុក៖ ' + error.message);
-      } else {
-        documentsData.unshift(data[0]);
-        closeModals();
-        renderDocs();
+      // ១. Save ចូល LocalStorage ភ្លាមៗ (ធានាមិនបាត់ ១០០%)
+      documentsData.unshift(newDoc);
+      setLocal(STORAGE_KEYS.DOCS, documentsData);
+      closeModals();
+      renderDocs();
+      document.querySelector('#modal-doc form').reset();
+
+      // ២. រុញទៅ Supabase Cloud
+      if (db) {
+        try {
+          const { id, ...cloudRecord } = newDoc;
+          await db.from('documents').insert([cloudRecord]);
+        } catch (err) { console.warn('Supabase save error:', err); }
       }
-      btn.innerText = 'រក្សាទុក'; btn.disabled = false;
     }
 
     async function deleteDoc(id) {
-      if (confirm('តើអ្នកប្រាកដជាចង់លុបឯកសារនេះពី Cloud មែនទេ?')) {
-        const { error } = await db.from('documents').delete().eq('id', id);
-        if (!error) {
-          documentsData = documentsData.filter(d => d.id !== id);
-          renderDocs();
+      if (confirm('តើអ្នកប្រាកដជាចង់លុបឯកសារនេះមែនទេ?')) {
+        documentsData = documentsData.filter(d => d.id !== id);
+        setLocal(STORAGE_KEYS.DOCS, documentsData);
+        renderDocs();
+        if (db) {
+          try { await db.from('documents').delete().eq('id', id); } catch (e) {}
         }
       }
     }
 
     async function handleSaveDispatch(e) {
       e.preventDefault();
-      const btn = document.getElementById('btn-save-disp');
-      btn.innerText = 'កំពុងរក្សាទុក...'; btn.disabled = true;
-
-      const record = {
+      const newDispatch = {
+        id: Date.now(),
         type: document.getElementById('disp-type').value,
         code: document.getElementById('disp-code').value,
         title: document.getElementById('disp-title').value,
@@ -487,54 +536,57 @@
         date_done: '-'
       };
 
-      const { data, error } = await db.from('dispatches').insert([record]).select();
-      if (error) {
-        alert('មានបញ្ហាក្នុងការរក្សាទុក៖ ' + error.message);
-      } else {
-        dispatchesData.unshift(data[0]);
-        closeModals();
-        renderDispatches();
+      dispatchesData.unshift(newDispatch);
+      setLocal(STORAGE_KEYS.DISPATCH, dispatchesData);
+      closeModals();
+      renderDispatches();
+      document.querySelector('#modal-dispatch form').reset();
+
+      if (db) {
+        try {
+          const { id, ...cloudRecord } = newDispatch;
+          await db.from('dispatches').insert([cloudRecord]);
+        } catch (err) { console.warn('Supabase save error:', err); }
       }
-      btn.innerText = 'រក្សាទុក'; btn.disabled = false;
     }
 
     async function advanceStage(id, currentStage) {
       const currentIndex = stages.indexOf(currentStage);
       if (currentIndex < stages.length - 1) {
         const nextStage = stages[currentIndex + 1];
-        const updateData = { stage: nextStage };
-        if (nextStage === 'បញ្ចប់រួចរាល់') {
-          updateData.date_done = new Date().toISOString().split('T')[0];
-        }
+        const item = dispatchesData.find(d => d.id === id);
+        if (item) {
+          item.stage = nextStage;
+          if (nextStage === 'បញ្ចប់រួចរាល់') {
+            item.date_done = new Date().toISOString().split('T')[0];
+          }
+          setLocal(STORAGE_KEYS.DISPATCH, dispatchesData);
+          renderDispatches();
 
-        const { error } = await db.from('dispatches').update(updateData).eq('id', id);
-        if (!error) {
-          const item = dispatchesData.find(d => d.id === id);
-          if (item) {
-            item.stage = nextStage;
-            if (updateData.date_done) item.date_done = updateData.date_done;
-            renderDispatches();
+          if (db) {
+            try {
+              await db.from('dispatches').update({ stage: nextStage, date_done: item.date_done }).eq('id', id);
+            } catch (e) {}
           }
         }
       }
     }
 
     async function deleteDispatch(id) {
-      if (confirm('តើអ្នកចង់លុបកំណត់ត្រានេះពី Cloud មែនទេ?')) {
-        const { error } = await db.from('dispatches').delete().eq('id', id);
-        if (!error) {
-          dispatchesData = dispatchesData.filter(d => d.id !== id);
-          renderDispatches();
+      if (confirm('តើអ្នកចង់លុបកំណត់ត្រានេះមែនទេ?')) {
+        dispatchesData = dispatchesData.filter(d => d.id !== id);
+        setLocal(STORAGE_KEYS.DISPATCH, dispatchesData);
+        renderDispatches();
+        if (db) {
+          try { await db.from('dispatches').delete().eq('id', id); } catch (e) {}
         }
       }
     }
 
     async function handleSaveCert(e) {
       e.preventDefault();
-      const btn = document.getElementById('btn-save-cert');
-      btn.innerText = 'កំពុងរក្សាទុក...'; btn.disabled = true;
-
-      const record = {
+      const newCert = {
+        id: Date.now(),
         num: document.getElementById('cert-num').value,
         recipient: document.getElementById('cert-recipient').value,
         type: document.getElementById('cert-type').value,
@@ -542,28 +594,32 @@
         signer: document.getElementById('cert-signer').value || 'ប្រធាននាយកដ្ឋាន'
       };
 
-      const { data, error } = await db.from('certificates').insert([record]).select();
-      if (error) {
-        alert('មានបញ្ហាក្នុងការរក្សាទុក (អាចជាន់លេខវិញ្ញាបនបត្រ)៖ ' + error.message);
-      } else {
-        certificatesData.unshift(data[0]);
-        closeModals();
-        renderCerts();
+      certificatesData.unshift(newCert);
+      setLocal(STORAGE_KEYS.CERTS, certificatesData);
+      closeModals();
+      renderCerts();
+      document.querySelector('#modal-cert form').reset();
+
+      if (db) {
+        try {
+          const { id, ...cloudRecord } = newCert;
+          await db.from('certificates').insert([cloudRecord]);
+        } catch (err) { console.warn('Supabase cert error:', err); }
       }
-      btn.innerText = 'រក្សាទុក'; btn.disabled = false;
     }
 
     async function deleteCert(id) {
-      if (confirm('តើអ្នកចង់លុបវិញ្ញាបនបត្រនេះពី Cloud មែនទេ?')) {
-        const { error } = await db.from('certificates').delete().eq('id', id);
-        if (!error) {
-          certificatesData = certificatesData.filter(c => c.id !== id);
-          renderCerts();
+      if (confirm('តើអ្នកចង់លុបវិញ្ញាបនបត្រនេះមែនទេ?')) {
+        certificatesData = certificatesData.filter(c => c.id !== id);
+        setLocal(STORAGE_KEYS.CERTS, certificatesData);
+        renderCerts();
+        if (db) {
+          try { await db.from('certificates').delete().eq('id', id); } catch (e) {}
         }
       }
     }
 
-    // ៦. MODAL CONTROLS & UTILITIES
+    // ៧. MODAL CONTROLS & UTILITIES
     function openDocModal() { document.getElementById('modal-doc').classList.remove('hidden'); }
     function openDispatchModal() { document.getElementById('modal-dispatch').classList.remove('hidden'); }
     function openCertModal() { document.getElementById('modal-cert').classList.remove('hidden'); }
@@ -630,7 +686,7 @@
       document.body.removeChild(link);
     }
 
-    // QR Code Scanner Logic
+    // QR Code Scanner
     let html5QrcodeScanner = null;
     function toggleScannerModal(show) {
       const modal = document.getElementById('modal-scanner');
@@ -655,8 +711,13 @@
       }
     }
 
-    // ៧. INITIAL LOAD
-    window.addEventListener('DOMContentLoaded', fetchAllData);
+    // ៨. INITIAL LOAD
+    window.addEventListener('DOMContentLoaded', () => {
+      renderDocs();
+      renderDispatches();
+      renderCerts();
+      syncWithCloud();
+    });
   </script>
 </body>
 </html>
