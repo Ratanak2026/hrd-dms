@@ -54,7 +54,7 @@
           <span class="px-1.5 py-0.5">📱</span>
         </div>
         <button onclick="openDocModal()" class="px-3.5 py-2 bg-[#2d6a4f] hover:bg-[#23533e] text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm transition">
-          + បង្កើតថ្មី
+          + Upload ឯកសារ
         </button>
         <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
           <div class="text-right hidden md:block leading-tight">
@@ -154,10 +154,10 @@
       </button>
     </div>
 
-    <!-- ================= SECTION 1: E-LIBRARY (ទម្រង់ដើម) ================= -->
+    <!-- ================= SECTION 1: E-LIBRARY ================= -->
     <div id="section-docs" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-5 shadow-2xs">
       
-      <!-- Section Title & Actions Bar -->
+      <!-- Section Header -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -238,19 +238,33 @@
 
   <!-- ================= MODALS ================= -->
 
-  <!-- Modal Doc -->
+  <!-- Modal Doc with REAL FILE UPLOAD ZONE -->
   <div id="modal-doc" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-base font-bold text-slate-900" id="doc-modal-title">បញ្ចូលឯកសារថ្មីក្នុងបណ្ណាល័យ</h3>
+        <h3 class="text-base font-bold text-slate-900" id="doc-modal-title">បង្ហោះឯកសារថ្មី (Upload File)</h3>
         <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
       </div>
-      <form onsubmit="handleSaveDoc(event)" class="space-y-3">
+      <form onsubmit="handleSaveDoc(event)" class="space-y-3.5">
         <input type="hidden" id="doc-edit-id">
+
+        <!-- REAL DRAG & DROP FILE UPLOAD ZONE -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ជ្រើសរើស ឬទម្លាក់ហ្វាលឯកសារ (PDF, Word, Excel, Images)</label>
+          <div id="drop-zone" onclick="document.getElementById('doc-file-input').click()" class="border-2 border-dashed border-emerald-400/80 bg-emerald-50/40 hover:bg-emerald-50/80 rounded-xl p-4 text-center cursor-pointer transition">
+            <input type="file" id="doc-file-input" onchange="handleFileSelected(event)" class="hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.png,.jpg,.jpeg">
+            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-2 text-lg shadow-2xs">
+              📁
+            </div>
+            <p id="file-label" class="text-xs font-bold text-slate-700">ចុចទីនេះដើម្បីជ្រើសរើសហ្វាល ឬអូសទម្លាក់ចូល (Drag & Drop)</p>
+            <p id="file-sublabel" class="text-[11px] text-slate-400 mt-1">គាំទ្រ PDF, DOCX, XLSX ទំហំត្រឹម 10MB</p>
+          </div>
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">កូដឯកសារ</label>
-            <input type="text" id="doc-code" required class="w-full border border-slate-200 rounded-xl p-2.5 text-xs" placeholder="DOC-EXAM-2026-01">
+            <input type="text" id="doc-code" required class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:ring-1 focus:ring-emerald-500 outline-none" placeholder="DOC-EXAM-2026-01">
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទឯកសារ</label>
@@ -262,10 +276,12 @@
             </select>
           </div>
         </div>
+
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">ចំណងជើងឯកសារ</label>
-          <input type="text" id="doc-title" required class="w-full border border-slate-200 rounded-xl p-2.5 text-xs" placeholder="ចំណងជើងឯកសារ...">
+          <input type="text" id="doc-title" required class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:ring-1 focus:ring-emerald-500 outline-none" placeholder="ចំណងជើងឯកសារ...">
         </div>
+
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">ការិយាល័យទទួលបន្ទុក</label>
           <select id="doc-bureau" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
@@ -274,26 +290,15 @@
             <option value="ការិយាល័យចុះបញ្ជិកានិងវិញ្ញាបនបត្រ">ការិយាល័យចុះបញ្ជិកានិងវិញ្ញាបនបត្រ</option>
           </select>
         </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ទំហំហ្វាល (ប៉ាន់ស្មាន)</label>
-            <input type="text" id="doc-filesize" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs" placeholder="ឧ. 4.8 MB">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទ File</label>
-            <select id="doc-filetype" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-              <option value="PDF">📕 PDF Document</option>
-              <option value="DOCX">📘 Word Document (.docx)</option>
-            </select>
-          </div>
-        </div>
+
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">កំណត់ចំណាំសង្ខេប</label>
-          <textarea id="doc-notes" rows="2" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs" placeholder="សេចក្តីសង្ខេប..."></textarea>
+          <textarea id="doc-notes" rows="2" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:ring-1 focus:ring-emerald-500 outline-none" placeholder="សេចក្តីសង្ខេប..."></textarea>
         </div>
+
         <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">បោះបង់</button>
-          <button type="submit" class="px-5 py-2 text-xs font-bold bg-[#2d6a4f] text-white rounded-xl hover:bg-[#23533e]">រក្សាទុក</button>
+          <button type="submit" id="btn-save-doc" class="px-5 py-2 text-xs font-bold bg-[#2d6a4f] text-white rounded-xl hover:bg-[#23533e]">បង្ហោះ និងរក្សាទុក</button>
         </div>
       </form>
     </div>
@@ -398,13 +403,12 @@
     </div>
   </div>
 
-  <!-- ================= JAVASCRIPT ================= -->
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
-    // ប្រើ Key ថ្មីស្រឡាងដើម្បីការពារកុំឱ្យជាន់ Cache ចាស់
     const STORAGE_KEYS = {
-      DOCS: 'hrd_dms_final_view_v5',
-      DISPATCH: 'hrd_dms_final_disp_v5',
-      CERTS: 'hrd_dms_final_certs_v5'
+      DOCS: 'hrd_dms_upload_final_v6',
+      DISPATCH: 'hrd_dms_disp_final_v6',
+      CERTS: 'hrd_dms_certs_final_v6'
     };
 
     function getLocal(key, defaultVal) {
@@ -428,6 +432,8 @@
         category: 'វិញ្ញាសាប្រឡងជាតិ',
         fileType: 'PDF',
         fileSize: '4.8 MB',
+        fileName: 'exam_2026_general_medicine.pdf',
+        fileData: '',
         date: '2026-10-15',
         notes: 'វិញ្ញាសារៀបចំសម្រាប់សម័យប្រឡងថ្នាក់ជាតិ'
       },
@@ -439,6 +445,8 @@
         category: 'សៀវភៅគោលការណ៍ណែនាំ',
         fileType: 'PDF',
         fileSize: '2.5 MB',
+        fileName: 'cpd_guidelines_2026.pdf',
+        fileData: '',
         date: '2026-10-12',
         notes: 'ឯកសារណែនាំផ្លូវការសម្រាប់មន្ត្រីសុខាភិបាល'
       },
@@ -450,6 +458,8 @@
         category: 'លិខិតបទដ្ឋានគតិយុត្ត',
         fileType: 'DOCX',
         fileSize: '1.2 MB',
+        fileName: 'medical_reg_decree.docx',
+        fileData: '',
         date: '2026-10-10',
         notes: 'ប្រកាសអន្តរក្រសួង'
       }
@@ -472,6 +482,9 @@
     let currentBureau = 'all';
     let currentCategory = 'all';
     const stages = ['រដ្ឋបាលទទួល', 'ពិនិត្យបច្ចេកទេស', 'ថ្នាក់ដឹកនាំពិនិត្យ', 'រង់ចាំចុះហត្ថលេខា', 'បញ្ចប់រួចរាល់'];
+
+    // Variable to hold uploaded file
+    let currentUploadedFile = { name: '', type: 'PDF', size: '1.5 MB', data: '' };
 
     function updateStats() {
       document.getElementById('stat-docs').innerText = documentsData.length;
@@ -505,7 +518,65 @@
       renderDocs();
     }
 
-    // Render Bookshelf Cards
+    // ==========================================
+    // FILE UPLOAD HANDLER (DRAG & DROP + INPUT)
+    // ==========================================
+    function handleFileSelected(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const ext = file.name.split('.').pop().toUpperCase();
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+      document.getElementById('file-label').innerHTML = `✅ បានជ្រើសរើស៖ <span class="text-emerald-700">${file.name}</span>`;
+      document.getElementById('file-sublabel').innerText = `ទំហំ៖ ${sizeMB} | ប្រភេទ៖ ${ext}`;
+
+      // ស្វ័យប្រវត្តិកំណត់ចំណងជើងបើនៅទទេ
+      const titleInput = document.getElementById('doc-title');
+      if (!titleInput.value) {
+        titleInput.value = file.name.replace(/\.[^/.]+$/, "");
+      }
+
+      // អានជា Data URL សម្រាប់ Preview និង Download
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        currentUploadedFile = {
+          name: file.name,
+          type: ext === 'PDF' ? 'PDF' : (ext.includes('DOC') ? 'DOCX' : ext),
+          size: sizeMB,
+          data: evt.target.result
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Drag and drop event listeners
+    const dropZone = document.getElementById('drop-zone');
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-emerald-600', 'bg-emerald-100/60');
+      });
+    });
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-emerald-600', 'bg-emerald-100/60');
+      });
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files.length) {
+        document.getElementById('doc-file-input').files = files;
+        handleFileSelected({ target: { files: files } });
+      }
+    });
+
+    // ==========================================
+    // RENDER BOOKSHELF CARDS (ដូចរូបភាពដើម)
+    // ==========================================
     function renderDocs() {
       const list = document.getElementById('docs-list');
       const search = (document.getElementById('doc-search')?.value || '').toLowerCase();
@@ -517,59 +588,65 @@
         return matchSearch && matchBureau && matchCat;
       });
 
-      list.innerHTML = filtered.map(d => `
-        <div class="bg-white rounded-2xl border border-slate-200 p-4.5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
-          <div>
-            <!-- Top Card Header -->
-            <div class="flex items-start justify-between gap-2 mb-3">
-              <div class="w-10 h-11 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500 shadow-2xs text-lg">
-                📕
+      list.innerHTML = filtered.map(d => {
+        const isPdf = (d.fileType || 'PDF') === 'PDF';
+        const fileIcon = isPdf ? '📕' : '📘';
+        const fileIconBg = isPdf ? 'bg-rose-50 border-rose-100 text-rose-500' : 'bg-blue-50 border-blue-100 text-blue-500';
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 p-4.5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
+            <div>
+              <!-- Top Card Header -->
+              <div class="flex items-start justify-between gap-2 mb-3">
+                <div class="w-10 h-11 rounded-lg ${fileIconBg} border flex items-center justify-center shadow-2xs text-lg">
+                  ${fileIcon}
+                </div>
+                <div class="text-right">
+                  <span class="inline-block text-[11px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200/60">
+                    ${d.code}
+                  </span>
+                  <p class="text-[10px] text-slate-400 mt-0.5">${d.fileType || 'PDF'} • ${d.fileSize || '3.5 MB'}</p>
+                </div>
               </div>
-              <div class="text-right">
-                <span class="inline-block text-[11px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200">
-                  ${d.code}
-                </span>
-                <p class="text-[10px] text-slate-400 mt-0.5">${d.fileType || 'PDF'} • ${d.fileSize || '3.5 MB'}</p>
+
+              <!-- Category -->
+              <span class="text-[11px] font-bold text-emerald-800 mb-1 inline-block">
+                ${d.category || 'ឯកសារទូទៅ'}
+              </span>
+
+              <!-- Title -->
+              <h4 class="text-xs sm:text-sm font-bold text-slate-900 leading-snug group-hover:text-emerald-700 transition">
+                ${d.title}
+              </h4>
+
+              <!-- Bureau -->
+              <p class="text-[11px] text-slate-500 mt-2 flex items-center gap-1">
+                🏛️ <span>${d.bureau}</span>
+              </p>
+            </div>
+
+            <!-- Bottom Actions -->
+            <div class="pt-3.5 mt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+              <div class="flex items-center gap-1.5">
+                <button onclick="previewDoc(${d.id})" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition">
+                  👁️ មើល
+                </button>
+                <button onclick="downloadDoc(${d.id})" class="p-1.5 text-slate-500 hover:text-emerald-700 rounded-lg" title="ទាញយក">
+                  📥
+                </button>
+              </div>
+              <div class="flex items-center gap-1">
+                <button onclick="editDoc(${d.id})" class="p-1.5 text-slate-400 hover:text-amber-600" title="កែសម្រួល">
+                  ✏️
+                </button>
+                <button onclick="deleteDoc(${d.id})" class="p-1.5 text-slate-400 hover:text-rose-600" title="លុប">
+                  🗑️
+                </button>
               </div>
             </div>
-
-            <!-- Category -->
-            <span class="text-[11px] font-bold text-emerald-800 mb-1 inline-block">
-              ${d.category || 'ឯកសារទូទៅ'}
-            </span>
-
-            <!-- Title -->
-            <h4 class="text-xs sm:text-sm font-bold text-slate-900 leading-snug group-hover:text-emerald-700 transition">
-              ${d.title}
-            </h4>
-
-            <!-- Bureau -->
-            <p class="text-[11px] text-slate-500 mt-2 flex items-center gap-1">
-              🏛️ <span>${d.bureau}</span>
-            </p>
           </div>
-
-          <!-- Bottom Actions -->
-          <div class="pt-3.5 mt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
-            <div class="flex items-center gap-1.5">
-              <button onclick="previewDoc('${d.title}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition">
-                👁️ មើល
-              </button>
-              <button onclick="downloadDoc('${d.title}')" class="p-1.5 text-slate-500 hover:text-emerald-700 rounded-lg" title="ទាញយក">
-                📥
-              </button>
-            </div>
-            <div class="flex items-center gap-1">
-              <button onclick="editDoc(${d.id})" class="p-1.5 text-slate-400 hover:text-amber-600" title="កែសម្រួល">
-                ✏️
-              </button>
-              <button onclick="deleteDoc(${d.id})" class="p-1.5 text-slate-400 hover:text-rose-600" title="លុប">
-                🗑️
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       updateStats();
     }
@@ -631,24 +708,37 @@
       updateStats();
     }
 
-    // Save Handlers
+    // ==========================================
+    // SAVE, EDIT, DELETE & FILE PREVIEW HANDLERS
+    // ==========================================
     function handleSaveDoc(e) {
       e.preventDefault();
       const editId = document.getElementById('doc-edit-id').value;
+
       const record = {
         code: document.getElementById('doc-code').value,
         title: document.getElementById('doc-title').value,
         bureau: document.getElementById('doc-bureau').value,
         category: document.getElementById('doc-category').value,
-        fileType: document.getElementById('doc-filetype').value,
-        fileSize: document.getElementById('doc-filesize').value || '3.5 MB',
+        fileType: currentUploadedFile.type || 'PDF',
+        fileSize: currentUploadedFile.size || '2.0 MB',
+        fileName: currentUploadedFile.name || 'document.pdf',
+        fileData: currentUploadedFile.data || '',
         date: new Date().toISOString().split('T')[0],
         notes: document.getElementById('doc-notes').value
       };
 
       if (editId) {
         const idx = documentsData.findIndex(d => d.id == editId);
-        if (idx !== -1) documentsData[idx] = { ...documentsData[idx], ...record };
+        if (idx !== -1) {
+          if (!currentUploadedFile.data && documentsData[idx].fileData) {
+            record.fileData = documentsData[idx].fileData;
+            record.fileName = documentsData[idx].fileName;
+            record.fileType = documentsData[idx].fileType;
+            record.fileSize = documentsData[idx].fileSize;
+          }
+          documentsData[idx] = { ...documentsData[idx], ...record };
+        }
       } else {
         record.id = Date.now();
         documentsData.unshift(record);
@@ -657,6 +747,7 @@
       setLocal(STORAGE_KEYS.DOCS, documentsData);
       closeModals();
       renderDocs();
+      currentUploadedFile = { name: '', type: 'PDF', size: '1.5 MB', data: '' };
     }
 
     function editDoc(id) {
@@ -667,10 +758,9 @@
       document.getElementById('doc-title').value = doc.title;
       document.getElementById('doc-bureau').value = doc.bureau;
       document.getElementById('doc-category').value = doc.category;
-      document.getElementById('doc-filetype').value = doc.fileType || 'PDF';
-      document.getElementById('doc-filesize').value = doc.fileSize || '3.5 MB';
       document.getElementById('doc-notes').value = doc.notes || '';
       document.getElementById('doc-modal-title').innerText = 'កែសម្រួលឯកសារ';
+      document.getElementById('file-label').innerHTML = doc.fileName ? `📁 ហ្វាលបច្ចុប្បន្ន៖ <span class="text-emerald-700">${doc.fileName}</span>` : 'ចុចទីនេះដើម្បីប្តូរហ្វាលថ្មី';
       openDocModal();
     }
 
@@ -682,8 +772,33 @@
       }
     }
 
-    function previewDoc(title) { alert(`📄 កំពុងបើកអានឯកសារគំរូ៖\n«${title}»`); }
-    function downloadDoc(title) { alert(`📥 កំពុងទាញយកឯកសារ៖\n«${title}»`); }
+    function previewDoc(id) {
+      const doc = documentsData.find(d => d.id === id);
+      if (doc && doc.fileData) {
+        const previewWin = window.open();
+        if (doc.fileType === 'PDF' || doc.fileData.startsWith('data:application/pdf') || doc.fileData.startsWith('data:image')) {
+          previewWin.document.write(`<iframe src="${doc.fileData}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+        } else {
+          alert(`📄 ឯកសារ "${doc.title}" ជាប្រភេទ ${doc.fileType}។ សូមចុចប៊ូតុងទាញយក (Download) ដើម្បីបើកអានលើកុំព្យូទ័ររបស់អ្នក។`);
+        }
+      } else {
+        alert(`📄 កំពុងបើកអានឯកសារគំរូ៖\n«${doc.title}»\n(សូម Upload ហ្វាលពិតប្រាកដតាមប៊ូតុង "+ Upload ឯកសារ" ដើម្បីបើកអានពេញលេញ)`);
+      }
+    }
+
+    function downloadDoc(id) {
+      const doc = documentsData.find(d => d.id === id);
+      if (doc && doc.fileData) {
+        const a = document.createElement('a');
+        a.href = doc.fileData;
+        a.download = doc.fileName || `${doc.title}.${doc.fileType.toLowerCase()}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else {
+        alert(`📥 កំពុងទាញយកឯកសារគំរូ៖\n«${doc.title}»`);
+      }
+    }
 
     function handleSaveDispatch(e) {
       e.preventDefault();
@@ -753,7 +868,10 @@
       document.getElementById('modal-doc').classList.remove('hidden');
       if (!document.getElementById('doc-edit-id').value) {
         document.querySelector('#modal-doc form').reset();
-        document.getElementById('doc-modal-title').innerText = 'បញ្ចូលឯកសារថ្មីក្នុងបណ្ណាល័យ';
+        document.getElementById('doc-modal-title').innerText = 'បង្ហោះឯកសារថ្មី (Upload File)';
+        document.getElementById('file-label').innerHTML = 'ចុចទីនេះដើម្បីជ្រើសរើសហ្វាល ឬអូសទម្លាក់ចូល (Drag & Drop)';
+        document.getElementById('file-sublabel').innerText = 'គាំទ្រ PDF, DOCX, XLSX ទំហំត្រឹម 10MB';
+        currentUploadedFile = { name: '', type: 'PDF', size: '1.5 MB', data: '' };
       }
     }
     function openDispatchModal() { document.getElementById('modal-dispatch').classList.remove('hidden'); }
@@ -803,8 +921,8 @@
     function exportCSV(type) {
       let csv = "\uFEFF";
       if (type === 'docs') {
-        csv += "កូដ,ចំណងជើង,ការិយាល័យ,ប្រភេទ,កាលបរិច្ឆេទ\n";
-        documentsData.forEach(d => { csv += `"${d.code}","${d.title}","${d.bureau}","${d.category}","${d.date}"\n`; });
+        csv += "កូដ,ចំណងជើង,ការិយាល័យ,ប្រភេទ,កាលបរិច្ឆេទ,ឈ្មោះហ្វាល\n";
+        documentsData.forEach(d => { csv += `"${d.code}","${d.title}","${d.bureau}","${d.category}","${d.date}","${d.fileName || ''}"\n`; });
       }
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
