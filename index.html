@@ -38,32 +38,35 @@
             <span class="font-bold text-slate-900 text-sm sm:text-base">ក្រសួងសុខាភិបាល</span>
             <span class="text-slate-300">|</span>
             <span class="font-bold text-slate-900 text-sm sm:text-base">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស</span>
-            <span class="text-xs text-amber-500 cursor-pointer">✏️</span>
           </div>
           <p class="text-[11px] text-slate-500 font-medium">Department of Human Resource Development (DHRD - MoH)</p>
         </div>
       </div>
 
-      <!-- Header Tools & Admin Badge -->
-      <div class="flex items-center space-x-2.5 sm:space-x-3">
+      <!-- Header Tools & User Profile / Settings -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
         <button onclick="toggleScannerModal(true)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
           📷 <span>ស្កេន QR</span>
         </button>
-        <div class="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-lg text-slate-500 text-xs border border-slate-200">
-          <span class="px-1.5 py-0.5 bg-white rounded shadow-xs text-slate-800">💻</span>
-          <span class="px-1.5 py-0.5">📱</span>
-        </div>
+
+        <!-- Admin Settings Pop-up Button (Only visible to Admin) -->
+        <button id="btn-admin-settings" onclick="openSettingsModal()" class="px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-slate-200 transition">
+          ⚙️ <span>គ្រប់គ្រង Users & Logs</span>
+        </button>
+
         <button onclick="openDocModal()" class="px-3.5 py-2 bg-[#2d6a4f] hover:bg-[#23533e] text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm transition">
           + Upload ឯកសារ
         </button>
+
+        <!-- Logged-in User Profile & Logout -->
         <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
           <div class="text-right hidden md:block leading-tight">
-            <div class="text-xs font-bold text-slate-800">ថ្នាក់ដឹកនាំរដ្ឋបាល (Admin)</div>
-            <div class="text-[10px] text-amber-600 font-semibold">👑 Admin</div>
+            <div class="text-xs font-bold text-slate-800" id="current-user-fullname">ថ្នាក់ដឹកនាំរដ្ឋបាល</div>
+            <div class="text-[10px] text-amber-600 font-semibold" id="current-user-role">👑 Admin</div>
           </div>
-          <div class="w-8 h-8 rounded-full bg-amber-100 border border-amber-300 text-amber-800 font-bold flex items-center justify-center text-xs">
-            I
-          </div>
+          <button onclick="handleLogout()" title="ចាកចេញ (Logout)" class="w-8 h-8 rounded-full bg-amber-100 hover:bg-rose-100 border border-amber-300 hover:border-rose-300 text-amber-800 hover:text-rose-700 font-bold flex items-center justify-center text-xs transition">
+            🚪
+          </button>
         </div>
       </div>
 
@@ -129,7 +132,7 @@
         <div>
           <p class="text-xs text-slate-500 font-medium">សិទ្ធិប្រើប្រាស់</p>
           <h3 class="text-sm font-bold text-slate-800 mt-2 flex items-center gap-1">
-            <span class="text-amber-500 text-xs">👑</span> Admin Mode
+            <span class="text-amber-500 text-xs">👑</span> <span id="stat-role-text">Admin Mode</span>
           </h3>
         </div>
         <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-lg">
@@ -236,9 +239,157 @@
 
   </main>
 
-  <!-- ================= MODALS ================= -->
+  <!-- ================= AUTH & MANAGEMENT MODALS ================= -->
 
-  <!-- Modal Doc with REAL FILE UPLOAD ZONE -->
+  <!-- 1. LOGIN OVERLAY MODAL (ចាក់សោរពេលបើកដំបូង) -->
+  <div id="modal-login" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-5 text-center">
+      <div class="w-16 h-16 rounded-full bg-emerald-50 border-2 border-emerald-600/30 flex items-center justify-center mx-auto text-3xl shadow-inner">
+        ⚕️
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900">ចូលប្រើប្រាស់ប្រព័ន្ធ (Login)</h3>
+        <p class="text-xs text-emerald-700 font-semibold mt-0.5">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស - ក្រសួងសុខាភិបាល</p>
+      </div>
+      <form onsubmit="handleLogin(event)" class="space-y-3.5 text-left">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះគណនី (Username)</label>
+          <input type="text" id="login-username" required class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none" placeholder="ឧ. admin">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">លេខសម្ងាត់ (Password)</label>
+          <input type="password" id="login-password" required class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none" placeholder="••••••••">
+        </div>
+        <p id="login-error" class="text-xs text-rose-600 font-medium hidden">ឈ្មោះគណនី ឬលេខសម្ងាត់មិនត្រឹមត្រូវឡើយ!</p>
+        <button type="submit" class="w-full py-2.5 bg-[#2d6a4f] hover:bg-[#23533e] text-white rounded-xl text-xs font-bold shadow-md transition">
+          ចូលប្រព័ន្ធ (Sign In)
+        </button>
+      </form>
+      <div class="pt-2 border-t border-slate-100 text-[11px] text-slate-400">
+        គណនីគំរូ Admin: <strong class="text-slate-600">admin</strong> | លេខសម្ងាត់: <strong class="text-slate-600">admin123</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SETTINGS / USER MANAGEMENT & ACTIVITY LOGS MODAL -->
+  <div id="modal-settings" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>⚙️</span> ផ្ទាំងគ្រប់គ្រងគណនី Users & កំណត់ត្រាសកម្មភាព
+        </h3>
+        <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
+      </div>
+
+      <!-- Settings Sub-tabs -->
+      <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
+        <button onclick="switchSettingsTab('users')" id="set-tab-users" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#2d6a4f] text-white transition">
+          👥 បញ្ជី Users & បង្កើតថ្មី
+        </button>
+        <button onclick="switchSettingsTab('logs')" id="set-tab-logs" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
+          🕒 កំណត់ត្រាសកម្មភាព (System Logs)
+        </button>
+      </div>
+
+      <!-- Tab Content 1: User Management -->
+      <div id="set-content-users" class="space-y-4 flex-1 overflow-y-auto pr-1">
+        <!-- Add User Form -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+          <h4 class="text-xs font-bold text-slate-800 mb-2.5">➕ បង្កើតគណនីមន្ត្រីថ្មី (Create New User)</h4>
+          <form onsubmit="handleCreateUser(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះពេញមន្ត្រី</label>
+              <input type="text" id="new-user-fullname" required placeholder="ឧ. វេជ្ជ. សុខ វិបុល" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះគណនី (Username)</label>
+              <input type="text" id="new-user-username" required placeholder="vibol.moh" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">លេខសម្ងាត់ (Password)</label>
+              <input type="password" id="new-user-password" required placeholder="••••••••" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ការិយាល័យប្រចាំការ</label>
+              <select id="new-user-bureau" class="w-full border border-slate-200 rounded-lg p-2 text-xs bg-white">
+                <option value="ការិយាល័យបណ្តុះបណ្តាលមុនពេលបម្រើការងារ">ការិយាល័យបណ្តុះបណ្តាលមុនពេលបម្រើការងារ</option>
+                <option value="ការិយាល័យបណ្តុះបណ្តាលបន្ត">ការិយាល័យបណ្តុះបណ្តាលបន្ត</option>
+                <option value="ការិយាល័យចុះបញ្ជិកានិងវិញ្ញាបនបត្រ">ការិយាល័យចុះបញ្ជិកានិងវិញ្ញាបនបត្រ</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">កម្រិតសិទ្ធិ (Role)</label>
+              <select id="new-user-role" class="w-full border border-slate-200 rounded-lg p-2 text-xs bg-white">
+                <option value="Officer">✍️ មន្ត្រីជំនាញ (Officer)</option>
+                <option value="Admin">👑 ថ្នាក់ដឹកនាំរដ្ឋបាល (Admin)</option>
+              </select>
+            </div>
+            <div class="flex items-end">
+              <button type="submit" class="w-full py-2 bg-[#2d6a4f] hover:bg-[#23533e] text-white rounded-lg text-xs font-bold transition">
+                + បង្កើត User ថ្មី
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Users Table -->
+        <div>
+          <h4 class="text-xs font-bold text-slate-800 mb-2">បញ្ជីគណនីក្នុងប្រព័ន្ធ</h4>
+          <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
+            <table class="w-full text-left">
+              <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-2.5">ឈ្មោះមន្ត្រី</th>
+                  <th class="p-2.5">Username</th>
+                  <th class="p-2.5">ការិយាល័យ</th>
+                  <th class="p-2.5">សិទ្ធិ</th>
+                  <th class="p-2.5 text-right">សកម្មភាព</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: Activity Logs -->
+      <div id="set-content-logs" class="space-y-2.5 flex-1 overflow-y-auto pr-1 hidden">
+        <div class="flex justify-between items-center">
+          <p class="text-xs text-slate-500">កំណត់ត្រាសកម្មភាព Login, View, Download, Create, Edit, Delete គ្រប់ User</p>
+          <button onclick="clearActivityLogs()" class="text-xs text-rose-600 hover:underline">ជម្រះ Logs ចាស់ៗ</button>
+        </div>
+        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
+          <table class="w-full text-left">
+            <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-2.5">កាលបរិច្ឆេទ & ម៉ោង</th>
+                <th class="p-2.5">មន្ត្រី (User)</th>
+                <th class="p-2.5">ប្រភេទសកម្មភាព</th>
+                <th class="p-2.5">កម្មវត្ថុ / ឯកសារ</th>
+              </tr>
+            </thead>
+            <tbody id="logs-table-body" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. INDIVIDUAL DOCUMENT AUDIT TRAIL MODAL (ប្រវត្តិឯកសារនីមួយៗ) -->
+  <div id="modal-doc-history" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 shadow-2xl space-y-3">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+        <h3 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+          <span>🕒</span> ប្រវត្តិសកម្មភាពលើឯកសារ
+        </h3>
+        <button onclick="closeDocHistoryModal()" class="text-slate-400 hover:text-slate-600 text-lg leading-none">✕</button>
+      </div>
+      <p id="doc-history-title" class="text-xs font-semibold text-emerald-800 bg-emerald-50 p-2 rounded-lg"></p>
+      <div id="doc-history-list" class="space-y-2 max-h-60 overflow-y-auto text-xs"></div>
+    </div>
+  </div>
+
+  <!-- 4. MODAL DOC (WITH REAL DRAG & DROP UPLOAD) -->
   <div id="modal-doc" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -298,13 +449,13 @@
 
         <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">បោះបង់</button>
-          <button type="submit" id="btn-save-doc" class="px-5 py-2 text-xs font-bold bg-[#2d6a4f] text-white rounded-xl hover:bg-[#23533e]">បង្ហោះ និងរក្សាទុក</button>
+          <button type="submit" class="px-5 py-2 text-xs font-bold bg-[#2d6a4f] text-white rounded-xl hover:bg-[#23533e]">បង្ហោះ និងរក្សាទុក</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Dispatch -->
+  <!-- 5. MODAL DISPATCH -->
   <div id="modal-dispatch" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -347,7 +498,7 @@
     </div>
   </div>
 
-  <!-- Modal Cert -->
+  <!-- 6. MODAL CERT -->
   <div id="modal-cert" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -389,7 +540,7 @@
     </div>
   </div>
 
-  <!-- Modal QR Scanner -->
+  <!-- 7. MODAL SCANNER -->
   <div id="modal-scanner" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl space-y-3">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2">
@@ -406,9 +557,12 @@
   <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
     const STORAGE_KEYS = {
-      DOCS: 'hrd_dms_upload_final_v6',
-      DISPATCH: 'hrd_dms_disp_final_v6',
-      CERTS: 'hrd_dms_certs_final_v6'
+      DOCS: 'hrd_dms_auth_docs_v7',
+      DISPATCH: 'hrd_dms_auth_disp_v7',
+      CERTS: 'hrd_dms_auth_certs_v7',
+      USERS: 'hrd_dms_app_users_v7',
+      LOGS: 'hrd_dms_audit_logs_v7',
+      SESSION: 'hrd_dms_current_session_v7'
     };
 
     function getLocal(key, defaultVal) {
@@ -422,7 +576,13 @@
       try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
     }
 
-    // ទិន្នន័យគំរូដើម
+    // Default System Users
+    const defaultUsers = [
+      { id: 1, username: 'admin', password: 'admin123', fullname: 'ថ្នាក់ដឹកនាំរដ្ឋបាល', bureau: 'ការិយាល័យចុះបញ្ជិកានិងវិញ្ញាបនបត្រ', role: 'Admin' },
+      { id: 2, username: 'officer1', password: '123', fullname: 'លោក អ៊ុក សុវណ្ណ', bureau: 'ការិយាល័យបណ្តុះបណ្តាលមុនពេលបម្រើការងារ', role: 'Officer' }
+    ];
+
+    // Default Documents
     const defaultDocs = [
       {
         id: 1,
@@ -435,7 +595,11 @@
         fileName: 'exam_2026_general_medicine.pdf',
         fileData: '',
         date: '2026-10-15',
-        notes: 'វិញ្ញាសារៀបចំសម្រាប់សម័យប្រឡងថ្នាក់ជាតិ'
+        notes: 'វិញ្ញាសារៀបចំសម្រាប់សម័យប្រឡងថ្នាក់ជាតិ',
+        createdBy: 'admin',
+        audit: [
+          { time: '2026-10-15 08:30:00', user: 'admin', action: 'Upload ឯកសារដំបូង' }
+        ]
       },
       {
         id: 2,
@@ -448,7 +612,11 @@
         fileName: 'cpd_guidelines_2026.pdf',
         fileData: '',
         date: '2026-10-12',
-        notes: 'ឯកសារណែនាំផ្លូវការសម្រាប់មន្ត្រីសុខាភិបាល'
+        notes: 'ឯកសារណែនាំផ្លូវការសម្រាប់មន្ត្រីសុខាភិបាល',
+        createdBy: 'admin',
+        audit: [
+          { time: '2026-10-12 09:15:00', user: 'admin', action: 'Upload ឯកសារដំបូង' }
+        ]
       },
       {
         id: 3,
@@ -461,7 +629,11 @@
         fileName: 'medical_reg_decree.docx',
         fileData: '',
         date: '2026-10-10',
-        notes: 'ប្រកាសអន្តរក្រសួង'
+        notes: 'ប្រកាសអន្តរក្រសួង',
+        createdBy: 'admin',
+        audit: [
+          { time: '2026-10-10 14:00:00', user: 'admin', action: 'Upload ឯកសារដំបូង' }
+        ]
       }
     ];
 
@@ -476,16 +648,205 @@
       { id: 3, num: 'DHRD-REG-2026-0105', recipient: 'ទន្តបណ្ឌិត ស៊ឹម វ៉ាន់ដា', type: 'វិញ្ញាបនបត្របញ្ជាក់ការចុះបញ្ជិកាវិជ្ជាជីវៈ', sign_date: '2026-10-10', signer: 'ប្រធាននាយកដ្ឋាន' }
     ];
 
+    let usersData = getLocal(STORAGE_KEYS.USERS, defaultUsers);
+    let auditLogs = getLocal(STORAGE_KEYS.LOGS, []);
+    let currentUser = getLocal(STORAGE_KEYS.SESSION, null);
+
     let documentsData = getLocal(STORAGE_KEYS.DOCS, defaultDocs);
     let dispatchesData = getLocal(STORAGE_KEYS.DISPATCH, defaultDispatches);
     let certificatesData = getLocal(STORAGE_KEYS.CERTS, defaultCerts);
     let currentBureau = 'all';
     let currentCategory = 'all';
+    let currentUploadedFile = { name: '', type: 'PDF', size: '1.5 MB', data: '' };
     const stages = ['រដ្ឋបាលទទួល', 'ពិនិត្យបច្ចេកទេស', 'ថ្នាក់ដឹកនាំពិនិត្យ', 'រង់ចាំចុះហត្ថលេខា', 'បញ្ចប់រួចរាល់'];
 
-    // Variable to hold uploaded file
-    let currentUploadedFile = { name: '', type: 'PDF', size: '1.5 MB', data: '' };
+    // ==========================================
+    // ACTIVITY LOGGING SYSTEM (AUDIT TRAIL)
+    // ==========================================
+    function logActivity(action, target) {
+      const now = new Date();
+      const timeStr = now.toLocaleDateString('km-KH') + ' ' + now.toLocaleTimeString('en-US');
+      const entry = {
+        id: Date.now(),
+        time: timeStr,
+        user: currentUser ? `${currentUser.fullname} (@${currentUser.username})` : 'ប្រព័ន្ធស្វ័យប្រវត្តិ',
+        username: currentUser ? currentUser.username : 'system',
+        action: action,
+        target: target
+      };
+      auditLogs.unshift(entry);
+      setLocal(STORAGE_KEYS.LOGS, auditLogs);
+    }
 
+    // ==========================================
+    // AUTHENTICATION LOGIC
+    // ==========================================
+    function checkAuth() {
+      if (!currentUser) {
+        document.getElementById('modal-login').classList.remove('hidden');
+      } else {
+        document.getElementById('modal-login').classList.add('hidden');
+        document.getElementById('current-user-fullname').innerText = currentUser.fullname;
+        document.getElementById('current-user-role').innerText = currentUser.role === 'Admin' ? '👑 Admin' : '✍️ Officer';
+        document.getElementById('stat-role-text').innerText = currentUser.role === 'Admin' ? 'Admin Mode' : 'Officer Mode';
+        
+        // Hide Admin tools if not admin
+        const adminBtn = document.getElementById('btn-admin-settings');
+        if (currentUser.role === 'Admin') {
+          adminBtn.classList.remove('hidden');
+        } else {
+          adminBtn.classList.add('hidden');
+        }
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById('login-username').value.trim();
+      const p = document.getElementById('login-password').value.trim();
+
+      const found = usersData.find(user => user.username.toLowerCase() === u.toLowerCase() && user.password === p);
+      if (found) {
+        currentUser = found;
+        setLocal(STORAGE_KEYS.SESSION, currentUser);
+        document.getElementById('login-error').classList.add('hidden');
+        document.getElementById('modal-login').classList.add('hidden');
+        logActivity('ចូលប្រើប្រាស់ (Login)', 'បានចូលប្រើប្រាស់ប្រព័ន្ធ');
+        checkAuth();
+        renderDocs();
+      } else {
+        document.getElementById('login-error').classList.remove('hidden');
+      }
+    }
+
+    function handleLogout() {
+      if (confirm('តើអ្នកពិតជាចង់ចាកចេញពីប្រព័ន្ធមែនទេ?')) {
+        logActivity('ចាកចេញ (Logout)', 'បានចាកចេញពីប្រព័ន្ធ');
+        currentUser = null;
+        localStorage.removeItem(STORAGE_KEYS.SESSION);
+        checkAuth();
+      }
+    }
+
+    // ==========================================
+    // SETTINGS & USER MANAGEMENT MODAL
+    // ==========================================
+    function openSettingsModal() {
+      if (!currentUser || currentUser.role !== 'Admin') {
+        alert('មានតែថ្នាក់ដឹកនាំរដ្ឋបាល (Admin) ប៉ុណ្ណោះដែលអាចបើកផ្ទាំងនេះបាន!');
+        return;
+      }
+      document.getElementById('modal-settings').classList.remove('hidden');
+      renderUsersTable();
+      renderLogsTable();
+    }
+
+    function closeSettingsModal() {
+      document.getElementById('modal-settings').classList.add('hidden');
+    }
+
+    function switchSettingsTab(tab) {
+      if (tab === 'users') {
+        document.getElementById('set-content-users').classList.remove('hidden');
+        document.getElementById('set-content-logs').classList.add('hidden');
+        document.getElementById('set-tab-users').className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#2d6a4f] text-white transition';
+        document.getElementById('set-tab-logs').className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+      } else {
+        document.getElementById('set-content-users').classList.add('hidden');
+        document.getElementById('set-content-logs').classList.remove('hidden');
+        document.getElementById('set-tab-logs').className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#2d6a4f] text-white transition';
+        document.getElementById('set-tab-users').className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+      }
+    }
+
+    function handleCreateUser(e) {
+      e.preventDefault();
+      const username = document.getElementById('new-user-username').value.trim();
+      if (usersData.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        alert('ឈ្មោះគណនី (Username) នេះមានអ្នកប្រើប្រាស់រួចហើយ!');
+        return;
+      }
+
+      const newUser = {
+        id: Date.now(),
+        fullname: document.getElementById('new-user-fullname').value.trim(),
+        username: username,
+        password: document.getElementById('new-user-password').value.trim(),
+        bureau: document.getElementById('new-user-bureau').value,
+        role: document.getElementById('new-user-role').value
+      };
+
+      usersData.unshift(newUser);
+      setLocal(STORAGE_KEYS.USERS, usersData);
+      logActivity('បង្កើត User ថ្មី', `បានបង្កើតគណនី @${newUser.username} (${newUser.fullname}) សិទ្ធិ ${newUser.role}`);
+      renderUsersTable();
+      e.target.reset();
+      alert(`✅ បានបង្កើតគណនី "${newUser.fullname}" ដោយជោគជ័យ!`);
+    }
+
+    function deleteUser(id) {
+      const targetUser = usersData.find(u => u.id === id);
+      if (!targetUser) return;
+      if (targetUser.username === 'admin') {
+        alert('មិនអាចលុប Super Admin ដើមបានឡើយ!');
+        return;
+      }
+      if (confirm(`តើអ្នកប្រាកដជាចង់លុបគណនី @${targetUser.username} មែនទេ?`)) {
+        usersData = usersData.filter(u => u.id !== id);
+        setLocal(STORAGE_KEYS.USERS, usersData);
+        logActivity('លុប User', `បានលុបគណនី @${targetUser.username}`);
+        renderUsersTable();
+      }
+    }
+
+    function renderUsersTable() {
+      const tbody = document.getElementById('users-table-body');
+      tbody.innerHTML = usersData.map(u => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="p-2.5 font-bold text-slate-800">${u.fullname}</td>
+          <td class="p-2.5 font-mono text-emerald-700 font-semibold">@${u.username}</td>
+          <td class="p-2.5 text-slate-500">${u.bureau}</td>
+          <td class="p-2.5">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${u.role === 'Admin' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}">
+              ${u.role}
+            </span>
+          </td>
+          <td class="p-2.5 text-right">
+            ${u.username !== 'admin' ? `
+              <button onclick="deleteUser(${u.id})" class="text-rose-600 hover:text-rose-800 font-semibold">លុប</button>
+            ` : '<span class="text-slate-400">Default</span>'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderLogsTable() {
+      const tbody = document.getElementById('logs-table-body');
+      tbody.innerHTML = auditLogs.map(l => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="p-2.5 text-slate-400 font-mono text-[11px]">${l.time}</td>
+          <td class="p-2.5 font-bold text-slate-700">${l.user}</td>
+          <td class="p-2.5">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${l.action.includes('Upload') || l.action.includes('បង្កើត') ? 'bg-emerald-100 text-emerald-800' : (l.action.includes('លុប') ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-700')}">
+              ${l.action}
+            </span>
+          </td>
+          <td class="p-2.5 text-slate-600">${l.target}</td>
+        </tr>
+      `).join('');
+    }
+
+    function clearActivityLogs() {
+      if (confirm('តើអ្នកពិតជាចង់សម្អាតកំណត់ត្រាសកម្មភាពចាស់ៗទាំងអស់មែនទេ?')) {
+        auditLogs = [];
+        setLocal(STORAGE_KEYS.LOGS, auditLogs);
+        renderLogsTable();
+      }
+    }
+
+    // ==========================================
+    // UI NAVIGATION & STATS
+    // ==========================================
     function updateStats() {
       document.getElementById('stat-docs').innerText = documentsData.length;
       document.getElementById('stat-dispatch').innerText = dispatchesData.filter(d => d.stage !== 'បញ្ចប់រួចរាល់').length;
@@ -519,7 +880,7 @@
     }
 
     // ==========================================
-    // FILE UPLOAD HANDLER (DRAG & DROP + INPUT)
+    // FILE UPLOAD HANDLER
     // ==========================================
     function handleFileSelected(e) {
       const file = e.target.files[0];
@@ -531,13 +892,11 @@
       document.getElementById('file-label').innerHTML = `✅ បានជ្រើសរើស៖ <span class="text-emerald-700">${file.name}</span>`;
       document.getElementById('file-sublabel').innerText = `ទំហំ៖ ${sizeMB} | ប្រភេទ៖ ${ext}`;
 
-      // ស្វ័យប្រវត្តិកំណត់ចំណងជើងបើនៅទទេ
       const titleInput = document.getElementById('doc-title');
       if (!titleInput.value) {
         titleInput.value = file.name.replace(/\.[^/.]+$/, "");
       }
 
-      // អានជា Data URL សម្រាប់ Preview និង Download
       const reader = new FileReader();
       reader.onload = function(evt) {
         currentUploadedFile = {
@@ -550,7 +909,7 @@
       reader.readAsDataURL(file);
     }
 
-    // Drag and drop event listeners
+    // Drag and Drop
     const dropZone = document.getElementById('drop-zone');
     ['dragenter', 'dragover'].forEach(name => {
       dropZone.addEventListener(name, (e) => {
@@ -575,7 +934,7 @@
     });
 
     // ==========================================
-    // RENDER BOOKSHELF CARDS (ដូចរូបភាពដើម)
+    // RENDER BOOKSHELF CARDS (WITH AUDIT TRAIL)
     // ==========================================
     function renderDocs() {
       const list = document.getElementById('docs-list');
@@ -623,10 +982,18 @@
               <p class="text-[11px] text-slate-500 mt-2 flex items-center gap-1">
                 🏛️ <span>${d.bureau}</span>
               </p>
+
+              <!-- Uploaded By Tag -->
+              <div class="mt-2.5 pt-2 border-t border-slate-50 flex items-center justify-between text-[10px] text-slate-400">
+                <span>បង្ហោះដោយ៖ <strong class="text-slate-600">@${d.createdBy || 'admin'}</strong></span>
+                <button onclick="openDocHistory(${d.id})" class="text-emerald-700 hover:underline flex items-center gap-0.5 font-bold">
+                  🕒 ប្រវត្តិ (${(d.audit || []).length})
+                </button>
+              </div>
             </div>
 
             <!-- Bottom Actions -->
-            <div class="pt-3.5 mt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+            <div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
               <div class="flex items-center gap-1.5">
                 <button onclick="previewDoc(${d.id})" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition">
                   👁️ មើល
@@ -709,11 +1076,13 @@
     }
 
     // ==========================================
-    // SAVE, EDIT, DELETE & FILE PREVIEW HANDLERS
+    // ACTION HANDLERS WITH AUDIT LOGGING
     // ==========================================
     function handleSaveDoc(e) {
       e.preventDefault();
       const editId = document.getElementById('doc-edit-id').value;
+      const now = new Date();
+      const timeStr = now.toLocaleDateString('km-KH') + ' ' + now.toLocaleTimeString('en-US');
 
       const record = {
         code: document.getElementById('doc-code').value,
@@ -721,11 +1090,13 @@
         bureau: document.getElementById('doc-bureau').value,
         category: document.getElementById('doc-category').value,
         fileType: currentUploadedFile.type || 'PDF',
-        fileSize: currentUploadedFile.size || '2.0 MB',
+        fileSize: currentUploadedFile.size || '3.5 MB',
         fileName: currentUploadedFile.name || 'document.pdf',
         fileData: currentUploadedFile.data || '',
         date: new Date().toISOString().split('T')[0],
-        notes: document.getElementById('doc-notes').value
+        notes: document.getElementById('doc-notes').value,
+        createdBy: currentUser ? currentUser.username : 'admin',
+        audit: []
       };
 
       if (editId) {
@@ -737,11 +1108,16 @@
             record.fileType = documentsData[idx].fileType;
             record.fileSize = documentsData[idx].fileSize;
           }
+          record.audit = documentsData[idx].audit || [];
+          record.audit.unshift({ time: timeStr, user: currentUser.username, action: 'បានកែសម្រួលព័ត៌មាន' });
           documentsData[idx] = { ...documentsData[idx], ...record };
+          logActivity('កែប្រែឯកសារ', `បានកែសម្រួលឯកសារ ${record.code} (${record.title})`);
         }
       } else {
         record.id = Date.now();
+        record.audit.unshift({ time: timeStr, user: currentUser.username, action: 'បាន Upload ឯកសារដំបូង' });
         documentsData.unshift(record);
+        logActivity('Upload ឯកសារ', `បានបង្ហោះឯកសារថ្មី ${record.code} (${record.title})`);
       }
 
       setLocal(STORAGE_KEYS.DOCS, documentsData);
@@ -765,16 +1141,33 @@
     }
 
     function deleteDoc(id) {
-      if (confirm('តើអ្នកប្រាកដជាចង់លុបឯកសារនេះមែនទេ?')) {
+      if (currentUser && currentUser.role !== 'Admin') {
+        alert('មានតែ Admin ប៉ុណ្ណោះដែលអាចលុបឯកសារបាន!');
+        return;
+      }
+      const doc = documentsData.find(d => d.id === id);
+      if (!doc) return;
+      if (confirm(`តើអ្នកប្រាកដជាចង់លុបឯកសារ «${doc.title}» មែនទេ?`)) {
         documentsData = documentsData.filter(d => d.id !== id);
         setLocal(STORAGE_KEYS.DOCS, documentsData);
+        logActivity('លុបឯកសារ', `បានលុបឯកសារ ${doc.code} (${doc.title})`);
         renderDocs();
       }
     }
 
     function previewDoc(id) {
       const doc = documentsData.find(d => d.id === id);
-      if (doc && doc.fileData) {
+      if (!doc) return;
+
+      const now = new Date();
+      const timeStr = now.toLocaleDateString('km-KH') + ' ' + now.toLocaleTimeString('en-US');
+      doc.audit = doc.audit || [];
+      doc.audit.unshift({ time: timeStr, user: currentUser ? currentUser.username : 'user', action: 'បានចុចមើល (View)' });
+      setLocal(STORAGE_KEYS.DOCS, documentsData);
+      logActivity('មើល (View)', `បានចុចមើលឯកសារ ${doc.code} (${doc.title})`);
+      renderDocs();
+
+      if (doc.fileData) {
         const previewWin = window.open();
         if (doc.fileType === 'PDF' || doc.fileData.startsWith('data:application/pdf') || doc.fileData.startsWith('data:image')) {
           previewWin.document.write(`<iframe src="${doc.fileData}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
@@ -782,13 +1175,23 @@
           alert(`📄 ឯកសារ "${doc.title}" ជាប្រភេទ ${doc.fileType}។ សូមចុចប៊ូតុងទាញយក (Download) ដើម្បីបើកអានលើកុំព្យូទ័ររបស់អ្នក។`);
         }
       } else {
-        alert(`📄 កំពុងបើកអានឯកសារគំរូ៖\n«${doc.title}»\n(សូម Upload ហ្វាលពិតប្រាកដតាមប៊ូតុង "+ Upload ឯកសារ" ដើម្បីបើកអានពេញលេញ)`);
+        alert(`📄 កំពុងបើកអានឯកសារគំរូ៖\n«${doc.title}»`);
       }
     }
 
     function downloadDoc(id) {
       const doc = documentsData.find(d => d.id === id);
-      if (doc && doc.fileData) {
+      if (!doc) return;
+
+      const now = new Date();
+      const timeStr = now.toLocaleDateString('km-KH') + ' ' + now.toLocaleTimeString('en-US');
+      doc.audit = doc.audit || [];
+      doc.audit.unshift({ time: timeStr, user: currentUser ? currentUser.username : 'user', action: 'បានទាញយក (Download)' });
+      setLocal(STORAGE_KEYS.DOCS, documentsData);
+      logActivity('ទាញយក (Download)', `បានទាញយកឯកសារ ${doc.code} (${doc.title})`);
+      renderDocs();
+
+      if (doc.fileData) {
         const a = document.createElement('a');
         a.href = doc.fileData;
         a.download = doc.fileName || `${doc.title}.${doc.fileType.toLowerCase()}`;
@@ -798,6 +1201,33 @@
       } else {
         alert(`📥 កំពុងទាញយកឯកសារគំរូ៖\n«${doc.title}»`);
       }
+    }
+
+    // Individual Doc History Modal
+    function openDocHistory(id) {
+      const doc = documentsData.find(d => d.id === id);
+      if (!doc) return;
+      document.getElementById('doc-history-title').innerText = `${doc.code} - ${doc.title}`;
+      const list = document.getElementById('doc-history-list');
+      const audit = doc.audit || [];
+      if (audit.length === 0) {
+        list.innerHTML = '<p class="text-slate-400 text-center py-2">មិនទាន់មានកំណត់ត្រាសកម្មភាពនៅឡើយទេ</p>';
+      } else {
+        list.innerHTML = audit.map(a => `
+          <div class="p-2 border border-slate-100 rounded-lg bg-slate-50 flex justify-between items-center">
+            <div>
+              <span class="font-bold text-slate-700">@${a.user}</span>
+              <p class="text-[11px] text-slate-500">${a.action}</p>
+            </div>
+            <span class="text-[10px] text-slate-400 font-mono">${a.time}</span>
+          </div>
+        `).join('');
+      }
+      document.getElementById('modal-doc-history').classList.remove('hidden');
+    }
+
+    function closeDocHistoryModal() {
+      document.getElementById('modal-doc-history').classList.add('hidden');
     }
 
     function handleSaveDispatch(e) {
@@ -814,6 +1244,7 @@
       };
       dispatchesData.unshift(newDispatch);
       setLocal(STORAGE_KEYS.DISPATCH, dispatchesData);
+      logActivity('កត់ត្រាចេញ-ចូល', `បានកត់ត្រាឯកសារ ${newDispatch.type} ${newDispatch.code} (${newDispatch.title})`);
       closeModals();
       renderDispatches();
     }
@@ -827,15 +1258,22 @@
           item.stage = nextStage;
           if (nextStage === 'បញ្ចប់រួចរាល់') item.date_done = new Date().toISOString().split('T')[0];
           setLocal(STORAGE_KEYS.DISPATCH, dispatchesData);
+          logActivity('រុញដំណាក់កាល', `ឯកសារ ${item.code} ទៅកាន់ "${nextStage}"`);
           renderDispatches();
         }
       }
     }
 
     function deleteDispatch(id) {
-      if (confirm('តើអ្នកចង់លុបកំណត់ត្រានេះមែនទេ?')) {
+      if (currentUser && currentUser.role !== 'Admin') {
+        alert('មានតែ Admin ប៉ុណ្ណោះដែលអាចលុបបាន!');
+        return;
+      }
+      const item = dispatchesData.find(d => d.id === id);
+      if (item && confirm('តើអ្នកចង់លុបកំណត់ត្រានេះមែនទេ?')) {
         dispatchesData = dispatchesData.filter(d => d.id !== id);
         setLocal(STORAGE_KEYS.DISPATCH, dispatchesData);
+        logActivity('លុបចេញ-ចូល', `បានលុបកំណត់ត្រា ${item.code}`);
         renderDispatches();
       }
     }
@@ -852,14 +1290,21 @@
       };
       certificatesData.unshift(newCert);
       setLocal(STORAGE_KEYS.CERTS, certificatesData);
+      logActivity('ចុះបញ្ជីវិញ្ញាបនបត្រ', `បានចុះបញ្ជីលេខ ${newCert.num} ជូន ${newCert.recipient}`);
       closeModals();
       renderCerts();
     }
 
     function deleteCert(id) {
-      if (confirm('តើអ្នកចង់លុបវិញ្ញាបនបត្រនេះមែនទេ?')) {
+      if (currentUser && currentUser.role !== 'Admin') {
+        alert('មានតែ Admin ប៉ុណ្ណោះដែលអាចលុបបាន!');
+        return;
+      }
+      const cert = certificatesData.find(c => c.id === id);
+      if (cert && confirm('តើអ្នកចង់លុបវិញ្ញាបនបត្រនេះមែនទេ?')) {
         certificatesData = certificatesData.filter(c => c.id !== id);
         setLocal(STORAGE_KEYS.CERTS, certificatesData);
+        logActivity('លុបវិញ្ញាបនបត្រ', `បានលុបវិញ្ញាបនបត្រលេខ ${cert.num}`);
         renderCerts();
       }
     }
@@ -921,8 +1366,8 @@
     function exportCSV(type) {
       let csv = "\uFEFF";
       if (type === 'docs') {
-        csv += "កូដ,ចំណងជើង,ការិយាល័យ,ប្រភេទ,កាលបរិច្ឆេទ,ឈ្មោះហ្វាល\n";
-        documentsData.forEach(d => { csv += `"${d.code}","${d.title}","${d.bureau}","${d.category}","${d.date}","${d.fileName || ''}"\n`; });
+        csv += "កូដ,ចំណងជើង,ការិយាល័យ,ប្រភេទ,កាលបរិច្ឆេទ,ឈ្មោះហ្វាល,បង្ហោះដោយ\n";
+        documentsData.forEach(d => { csv += `"${d.code}","${d.title}","${d.bureau}","${d.category}","${d.date}","${d.fileName || ''}","${d.createdBy || ''}"\n`; });
       }
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -958,7 +1403,11 @@
       }
     }
 
+    // ==========================================
+    // INITIAL BOOTSTRAP
+    // ==========================================
     window.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
       renderDocs();
       renderDispatches();
       renderCerts();
