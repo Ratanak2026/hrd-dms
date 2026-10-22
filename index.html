@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស - ប្រព័ន្ធគ្រប់គ្រងឯកសារ និងវិញ្ញាបនបត្រ</title>
+  <title>នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស - ក្រសួងសុខាភិបាល</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts for Khmer -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;600;700&family=Moul&display=swap" rel="stylesheet">
-  <!-- Supabase JS Client -->
+  <!-- Supabase & QR Tools -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- QR Code & Scanner -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
@@ -20,33 +19,32 @@
     .font-moul { font-family: 'Moul', cursive; }
   </style>
 </head>
-<body class="bg-[#f4f7fb] text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="bg-[#f0f4f8] text-slate-800 antialiased min-h-screen flex flex-col">
 
-  <!-- ================= TOP NAVBAR ================= -->
-  <header class="bg-white border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-2 flex items-center justify-between gap-4">
+  <!-- ================= TOP HEADER BAR ================= -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       
-      <!-- Institutional Branding -->
-      <div class="flex items-center space-x-3.5">
-        <div class="w-12 h-12 rounded-full border border-emerald-500/30 p-1 flex items-center justify-center bg-emerald-50/50 shadow-inner">
-          <!-- MoH Caduceus Emblem -->
+      <!-- Institutional Identity -->
+      <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 rounded-full border-2 border-emerald-600/30 p-1 flex items-center justify-center bg-emerald-50 shadow-inner">
           <svg class="w-8 h-8 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 2v20M8 5c2 1 6 1 8 0M8 10c2 1.2 6 1.2 8 0M8 15c2 1.2 6 1.2 8 0M10 2a2 2 0 1 0 4 0"/>
             <circle cx="12" cy="3" r="1.5" fill="currentColor"/>
           </svg>
         </div>
         <div>
-          <div class="flex items-center gap-1.5">
+          <div class="flex items-center gap-1.5 flex-wrap">
             <span class="font-bold text-slate-900 text-sm sm:text-base">ក្រសួងសុខាភិបាល</span>
             <span class="text-slate-300">|</span>
-            <span class="font-bold text-slate-800 text-sm sm:text-base">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស</span>
-            <span class="text-xs text-amber-500 cursor-pointer" title="កែសម្រួល">✏️</span>
+            <span class="font-bold text-slate-900 text-sm sm:text-base">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស</span>
+            <span class="text-xs text-amber-500 cursor-pointer">✏️</span>
           </div>
           <p class="text-[11px] text-slate-500 font-medium">Department of Human Resource Development (DHRD - MoH)</p>
         </div>
       </div>
 
-      <!-- Action Tools & Admin Badge -->
+      <!-- Header Tools & Admin Badge -->
       <div class="flex items-center space-x-2.5 sm:space-x-3">
         <button onclick="toggleScannerModal(true)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
           📷 <span>ស្កេន QR</span>
@@ -72,10 +70,10 @@
     </div>
   </header>
 
-  <!-- ================= MAIN DASHBOARD CONTAINER ================= -->
+  <!-- ================= MAIN CONTAINER ================= -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 w-full flex-1 space-y-5">
 
-    <!-- HERO BANNER -->
+    <!-- HERO GREEN BANNER -->
     <div class="bg-[#1b4332] rounded-2xl p-5 sm:p-6 text-white shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-5">
       <div class="space-y-1">
         <span class="text-xs text-emerald-300 font-semibold tracking-wide">ស្ថាប័នគ្រប់គ្រងជំនាញ</span>
@@ -83,10 +81,10 @@
         <p class="text-xs text-emerald-100/80 max-w-2xl">ប្រព័ន្ធគ្រប់គ្រងបណ្ណាល័យឯកសារ តាមដានលិខិតចេញ-ចូល និងចុះបញ្ជីការវិញ្ញាបនបត្រសុខាភិបាល</p>
       </div>
 
-      <!-- Bureau Selector Box -->
+      <!-- Bureau Dropdown in Banner -->
       <div class="bg-[#24533f]/90 border border-emerald-600/40 rounded-xl p-3 sm:w-80 space-y-1.5">
         <label class="block text-[11px] text-emerald-200 font-medium">🏛️ ជ្រើសរើសតាមការិយាល័យជំនាញទាំង ៣៖</label>
-        <select id="main-bureau-filter" onchange="handleBureauChange(this.value)" class="w-full bg-[#1b4332] text-white text-xs border border-emerald-500/50 rounded-lg p-2 outline-none focus:ring-1 focus:ring-emerald-400">
+        <select id="main-bureau-filter" onchange="handleBureauFilter(this.value)" class="w-full bg-[#1b4332] text-white text-xs border border-emerald-500/50 rounded-lg p-2 outline-none focus:ring-1 focus:ring-emerald-400">
           <option value="all">ការិយាល័យទាំងអស់ (រួមទាំង ៣)</option>
           <option value="ការិយាល័យបណ្តុះបណ្តាលមុនពេលបម្រើការងារ">ការិយាល័យបណ្តុះបណ្តាលមុនពេលបម្រើការងារ</option>
           <option value="ការិយាល័យបណ្តុះបណ្តាលបន្ត">ការិយាល័យបណ្តុះបណ្តាលបន្ត</option>
@@ -95,9 +93,9 @@
       </div>
     </div>
 
-    <!-- STAT SUMMARY CARDS (4 CARDS) -->
+    <!-- 4 STAT SUMMARY CARDS -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-      <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs flex items-center justify-between">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs flex items-center justify-between">
         <div>
           <p class="text-xs text-slate-500 font-medium">បណ្ណាល័យឯកសារ</p>
           <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-docs">3</h3>
@@ -107,7 +105,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs flex items-center justify-between">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs flex items-center justify-between">
         <div>
           <p class="text-xs text-slate-500 font-medium">ឯកសារកំពុងដំណើរការ</p>
           <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-dispatch">2</h3>
@@ -117,7 +115,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs flex items-center justify-between">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs flex items-center justify-between">
         <div>
           <p class="text-xs text-slate-500 font-medium">វិញ្ញាបនបត្របានចុះបញ្ជី</p>
           <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-certs">3</h3>
@@ -127,7 +125,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-2xs flex items-center justify-between">
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs flex items-center justify-between">
         <div>
           <p class="text-xs text-slate-500 font-medium">សិទ្ធិប្រើប្រាស់</p>
           <h3 class="text-sm font-bold text-slate-800 mt-2 flex items-center gap-1">
@@ -140,25 +138,26 @@
       </div>
     </div>
 
-    <!-- MAIN MODULE TABS BAR -->
+    <!-- HORIZONTAL MODULE TABS -->
     <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
       <button onclick="switchTab('docs')" id="tab-btn-docs" class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-[#2d6a4f] text-white shadow-xs">
         <span>📚 ១. បណ្ណាល័យឯកសារ (e-Library)</span>
       </button>
-      <button onclick="switchTab('dispatch')" id="tab-btn-dispatch" class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80">
+      <button onclick="switchTab('dispatch')" id="tab-btn-dispatch" class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-white text-slate-600 hover:bg-slate-50 border border-slate-200">
         <span>🔄 ២. តាមដានឯកសារចេញ-ចូល</span>
       </button>
-      <button onclick="switchTab('certs')" id="tab-btn-certs" class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80">
+      <button onclick="switchTab('certs')" id="tab-btn-certs" class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-white text-slate-600 hover:bg-slate-50 border border-slate-200">
         <span>📜 ៣. គ្រប់គ្រងលេខវិញ្ញាបនបត្រ</span>
       </button>
-      <button onclick="switchTab('projects')" id="tab-btn-projects" class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80">
+      <button onclick="switchTab('projects')" id="tab-btn-projects" class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-white text-slate-600 hover:bg-slate-50 border border-slate-200">
         <span>✨ ៤. គម្រោងថ្មី/ត្រៀមដំណើរការ</span>
       </button>
     </div>
 
-    <!-- ================= SECTION 1: E-LIBRARY ================= -->
-    <div id="section-docs" class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 space-y-5 shadow-2xs">
-      <!-- Section Header -->
+    <!-- ================= SECTION 1: E-LIBRARY (ទម្រង់ដើម) ================= -->
+    <div id="section-docs" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-5 shadow-2xs">
+      
+      <!-- Section Title & Actions Bar -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -179,7 +178,7 @@
         </div>
       </div>
 
-      <!-- Filter Pills & Layout Toggle -->
+      <!-- Filter Pills Row -->
       <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-slate-100">
         <div class="flex items-center gap-1.5 overflow-x-auto pb-1" id="filter-pills">
           <button onclick="setCategoryFilter('all')" class="category-pill active-pill px-3 py-1 rounded-lg text-xs font-bold transition bg-[#2d6a4f] text-white">ទាំងអស់</button>
@@ -199,7 +198,7 @@
     </div>
 
     <!-- ================= SECTION 2: DISPATCH ================= -->
-    <div id="section-dispatch" class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
+    <div id="section-dispatch" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-slate-900">📤📥 តាមដានឯកសារចេញ-ចូល</h3>
@@ -213,7 +212,7 @@
     </div>
 
     <!-- ================= SECTION 3: CERTS ================= -->
-    <div id="section-certs" class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
+    <div id="section-certs" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-slate-900">📜 បញ្ជីគ្រប់គ្រងលេខវិញ្ញាបនបត្រ</h3>
@@ -227,7 +226,7 @@
     </div>
 
     <!-- ================= SECTION 4: PROJECTS ================= -->
-    <div id="section-projects" class="bg-white rounded-2xl border border-slate-200/80 p-8 text-center space-y-3 shadow-2xs hidden">
+    <div id="section-projects" class="bg-white rounded-2xl border border-slate-200 p-8 text-center space-y-3 shadow-2xs hidden">
       <div class="w-16 h-16 bg-emerald-50 text-[#2d6a4f] rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
         ✨
       </div>
@@ -239,7 +238,7 @@
 
   <!-- ================= MODALS ================= -->
 
-  <!-- Modal Add/Edit Document -->
+  <!-- Modal Doc -->
   <div id="modal-doc" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -399,12 +398,13 @@
     </div>
   </div>
 
-  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <!-- ================= JAVASCRIPT ================= -->
   <script>
+    // ប្រើ Key ថ្មីស្រឡាងដើម្បីការពារកុំឱ្យជាន់ Cache ចាស់
     const STORAGE_KEYS = {
-      DOCS: 'hrd_dms_original_docs_v4',
-      DISPATCH: 'hrd_dms_original_disp_v4',
-      CERTS: 'hrd_dms_original_certs_v4'
+      DOCS: 'hrd_dms_final_view_v5',
+      DISPATCH: 'hrd_dms_final_disp_v5',
+      CERTS: 'hrd_dms_final_certs_v5'
     };
 
     function getLocal(key, defaultVal) {
@@ -418,7 +418,7 @@
       try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
     }
 
-    // ទិន្នន័យគំរូដើមដូចក្នុងរូបភាព
+    // ទិន្នន័យគំរូដើម
     const defaultDocs = [
       {
         id: 1,
@@ -469,8 +469,8 @@
     let documentsData = getLocal(STORAGE_KEYS.DOCS, defaultDocs);
     let dispatchesData = getLocal(STORAGE_KEYS.DISPATCH, defaultDispatches);
     let certificatesData = getLocal(STORAGE_KEYS.CERTS, defaultCerts);
-    let selectedBureau = 'all';
-    let selectedCategory = 'all';
+    let currentBureau = 'all';
+    let currentCategory = 'all';
     const stages = ['រដ្ឋបាលទទួល', 'ពិនិត្យបច្ចេកទេស', 'ថ្នាក់ដឹកនាំពិនិត្យ', 'រង់ចាំចុះហត្ថលេខា', 'បញ្ចប់រួចរាល់'];
 
     function updateStats() {
@@ -483,20 +483,20 @@
       ['docs', 'dispatch', 'certs', 'projects'].forEach(t => {
         document.getElementById(`section-${t}`).classList.add('hidden');
         const btn = document.getElementById(`tab-btn-${t}`);
-        btn.className = 'px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80';
+        btn.className = 'px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-white text-slate-600 hover:bg-slate-50 border border-slate-200';
       });
       document.getElementById(`section-${tab}`).classList.remove('hidden');
       const activeBtn = document.getElementById(`tab-btn-${tab}`);
       activeBtn.className = 'px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-[#2d6a4f] text-white shadow-xs';
     }
 
-    function handleBureauChange(bureau) {
-      selectedBureau = bureau;
+    function handleBureauFilter(bureau) {
+      currentBureau = bureau;
       renderDocs();
     }
 
     function setCategoryFilter(cat) {
-      selectedCategory = cat;
+      currentCategory = cat;
       const pills = document.querySelectorAll('.category-pill');
       pills.forEach(p => {
         p.className = 'category-pill px-3 py-1 rounded-lg text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 transition';
@@ -505,22 +505,20 @@
       renderDocs();
     }
 
-    // ==========================================
-    // RENDER BOOKSHELF CARDS (ដូចរូបភាពដើម)
-    // ==========================================
+    // Render Bookshelf Cards
     function renderDocs() {
       const list = document.getElementById('docs-list');
       const search = (document.getElementById('doc-search')?.value || '').toLowerCase();
 
       const filtered = documentsData.filter(d => {
         const matchSearch = (d.title || '').toLowerCase().includes(search) || (d.code || '').toLowerCase().includes(search);
-        const matchBureau = (selectedBureau === 'all' || d.bureau === selectedBureau);
-        const matchCat = (selectedCategory === 'all' || d.category === selectedCategory);
+        const matchBureau = (currentBureau === 'all' || d.bureau === currentBureau);
+        const matchCat = (currentCategory === 'all' || d.category === currentCategory);
         return matchSearch && matchBureau && matchCat;
       });
 
       list.innerHTML = filtered.map(d => `
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-4.5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
+        <div class="bg-white rounded-2xl border border-slate-200 p-4.5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
           <div>
             <!-- Top Card Header -->
             <div class="flex items-start justify-between gap-2 mb-3">
@@ -528,7 +526,7 @@
                 📕
               </div>
               <div class="text-right">
-                <span class="inline-block text-[11px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200/60">
+                <span class="inline-block text-[11px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200">
                   ${d.code}
                 </span>
                 <p class="text-[10px] text-slate-400 mt-0.5">${d.fileType || 'PDF'} • ${d.fileSize || '3.5 MB'}</p>
@@ -581,7 +579,7 @@
       list.innerHTML = dispatchesData.map(d => {
         const isFinished = d.stage === 'បញ្ចប់រួចរាល់';
         return `
-          <div class="border border-slate-200/80 rounded-2xl p-4 bg-white flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
+          <div class="border border-slate-200 rounded-2xl p-4 bg-white flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs">
             <div class="space-y-1">
               <div class="flex items-center gap-2">
                 <span class="px-2.5 py-0.5 rounded-lg text-xs font-bold ${d.type === 'ចូល' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}">
@@ -613,7 +611,7 @@
     function renderCerts() {
       const list = document.getElementById('certs-list');
       list.innerHTML = certificatesData.map(c => `
-        <div class="border border-slate-200/80 rounded-2xl p-4.5 bg-white space-y-2 shadow-2xs">
+        <div class="border border-slate-200 rounded-2xl p-4.5 bg-white space-y-2 shadow-2xs">
           <div class="flex justify-between items-start">
             <div>
               <span class="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-lg border border-emerald-200">${c.num}</span>
@@ -633,7 +631,7 @@
       updateStats();
     }
 
-    // Handlers (LocalStorage Persistence)
+    // Save Handlers
     function handleSaveDoc(e) {
       e.preventDefault();
       const editId = document.getElementById('doc-edit-id').value;
@@ -684,13 +682,8 @@
       }
     }
 
-    function previewDoc(title) {
-      alert(`📄 កំពុងបើកអានឯកសារគំរូ៖\n«${title}»`);
-    }
-
-    function downloadDoc(title) {
-      alert(`📥 កំពុងទាញយកឯកសារ៖\n«${title}»`);
-    }
+    function previewDoc(title) { alert(`📄 កំពុងបើកអានឯកសារគំរូ៖\n«${title}»`); }
+    function downloadDoc(title) { alert(`📥 កំពុងទាញយកឯកសារ៖\n«${title}»`); }
 
     function handleSaveDispatch(e) {
       e.preventDefault();
