@@ -13,9 +13,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;600;700&family=Moul&display=swap" rel="stylesheet">
   
+  <!-- SheetJS Library សម្រាប់ Export Excel (.xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
   <!-- Supabase & QR Tools -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <!-- Google Drive API Libraries -->
@@ -25,20 +27,23 @@
   <style>
     body { font-family: 'Battambang', system-ui, sans-serif; }
     .font-moul { font-family: 'Moul', cursive; }
+    @media print {
+      body * { visibility: hidden; }
+      #printable-preview-content, #printable-preview-content * { visibility: visible; }
+      #printable-preview-content { position: absolute; left: 0; top: 0; width: 100%; border: none; }
+    }
   </style>
 </head>
-<!-- SheetJS Library សម្រាប់ Export Excel (.xlsx) ផ្លូវការ -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <body class="bg-[#f0f4f8] text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="bg-[#f0f4f8] text-slate-800 antialiased min-h-screen flex flex-col">
 
   <!-- ================= TOP HEADER BAR ================= -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       
-      <!-- Logo & Institution Name -->
+      <!-- Logo ថ្មីផ្លូវការក្រសួងសុខាភិបាល -->
       <div class="flex items-center space-x-3">
-        <div class="w-14 h-14 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center bg-white shadow-xs">
-          <img src="logo.png" alt="MoH Logo" class="w-full h-full object-contain">
+        <div class="w-13 h-13 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center bg-white shadow-xs overflow-hidden">
+          <img src="photo_2026-10-16_22-06-11.jpg" onerror="this.src='logo.png'" alt="MoH Logo" class="w-full h-full object-contain">
         </div>
         <div>
           <div class="flex items-center gap-1.5 flex-wrap">
@@ -107,7 +112,7 @@
     <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5">
       <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-2xs flex items-center justify-between">
         <div>
-          <p class="text-xs text-slate-500 font-medium">ឯកសារការិយាល័យ</p>
+          <p class="text-xs text-slate-500 font-medium">បណ្ណាល័យរួម (៣ ការិយាល័យ)</p>
           <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-bureau-docs">0</h3>
         </div>
         <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-lg">📚</div>
@@ -138,25 +143,25 @@
       </div>
     </div>
 
-    <!-- DYNAMIC NAVIGATION TABS (ADAPTS ACCORDING TO CURRENT BUREAU) -->
+    <!-- DYNAMIC NAVIGATION TABS -->
     <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none" id="bureau-tabs-nav"></div>
 
     <!-- ================= CONTENT AREAS ================= -->
 
-    <!-- TAB 1: E-LIBRARY (APPLIES TO CURRENT BUREAU) -->
+    <!-- TAB 1: E-LIBRARY (SHARED ACROSS ALL 3 BUREAUS) -->
     <div id="section-docs" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-5 shadow-2xs">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-            <span>📚</span> បណ្ណាល័យឯកសារ (e-Library ផ្ទាល់ការិយាល័យ)
+            <span>📚</span> បណ្ណាល័យឯកសារឌីជីថលរួម (Shared e-Library)
           </h3>
-          <p class="text-xs text-slate-500 mt-0.5">បង្ហោះឯកសារ (≤10MB), មើល (Preview) ឬទាញយក (Download)</p>
+          <p class="text-xs text-slate-500 mt-0.5">ការិយាល័យទាំង ៣ អាចអាន (Preview) និងទាញយកបានស្មើគ្នា (Upload ≤ 10MB)</p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
           <button onclick="exportCSV('docs')" class="px-3.5 py-2 bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-100 transition">
-            📊 Export Excel/CSV
+            📊 Export CSV
           </button>
-          <input type="text" id="doc-search" oninput="renderDocs()" placeholder="🔍 ស្វែងរកឯកសារ..." class="border border-slate-200 rounded-xl px-3 py-1.5 text-xs w-48 sm:w-56 focus:ring-1 focus:ring-emerald-500 outline-none">
+          <input type="text" id="doc-search" oninput="renderDocs()" placeholder="🔍 ស្វែងរកឯកសារក្នុងបណ្ណាល័យ..." class="border border-slate-200 rounded-xl px-3 py-1.5 text-xs w-48 sm:w-56 focus:ring-1 focus:ring-emerald-500 outline-none">
           <button id="btn-upload-doc" onclick="openDocModal()" class="px-3.5 py-2 bg-[#2d6a4f] hover:bg-[#23533e] text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-1">
             + Upload ឯកសារ
           </button>
@@ -165,7 +170,7 @@
       <div id="docs-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
     </div>
 
-    <!-- TAB 2: DISPATCH (WITH STAGE, LOCATION/WHERE IT IS, & DATE) -->
+    <!-- TAB 2: DISPATCH (WITH STAGE, LOCATION & DATE) -->
     <div id="section-dispatch" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
         <div>
@@ -193,7 +198,7 @@
       <div id="exams-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
 
-   <!-- TAB 3B: BUREAU 2 CONTINUING TRAINING (ទម្រង់តាម EXCEL ផ្លូវការ) -->
+    <!-- TAB 3B: BUREAU 2 CONTINUING TRAINING (ទម្រង់តាម EXCEL ផ្លូវការ) -->
     <div id="section-training" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
         <div>
@@ -269,36 +274,8 @@
         </table>
       </div>
     </div>
-      <!-- Filters & Preview Bar -->
-      <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 flex-wrap text-xs">
-        <span class="font-bold text-slate-600">🔍 Filter របាយការណ៍៖</span>
-        <select id="filter-training-type" onchange="renderTrainingList()" class="border border-slate-200 rounded-lg p-1.5 bg-white">
-          <option value="all">ទាំងអស់ (ក្នុង និងក្រៅប្រទេស)</option>
-          <option value="ក្នុងប្រទេស">ក្នុងប្រទេស (In-Country)</option>
-          <option value="ក្រៅប្រទេស">ក្រៅប្រទេស (Overseas)</option>
-        </select>
-        <input type="text" id="filter-training-search" oninput="renderTrainingList()" placeholder="ស្វែងរកតាមវគ្គ ឬស្ថាប័ន..." class="border border-slate-200 rounded-lg p-1.5 bg-white w-48">
-      </div>
 
-      <div class="border border-slate-200 rounded-xl overflow-x-auto">
-        <table class="w-full text-left text-xs">
-          <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
-            <tr>
-              <th class="p-3">ឈ្មោះវគ្គបណ្តុះបណ្តាល</th>
-              <th class="p-3">ប្រភេទ</th>
-              <th class="p-3">ប្រទេស / ទីតាំង</th>
-              <th class="p-3">ស្ថាប័នរៀបចំ/ឧបត្ថម្ភ</th>
-              <th class="p-3">ចំនួនសិក្ខាកាម</th>
-              <th class="p-3">កាលបរិច្ឆេទ</th>
-              <th class="p-3 text-right">សកម្មភាព</th>
-            </tr>
-          </thead>
-          <tbody id="training-table-body" class="divide-y divide-slate-100"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- TAB 3C: BUREAU 3 CERTS & REGISTRATION (ចុះបញ្ជី និងលេខសញ្ញាបត្រ) -->
+    <!-- TAB 3C: BUREAU 3 CERTS & DEGREES -->
     <div id="section-certs" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
         <div>
@@ -323,11 +300,11 @@
 
   <!-- ================= MODALS & FORMS ================= -->
 
-  <!-- LOGIN MODAL (WITH BUREAU SPECIFICATION) -->
+  <!-- LOGIN MODAL (WITH NEW LOGO) -->
   <div id="modal-login" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-4 text-center">
-      <div class="w-20 h-20 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs">
-        <img src="logo.png" alt="MoH Logo" class="w-full h-full object-contain">
+      <div class="w-20 h-20 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs overflow-hidden">
+        <img src="photo_2026-10-16_22-06-11.jpg" onerror="this.src='logo.png'" alt="MoH Logo" class="w-full h-full object-contain">
       </div>
       <div>
         <h3 class="text-base font-bold text-slate-900">ចូលប្រព័ន្ធតាមការិយាល័យ</h3>
@@ -440,7 +417,7 @@
     </div>
   </div>
 
-  <!-- UPLOAD DOC MODAL (STRICT 10MB) -->
+  <!-- UPLOAD DOC MODAL (STRICT ≤ 10MB) -->
   <div id="modal-doc" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -484,7 +461,7 @@
     </div>
   </div>
 
-  <!-- DISPATCH MODAL (WITH STAGE, LOCATION/WHERE IT IS, & DATE) -->
+  <!-- DISPATCH MODAL (WITH STAGE, LOCATION & DATE) -->
   <div id="modal-dispatch" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -645,7 +622,80 @@
       </form>
     </div>
   </div>
-  <!-- BUREAU 3: CERT & DEGREE MODAL (ចុះបញ្ជី និងកំណត់លេខ) -->
+
+  <!-- PRINT PREVIEW & PDF MODAL -->
+  <div id="modal-print-preview" class="fixed inset-0 bg-slate-900/80 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-6 hidden">
+    <div class="bg-white rounded-2xl max-w-5xl w-full p-6 shadow-2xl flex flex-col max-h-[95vh]">
+      <div class="flex justify-between items-center pb-3 border-b border-slate-200">
+        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <span>👁️</span> ផ្ទាំងមើលជាមុន មុននឹង Print ឬទាញយកជា PDF (Print Preview)
+        </h3>
+        <div class="flex items-center gap-2">
+          <button onclick="executePrintReport()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition">
+            🖨️ បោះពុម្ព / Save ជា PDF
+          </button>
+          <button onclick="closePrintPreviewModal()" class="text-slate-400 hover:text-slate-600 text-xl leading-none px-2">✕</button>
+        </div>
+      </div>
+      
+      <!-- Printable Document Container with Official Header & Logo -->
+      <div id="printable-preview-content" class="flex-1 overflow-y-auto p-4 sm:p-8 bg-white my-3 border border-slate-200 rounded-xl text-slate-900 space-y-4">
+        <!-- Official Letterhead -->
+        <div class="flex justify-between items-start border-b pb-4">
+          <div class="flex items-center gap-3">
+            <img src="photo_2026-10-16_22-06-11.jpg" onerror="this.src='logo.png'" alt="MoH Logo" class="w-16 h-16 object-contain">
+            <div class="leading-tight">
+              <h4 class="font-bold text-xs sm:text-sm text-slate-900">ក្រសួងសុខាភិបាល</h4>
+              <p class="text-xs text-slate-700 font-semibold">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស</p>
+              <p class="text-[11px] text-emerald-800 font-medium">ការិយាល័យបណ្តុះបណ្តាលបន្ត</p>
+            </div>
+          </div>
+          <div class="text-right leading-tight">
+            <h4 class="font-moul text-xs text-slate-900">ព្រះរាជាណាចក្រកម្ពុជា</h4>
+            <p class="text-xs font-semibold text-slate-800">ជាតិ សាសនា ព្រះមហាក្សត្រ</p>
+          </div>
+        </div>
+
+        <div class="text-center py-2">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900">របាយការណ៍ អំពីវគ្គបណ្តុះបណ្តាលនានា នៃការិយាល័យបណ្តុះបណ្តាលបន្ត</h2>
+          <p id="preview-report-subtitle" class="text-xs text-slate-500 mt-1"></p>
+        </div>
+
+        <!-- Preview Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse border border-slate-300">
+            <thead class="bg-slate-100 font-bold">
+              <tr>
+                <th class="border border-slate-300 p-2 text-center w-10">ល.រ</th>
+                <th class="border border-slate-300 p-2">ឈ្មោះ</th>
+                <th class="border border-slate-300 p-2">តួនាទី និងអង្គភាព</th>
+                <th class="border border-slate-300 p-2">កម្មវិធី ឬឈ្មោះវគ្គសិក្សា</th>
+                <th class="border border-slate-300 p-2 text-center">រយៈពេល</th>
+                <th class="border border-slate-300 p-2 text-center">កាលបរិច្ឆេទ</th>
+                <th class="border border-slate-300 p-2 text-center">ប្រទេស</th>
+                <th class="border border-slate-300 p-2">ឧបត្ថម្ភ</th>
+              </tr>
+            </thead>
+            <tbody id="preview-table-body"></tbody>
+          </table>
+        </div>
+
+        <!-- Official Signatures Block -->
+        <div class="grid grid-cols-2 pt-8 text-center text-xs">
+          <div>
+            <p>បានឃើញ និងឯកភាព</p>
+            <p class="font-bold mt-1">ប្រធាននាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស</p>
+          </div>
+          <div>
+            <p id="preview-sign-date">រាជធានីភ្នំពេញ, ថ្ងៃទី... ខែ... ឆ្នាំ២០២៦</p>
+            <p class="font-bold mt-1">ប្រធានការិយាល័យបណ្តុះបណ្តាលបន្ត</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUREAU 3: CERT & DEGREE MODAL -->
   <div id="modal-cert" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -711,7 +761,7 @@
         shortName: 'ការិយាល័យទី១',
         desc: 'គ្រប់គ្រងបណ្ណាល័យ លិខិតចេញ-ចូល និងការប្រឡងចូល-ចេញថ្នាក់ជាតិ',
         tabs: [
-          { id: 'docs', label: '📚 បណ្ណាល័យឯកសារ' },
+          { id: 'docs', label: '📚 បណ្ណាល័យរួម' },
           { id: 'dispatch', label: '🔄 ឯកសារចេញ-ចូល' },
           { id: 'exams', label: '🎓 ការប្រឡងចូល និងចេញ' },
           { id: 'other', label: '✨ ផ្សេងៗ / មិនទាន់មានគម្រោង' }
@@ -723,7 +773,7 @@
         shortName: 'ការិយាល័យទី២',
         desc: 'គ្រប់គ្រងបណ្ណាល័យ លិខិតចេញ-ចូល និងទិន្នន័យបណ្តុះបណ្តាលក្នុង/ក្រៅប្រទេស',
         tabs: [
-          { id: 'docs', label: '📚 បណ្ណាល័យឯកសារ' },
+          { id: 'docs', label: '📚 បណ្ណាល័យរួម' },
           { id: 'dispatch', label: '🔄 ឯកសារចេញ-ចូល' },
           { id: 'training', label: '🌐 បណ្តុះបណ្តាលក្នុង/ក្រៅប្រទេស' },
           { id: 'other', label: '✨ ផ្សេងៗ / មិនទាន់មានគម្រោង' }
@@ -735,7 +785,7 @@
         shortName: 'ការិយាល័យទី៣',
         desc: 'គ្រប់គ្រងបណ្ណាល័យ លិខិតចេញ-ចូល និងការចុះបញ្ជីកំណត់លេខសញ្ញាបត្រ',
         tabs: [
-          { id: 'docs', label: '📚 បណ្ណាល័យឯកសារ' },
+          { id: 'docs', label: '📚 បណ្ណាល័យរួម' },
           { id: 'dispatch', label: '🔄 ឯកសារចេញ-ចូល' },
           { id: 'certs', label: '📜 ចុះបញ្ជី និងលេខសញ្ញាបត្រ' },
           { id: 'other', label: '✨ ផ្សេងៗ / មិនទាន់មានគម្រោង' }
@@ -789,15 +839,15 @@
 
     // ៣. STORAGE & DEFAULT DATA
     const STORAGE_KEYS = {
-      DOCS: 'hrd_bureau_docs_v11',
-      DISPATCH: 'hrd_bureau_disp_v11',
-      EXAMS: 'hrd_bureau_exams_v11',
-      TRAINING: 'hrd_bureau_train_v11',
-      CERTS: 'hrd_bureau_certs_v11',
-      USERS: 'hrd_bureau_users_v11',
-      LOGS: 'hrd_bureau_logs_v11',
-      SESSION: 'hrd_bureau_session_v11',
-      ACTIVE_BUREAU: 'hrd_active_bureau_v11'
+      DOCS: 'hrd_shared_docs_v12',
+      DISPATCH: 'hrd_bureau_disp_v12',
+      EXAMS: 'hrd_bureau_exams_v12',
+      TRAINING: 'hrd_bureau_train_v12',
+      CERTS: 'hrd_bureau_certs_v12',
+      USERS: 'hrd_bureau_users_v12',
+      LOGS: 'hrd_bureau_logs_v12',
+      SESSION: 'hrd_bureau_session_v12',
+      ACTIVE_BUREAU: 'hrd_active_bureau_v12'
     };
 
     function getLocal(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
@@ -833,9 +883,17 @@
       { id: 2, major: 'ឱសថសាស្ត្រ (Pharmacy)', type: 'ប្រឡងចូល (Entrance Exam)', session: 'សម័យប្រឡង ១៥ វិច្ឆិកា ២០២៦', candidates: 180, status: 'កំពុងដំណើរការប្រឡង' }
     ]);
 
+    // ទិន្នន័យជាក់ស្តែងតាម Excel ផ្លូវការរបស់ការិយាល័យបណ្តុះបណ្តាលបន្ត
     let trainingData = getLocal(STORAGE_KEYS.TRAINING, [
-      { id: 1, title: 'វគ្គបណ្តុះបណ្តាលឯកទេសសង្គ្រោះបន្ទាន់កម្រិតខ្ពស់', type: 'ក្នុងប្រទេស', country: 'កម្ពុជា (មន្ទីរពេទ្យកាល់ម៉ែត)', sponsor: 'WHO Cambodia', participants: 30, start: '2026-11-01', end: '2026-11-05' },
-      { id: 2, title: 'អាហារូបករណ៍ថ្នាក់បរិញ្ញាបត្រជាន់ខ្ពស់ផ្នែកសុខភាពសាធារណៈ', type: 'ក្រៅប្រទេស', country: 'ជប៉ុន (Tokyo University)', sponsor: 'JICA', participants: 5, start: '2026-09-01', end: '2027-08-31' }
+      { id: 1, trainee: 'លោកវេជ្ជ នង មុន្នីពេជ្យ', unit: 'គណៈអភិបាលខេត្តពោធិសាត', course: 'Diploma in parasitology and entomology(DAP&E)', duration: '6 M', dates: '06/04/26-18/10/26', country: 'ម៉ាឡេស៊ី', sponsor: 'Seameo Tromed' },
+      { id: 2, trainee: 'លោក. សន បូណា', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'Universal Health Coverage(UHS)JFY 2025', duration: '(3A)', dates: '25/03/26-31/03/28', country: 'ជប៉ុន', sponsor: 'ទីភ្នាក់ងារជប៉ុន' },
+      { id: 3, trainee: 'លោកស្រី.សុធី សុផាណា', unit: 'មន្ទីរពេទ្យមិត្តភាពខ្មែរ-សូវៀត', course: 'Cardiac Operating', duration: '6M', dates: '30/09/25-04/05/26', country: 'ឥណ្ឌូនេស៊ី', sponsor: 'សាមីខ្លួន' },
+      { id: 4, trainee: 'លោក.ង៉ាយ ចាន់', unit: 'មន្ទីរពេទ្យមិត្តភាពខ្មែរ-សូវៀត', course: 'Arrhythmia and Eledrophysiology', duration: '6M', dates: '02/06/25-02/12/25', country: 'ឥណ្ឌូនេស៊ី', sponsor: 'សាមីខ្លួន' },
+      { id: 5, trainee: 'លោកស្រី. ឈឿន ស៊ីនួន', unit: 'UHS', course: 'បរិញ្ញាបត្រជាន់ខ្ពស់សុខភាពសាធារណៈ', duration: '2A 3M', dates: '23/06/25-15/09/27', country: 'នូវែសសេឡង់', sponsor: 'រដ្ឋាភិបាលនូវែសសេឡង់' },
+      { id: 6, trainee: 'លោកស្រី. ចាន់ បូរ៉ា', unit: 'រាជាធានីភ្នំពេញ', course: 'Madical Laboratory', duration: '1A', dates: '14/04/25-10/04/26', country: 'កាណាដា', sponsor: 'សាមីខ្លួន' },
+      { id: 7, trainee: 'លោក.ហៃ វណ្ណនិត', unit: 'វិទ្យាស្ថានជាតិសិខភាពសាធារណៈ', course: 'PhD in food Science and Technology', duration: '2A', dates: '08/25-07/27', country: 'សហរដ្ឋអាមេរិក', sponsor: 'University of Nebraska Lincoln' },
+      { id: 8, trainee: 'លោកជំទាវ.អេង ឡេងស៊ា', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'PhD of public Health', duration: '1A', dates: '04/11/24-02/11/25', country: 'អូស្រ្តាលី', sponsor: 'រដ្ឋបាលអូស្រ្តាលី' },
+      { id: 9, trainee: 'លោកស្រី.ប៉េង បញ្ញា', unit: 'រដ្ឋបាលខេត្តបាត់ដំបង', course: 'បរិញ្ញាបត្រជាន់ខ្ពស់សុខភាពសាធារណៈ', duration: '1A 6M', dates: '06/01/25-31/07/26', country: 'អូស្រ្តាលី', sponsor: 'រដ្ឋបាលអូស្រ្តាលី' }
     ]);
 
     let certsData = getLocal(STORAGE_KEYS.CERTS, [
@@ -843,7 +901,7 @@
       { id: 2, num: 'DHRD-CME-2026-0042', recipient: 'ឱសថការី គង់ សុភ័ក្ត្រ', type: 'វិញ្ញាបនបត្របណ្តុះបណ្តាលវេជ្ជសាស្ត្របន្ត (CME/CPD)', date: '2026-10-12', signer: 'រដ្ឋលេខាធិការ' }
     ]);
 
-    let currentUploadedFile = { name: '', type: 'PDF', size: '', data: '', rawFile: null };
+    let currentUploadedFile = { name: '', type: 'PDF', size: '', rawFile: null };
 
     // ៤. LOGS & AUTH CONTROL
     function logActivity(action, target) {
@@ -876,7 +934,6 @@
           lockNotice.classList.add('hidden');
           btnAdmin.classList.remove('hidden');
         } else {
-          // LOCK TO ASSIGNED BUREAU
           activeBureauKey = currentUser.bureau;
           setLocal(STORAGE_KEYS.ACTIVE_BUREAU, activeBureauKey);
           selectBox.value = activeBureauKey;
@@ -929,13 +986,12 @@
     function renderBureauWorkspace() {
       const bureau = BUREAUS[activeBureauKey] || BUREAUS.bureau_1;
 
-      // Update Hero Titles
       document.getElementById('active-bureau-title').innerText = bureau.name;
       document.getElementById('active-bureau-desc').innerText = bureau.desc;
       document.getElementById('active-bureau-select').value = activeBureauKey;
       document.getElementById('stat-bureau-badge').innerText = bureau.shortName;
 
-      // Render Specific Tabs for this Bureau
+      // Render Dynamic Tabs
       const nav = document.getElementById('bureau-tabs-nav');
       nav.innerHTML = bureau.tabs.map(t => {
         const isActive = (t.id === activeTab);
@@ -957,7 +1013,6 @@
       const currentSecEl = document.getElementById(`section-${activeTab}`);
       if (currentSecEl) currentSecEl.classList.remove('hidden');
 
-      // Update Workspace Stats & Render Data
       renderDocs();
       renderDispatch();
       if (activeBureauKey === 'bureau_1') renderExams();
@@ -972,13 +1027,12 @@
 
     // ៦. RENDER MODULES
 
-    // DOCS (បណ្ណាល័យរួម - មានសិទ្ធិមើល ស្វែងរក និងប្រើប្រាស់ស្មើគ្នាទាំង ៣ ការិយាល័យ)
+    // DOCS (Shared Across all bureaus)
     function renderDocs() {
       const list = document.getElementById('docs-list');
       if (!list) return;
       const search = (document.getElementById('doc-search')?.value || '').toLowerCase();
 
-      // បង្ហាញឯកសារទាំងអស់រួមគ្នា ដោយមិនបែងចែកតាមការិយាល័យឡើយ
       const filtered = docsData.filter(d => 
         d.title.toLowerCase().includes(search) || 
         d.code.toLowerCase().includes(search) ||
@@ -1004,7 +1058,7 @@
               <p class="text-[10px] text-slate-400 mt-2">ទំហំ៖ ${d.fileSize} | បង្ហោះ៖ @${d.createdBy}</p>
             </div>
             <div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-              <button onclick="alert('📄 បើកអានឯកសារ៖ ' + '${d.title}')" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">👁️ មើល</button>
+              <button onclick="alert('📄 កំពុងបើកអានឯកសារ៖ ' + '${d.title}')" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">👁️ មើល</button>
               <button onclick="deleteDoc(${d.id})" class="text-slate-400 hover:text-rose-600">🗑️</button>
             </div>
           </div>
@@ -1012,7 +1066,7 @@
       }).join('');
     }
 
-    // DISPATCH (Shows Stage, Location/Where it is, & Date)
+    // DISPATCH (Shows Stage, Location & Date)
     function renderDispatch() {
       const list = document.getElementById('dispatch-list');
       if (!list) return;
@@ -1064,51 +1118,170 @@
       `).join('');
     }
 
-    // BUREAU 2: CONTINUING TRAINING LIST & REPORT
+    // BUREAU 2: ADVANCED TRAINING LIST (ACCORDING TO EXCEL FORMAT)
+    function populateTrainingFilterDropdowns() {
+      const countrySel = document.getElementById('filter-training-country');
+      const sponsorSel = document.getElementById('filter-training-sponsor');
+      if (!countrySel || !sponsorSel) return;
+
+      const currentCountry = countrySel.value;
+      const currentSponsor = sponsorSel.value;
+
+      const countries = [...new Set(trainingData.map(t => t.country).filter(Boolean))];
+      const sponsors = [...new Set(trainingData.map(t => t.sponsor).filter(Boolean))];
+
+      countrySel.innerHTML = '<option value="all">ប្រទេសទាំងអស់</option>' + countries.map(c => `<option value="${c}" ${c === currentCountry ? 'selected' : ''}>${c}</option>`).join('');
+      sponsorSel.innerHTML = '<option value="all">អ្នកឧបត្ថម្ភទាំងអស់</option>' + sponsors.map(s => `<option value="${s}" ${s === currentSponsor ? 'selected' : ''}>${s}</option>`).join('');
+    }
+
+    function resetTrainingFilters() {
+      document.getElementById('filter-training-search').value = '';
+      document.getElementById('filter-training-country').value = 'all';
+      document.getElementById('filter-training-sponsor').value = 'all';
+      document.getElementById('filter-training-unit').value = '';
+      renderTrainingList();
+    }
+
+    function getFilteredTrainingData() {
+      const search = (document.getElementById('filter-training-search')?.value || '').toLowerCase();
+      const country = document.getElementById('filter-training-country')?.value || 'all';
+      const sponsor = document.getElementById('filter-training-sponsor')?.value || 'all';
+      const unit = (document.getElementById('filter-training-unit')?.value || '').toLowerCase();
+
+      return trainingData.filter(t => {
+        const matchSearch = !search || t.trainee.toLowerCase().includes(search) || t.course.toLowerCase().includes(search);
+        const matchCountry = (country === 'all' || t.country === country);
+        const matchSponsor = (sponsor === 'all' || t.sponsor === sponsor);
+        const matchUnit = !unit || t.unit.toLowerCase().includes(unit);
+        return matchSearch && matchCountry && matchSponsor && matchUnit;
+      });
+    }
+
     function renderTrainingList() {
       const tbody = document.getElementById('training-table-body');
       if (!tbody) return;
+      populateTrainingFilterDropdowns();
+
+      const filtered = getFilteredTrainingData();
       document.getElementById('stat-custom-label').innerText = 'វគ្គបណ្តុះបណ្តាល';
-      document.getElementById('stat-custom-val').innerText = trainingData.length;
+      document.getElementById('stat-custom-val').innerText = filtered.length;
       document.getElementById('stat-custom-icon').innerText = '🌐';
 
-      const typeFilter = document.getElementById('filter-training-type')?.value || 'all';
-      const search = (document.getElementById('filter-training-search')?.value || '').toLowerCase();
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-400">មិនមានទិន្នន័យស្របតាមលក្ខខណ្ឌស្វែងរកឡើយ</td></tr>`;
+        return;
+      }
 
-      const filtered = trainingData.filter(t => {
-        const mType = (typeFilter === 'all' || t.type === typeFilter);
-        const mSearch = t.title.toLowerCase().includes(search) || t.country.toLowerCase().includes(search) || t.sponsor.toLowerCase().includes(search);
-        return mType && mSearch;
-      });
-
-      tbody.innerHTML = filtered.map(t => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="p-3 font-bold text-slate-800">${t.title}</td>
-          <td class="p-3">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${t.type === 'ក្នុងប្រទេស' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">${t.type}</span>
+      tbody.innerHTML = filtered.map((t, idx) => `
+        <tr class="hover:bg-emerald-50/40 transition">
+          <td class="p-2.5 text-center font-bold text-slate-600 border-r border-slate-100">${idx + 1}</td>
+          <td class="p-2.5 font-bold text-slate-900 border-r border-slate-100">${t.trainee}</td>
+          <td class="p-2.5 text-slate-700 border-r border-slate-100">${t.unit}</td>
+          <td class="p-2.5 text-emerald-900 font-medium border-r border-slate-100">${t.course}</td>
+          <td class="p-2.5 text-center font-bold text-slate-600 border-r border-slate-100">${t.duration}</td>
+          <td class="p-2.5 text-center font-mono text-[11px] text-slate-600 border-r border-slate-100">${t.dates}</td>
+          <td class="p-2.5 text-center font-semibold text-slate-800 border-r border-slate-100">
+            <span class="px-2 py-0.5 bg-slate-100 rounded">${t.country}</span>
           </td>
-          <td class="p-3 font-semibold text-slate-700">${t.country}</td>
-          <td class="p-3 text-slate-600">${t.sponsor}</td>
-          <td class="p-3 font-bold text-slate-800">${t.participants} នាក់</td>
-          <td class="p-3 text-slate-500 font-mono text-[11px]">${t.start} ដល់ ${t.end}</td>
-          <td class="p-3 text-right">
-            <button onclick="deleteTraining(${t.id})" class="text-rose-600 hover:underline">លុប</button>
+          <td class="p-2.5 text-slate-700 border-r border-slate-100">${t.sponsor}</td>
+          <td class="p-2.5 text-center">
+            <button onclick="deleteTraining(${t.id})" class="text-rose-600 hover:text-rose-800 font-semibold">លុប</button>
           </td>
         </tr>
       `).join('');
     }
 
+    function handleSaveTraining(e) {
+      e.preventDefault();
+      const newT = {
+        id: Date.now(),
+        trainee: document.getElementById('train-trainee').value.trim(),
+        unit: document.getElementById('train-unit').value.trim(),
+        course: document.getElementById('train-course').value.trim(),
+        duration: document.getElementById('train-duration').value.trim(),
+        dates: document.getElementById('train-dates').value.trim(),
+        country: document.getElementById('train-country-input').value.trim(),
+        sponsor: document.getElementById('train-sponsor-input').value.trim()
+      };
+      trainingData.unshift(newT);
+      setLocal(STORAGE_KEYS.TRAINING, trainingData);
+      logActivity('កត់ត្រាវគ្គបណ្តុះបណ្តាល', `${newT.trainee} - ${newT.course}`);
+      closeModals();
+      renderTrainingList();
+    }
+
+    function deleteTraining(id) {
+      if (confirm('តើអ្នកពិតជាចង់លុបទិន្នន័យសិក្ខាកាមនេះមែនទេ?')) {
+        trainingData = trainingData.filter(t => t.id !== id);
+        setLocal(STORAGE_KEYS.TRAINING, trainingData);
+        renderTrainingList();
+      }
+    }
+
+    // EXPORT EXCEL (.XLSX) WITH SHEETJS
+    function exportTrainingExcel() {
+      const filtered = getFilteredTrainingData();
+      const excelRows = filtered.map((t, idx) => ({
+        "ល.រ": idx + 1,
+        "ឈ្មោះ": t.trainee,
+        "តួនាទី និងអង្គភាព": t.unit,
+        "កម្មវិធី ឬឈ្មោះវគ្គសិក្សា": t.course,
+        "រយៈពេល": t.duration,
+        "កាលបរិច្ឆេទ នៃវគ្គ": t.dates,
+        "ប្រទេស": t.country,
+        "ឧបត្ថម្ភ": t.sponsor
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(excelRows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "វគ្គបណ្តុះបណ្តាលបន្ត");
+      XLSX.writeFile(workbook, `របាយការណ៍_វគ្គបណ្តុះបណ្តាលបន្ត_${Date.now()}.xlsx`);
+    }
+
+    // EXPORT CSV
     function exportTrainingCSV() {
-      let csv = "\uFEFFឈ្មោះវគ្គ,ប្រភេទ,ប្រទេស,ដៃគូឧបត្ថម្ភ,សិក្ខាកាម,ចាប់ផ្តើម,បញ្ចប់\n";
-      trainingData.forEach(t => {
-        csv += `"${t.title}","${t.type}","${t.country}","${t.sponsor}","${t.participants}","${t.start}","${t.end}"\n`;
+      const filtered = getFilteredTrainingData();
+      let csv = "\uFEFFល.រ,ឈ្មោះ,តួនាទី និងអង្គភាព,កម្មវិធី ឬឈ្មោះវគ្គសិក្សា,រយៈពេល,កាលបរិច្ឆេទ,ប្រទេស,ឧបត្ថម្ភ\n";
+      filtered.forEach((t, idx) => {
+        csv += `"${idx + 1}","${t.trainee}","${t.unit}","${t.course}","${t.duration}","${t.dates}","${t.country}","${t.sponsor}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `dhrd_training_report_${Date.now()}.csv`;
+      a.download = `training_report_${Date.now()}.csv`;
       a.click();
+    }
+
+    // PRINT PREVIEW & PDF
+    function openPrintPreviewModal() {
+      const filtered = getFilteredTrainingData();
+      const tbody = document.getElementById('preview-table-body');
+      tbody.innerHTML = filtered.map((t, idx) => `
+        <tr>
+          <td class="border border-slate-300 p-2 text-center font-bold">${idx + 1}</td>
+          <td class="border border-slate-300 p-2 font-bold">${t.trainee}</td>
+          <td class="border border-slate-300 p-2">${t.unit}</td>
+          <td class="border border-slate-300 p-2">${t.course}</td>
+          <td class="border border-slate-300 p-2 text-center">${t.duration}</td>
+          <td class="border border-slate-300 p-2 text-center font-mono">${t.dates}</td>
+          <td class="border border-slate-300 p-2 text-center font-semibold">${t.country}</td>
+          <td class="border border-slate-300 p-2">${t.sponsor}</td>
+        </tr>
+      `).join('');
+
+      const now = new Date();
+      document.getElementById('preview-report-subtitle').innerText = `ទិន្នន័យសរុប៖ ${filtered.length} នាក់ | ទាញចេញនៅថ្ងៃទី ${now.toLocaleDateString('km-KH')}`;
+      document.getElementById('preview-sign-date').innerText = `រាជធានីភ្នំពេញ, ថ្ងៃទី ${now.getDate()} ខែ ${now.getMonth() + 1} ឆ្នាំ២០២៦`;
+      document.getElementById('modal-print-preview').classList.remove('hidden');
+    }
+
+    function closePrintPreviewModal() {
+      document.getElementById('modal-print-preview').classList.add('hidden');
+    }
+
+    function executePrintReport() {
+      window.print();
     }
 
     // BUREAU 3: CERTS & DEGREES
@@ -1137,12 +1310,12 @@
       `).join('');
     }
 
-    // ៧. ACTIONS & FORM HANDLERS (WITH 10MB LIMIT)
+    // ៧. ACTIONS & FORM HANDLERS (STRICT ≤ 10MB)
     function handleFileSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
       if (file.size > 10 * 1024 * 1024) {
-        alert('⚠️ ឯកសារនេះលើសពីកម្រិតកំណត់ ១០MB!');
+        alert('⚠️ ឯកសារនេះមានទំហំ ' + (file.size / (1024 * 1024)).toFixed(2) + ' MB លើសពីកម្រិតកំណត់ ១០MB!\nសូមជ្រើសរើសឯកសារទំហំ ១០MB ចុះក្រោម។');
         e.target.value = '';
         return;
       }
@@ -1227,33 +1400,6 @@
       logActivity('កត់ត្រាប្រឡង', `${newExam.type} - ${newExam.major}`);
       closeModals();
       renderExams();
-    }
-
-    function handleSaveTraining(e) {
-      e.preventDefault();
-      const newT = {
-        id: Date.now(),
-        title: document.getElementById('train-title').value,
-        type: document.getElementById('train-type').value,
-        country: document.getElementById('train-country').value,
-        sponsor: document.getElementById('train-sponsor').value,
-        participants: parseInt(document.getElementById('train-participants').value),
-        start: document.getElementById('train-start').value,
-        end: document.getElementById('train-end').value
-      };
-      trainingData.unshift(newT);
-      setLocal(STORAGE_KEYS.TRAINING, trainingData);
-      logActivity('កត់ត្រាបណ្តុះបណ្តាល', `${newT.title} (${newT.country})`);
-      closeModals();
-      renderTrainingList();
-    }
-
-    function deleteTraining(id) {
-      if (confirm('តើអ្នកចង់លុបទិន្នន័យនេះមែនទេ?')) {
-        trainingData = trainingData.filter(t => t.id !== id);
-        setLocal(STORAGE_KEYS.TRAINING, trainingData);
-        renderTrainingList();
-      }
     }
 
     function handleSaveCert(e) {
@@ -1380,9 +1526,8 @@
       });
     }
 
-   function exportCSV(type) {
+    function exportCSV(type) {
       let csv = "\uFEFFកូដ,ចំណងជើង,ការិយាល័យម្ចាស់ឯកសារ,ប្រភេទ,កាលបរិច្ឆេទ,ទំហំ,បង្ហោះដោយ\n";
-      // ទាញយកឯកសារបណ្ណាល័យទាំងអស់រួមគ្នា
       docsData.forEach(d => {
         const bName = BUREAUS[d.bureau]?.name || d.bureau;
         csv += `"${d.code}","${d.title}","${bName}","${d.category}","${d.date}","${d.fileSize}","${d.createdBy}"\n`;
@@ -1394,6 +1539,7 @@
       a.download = `dhrd_shared_library_${Date.now()}.csv`;
       a.click();
     }
+
     let html5QrcodeScanner = null;
     function toggleScannerModal(show) {
       const modal = document.getElementById('modal-scanner');
