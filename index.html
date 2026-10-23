@@ -27,7 +27,9 @@
     .font-moul { font-family: 'Moul', cursive; }
   </style>
 </head>
-<body class="bg-[#f0f4f8] text-slate-800 antialiased min-h-screen flex flex-col">
+<!-- SheetJS Library សម្រាប់ Export Excel (.xlsx) ផ្លូវការ -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <body class="bg-[#f0f4f8] text-slate-800 antialiased min-h-screen flex flex-col">
 
   <!-- ================= TOP HEADER BAR ================= -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
@@ -35,11 +37,8 @@
       
       <!-- Logo & Institution Name -->
       <div class="flex items-center space-x-3">
-        <div class="w-12 h-12 rounded-full border-2 border-emerald-600/30 p-1 flex items-center justify-center bg-emerald-50 shadow-inner">
-          <svg class="w-8 h-8 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2v20M8 5c2 1 6 1 8 0M8 10c2 1.2 6 1.2 8 0M8 15c2 1.2 6 1.2 8 0M10 2a2 2 0 1 0 4 0"/>
-            <circle cx="12" cy="3" r="1.5" fill="currentColor"/>
-          </svg>
+        <div class="w-14 h-14 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center bg-white shadow-xs">
+          <img src="logo.png" alt="MoH Logo" class="w-full h-full object-contain">
         </div>
         <div>
           <div class="flex items-center gap-1.5 flex-wrap">
@@ -194,23 +193,82 @@
       <div id="exams-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
 
-    <!-- TAB 3B: BUREAU 2 CONTINUING TRAINING (ក្នុង និងក្រៅប្រទេស) -->
+   <!-- TAB 3B: BUREAU 2 CONTINUING TRAINING (ទម្រង់តាម EXCEL ផ្លូវការ) -->
     <div id="section-training" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
         <div>
-          <h3 class="text-base sm:text-lg font-bold text-slate-900">🌐 ទិន្នន័យបណ្តុះបណ្តាលក្នុង និងក្រៅប្រទេស</h3>
-          <p class="text-xs text-slate-500">កត់ត្រាវគ្គបណ្តុះបណ្តាល អាហារូបករណ៍ សិក្ខាសាលា និងតម្រៀបទិន្នន័យរបាយការណ៍</p>
+          <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span>🌐</span> របាយការណ៍ អំពីវគ្គបណ្តុះបណ្តាលនានា នៃការិយាល័យបណ្តុះបណ្តាលបន្ត
+          </h3>
+          <p class="text-xs text-slate-500">តាមដានទិន្នន័យសិក្ខាកាម វគ្គសិក្សា រយៈពេល កាលបរិច្ឆេទ ប្រទេស និងដៃគូឧបត្ថម្ភ</p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
-          <button onclick="exportTrainingCSV()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">
-            📊 Export Excel/CSV
+          <!-- ប៊ូតុង Export ច្រើនជម្រើស -->
+          <button onclick="exportTrainingExcel()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-xs">
+            📊 Export Excel (.xlsx)
           </button>
-          <button id="btn-add-training" onclick="openTrainingModal()" class="px-3.5 py-2 bg-[#2d6a4f] text-white rounded-xl text-xs font-bold hover:bg-[#23533e]">
-            + បញ្ចូលទិន្នន័យវគ្គបណ្តុះបណ្តាល
+          <button onclick="exportTrainingCSV()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">
+            📄 CSV
+          </button>
+          <button onclick="openPrintPreviewModal()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-xs">
+            👁️ Preview មុន Print/PDF
+          </button>
+          <button id="btn-add-training" onclick="openTrainingModal()" class="px-3.5 py-1.5 bg-[#2d6a4f] text-white rounded-lg text-xs font-bold hover:bg-[#23533e]">
+            + បញ្ចូលទិន្នន័យថ្មី
           </button>
         </div>
       </div>
 
+      <!-- ជម្រើស Filter របាយការណ៍ស៊ីជម្រៅ (Advanced Filters) -->
+      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 text-xs">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <span class="font-bold text-slate-700 flex items-center gap-1">🎯 ជម្រើសចម្រាញ់ទិន្នន័យរបាយការណ៍ (Advanced Filters)៖</span>
+          <button onclick="resetTrainingFilters()" class="text-xs text-rose-600 hover:underline">🔄 កំណត់ឡើងវិញ</button>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ស្វែងរកតាម ឈ្មោះ ឬវគ្គសិក្សា</label>
+            <input type="text" id="filter-training-search" oninput="renderTrainingList()" placeholder="វាយពាក្យគន្លឹះ..." class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">តម្រៀបតាម ប្រទេស</label>
+            <select id="filter-training-country" onchange="renderTrainingList()" class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
+              <option value="all">ប្រទេសទាំងអស់</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">តម្រៀបតាម ដៃគូឧបត្ថម្ភ</label>
+            <select id="filter-training-sponsor" onchange="renderTrainingList()" class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
+              <option value="all">អ្នកឧបត្ថម្ភទាំងអស់</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">តម្រៀបតាម អង្គភាព/មន្ទីរពេទ្យ</label>
+            <input type="text" id="filter-training-unit" oninput="renderTrainingList()" placeholder="ឧ. កាល់ម៉ែត, UHS..." class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
+          </div>
+        </div>
+      </div>
+
+      <!-- តារាងទិន្នន័យតាមគំរូ EXCEL ជាក់ស្តែង -->
+      <div class="border border-slate-200 rounded-xl overflow-x-auto shadow-2xs">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-[#1b4332] text-white font-bold border-b border-slate-200">
+            <tr>
+              <th class="p-2.5 text-center w-12 border-r border-emerald-800">ល.រ</th>
+              <th class="p-2.5 border-r border-emerald-800 min-w-[150px]">ឈ្មោះ</th>
+              <th class="p-2.5 border-r border-emerald-800 min-w-[160px]">តួនាទី និងអង្គភាព</th>
+              <th class="p-2.5 border-r border-emerald-800 min-w-[200px]">កម្មវិធី ឬឈ្មោះវគ្គសិក្សា</th>
+              <th class="p-2.5 text-center border-r border-emerald-800 min-w-[80px]">រយៈពេល</th>
+              <th class="p-2.5 text-center border-r border-emerald-800 min-w-[140px]">កាលបរិច្ឆេទ នៃវគ្គ</th>
+              <th class="p-2.5 text-center border-r border-emerald-800 min-w-[100px]">ប្រទេស</th>
+              <th class="p-2.5 border-r border-emerald-800 min-w-[140px]">ឧបត្ថម្ភ</th>
+              <th class="p-2.5 text-center min-w-[80px]">សកម្មភាព</th>
+            </tr>
+          </thead>
+          <tbody id="training-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+        </table>
+      </div>
+    </div>
       <!-- Filters & Preview Bar -->
       <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 flex-wrap text-xs">
         <span class="font-bold text-slate-600">🔍 Filter របាយការណ៍៖</span>
@@ -268,7 +326,9 @@
   <!-- LOGIN MODAL (WITH BUREAU SPECIFICATION) -->
   <div id="modal-login" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-4 text-center">
-      <div class="w-16 h-16 rounded-full bg-emerald-50 border-2 border-emerald-600/30 flex items-center justify-center mx-auto text-3xl shadow-inner">⚕️</div>
+      <div class="w-20 h-20 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs">
+        <img src="logo.png" alt="MoH Logo" class="w-full h-full object-contain">
+      </div>
       <div>
         <h3 class="text-base font-bold text-slate-900">ចូលប្រព័ន្ធតាមការិយាល័យ</h3>
         <p class="text-xs text-emerald-700 font-semibold mt-0.5">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស - MoH</p>
@@ -536,59 +596,55 @@
     </div>
   </div>
 
-  <!-- BUREAU 2: CONTINUING TRAINING MODAL (FORM ថ្មី) -->
+  <!-- BUREAU 2: CONTINUING TRAINING MODAL (FORM ថ្មីតាម EXCEL) -->
   <div id="modal-training" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-base font-bold text-slate-900">បញ្ចូលទិន្នន័យបណ្តុះបណ្តាលក្នុង និងក្រៅប្រទេស</h3>
+        <h3 class="text-base font-bold text-slate-900">បញ្ចូលទិន្នន័យវគ្គបណ្តុះបណ្តាលថ្មី</h3>
         <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
       </div>
       <form onsubmit="handleSaveTraining(event)" class="space-y-3">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះសិក្ខាកាម *</label>
+            <input type="text" id="train-trainee" required placeholder="ឧ. លោកវេជ្ជ. នង មុន្នីពេជ្យ" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">តួនាទី និងអង្គភាព *</label>
+            <input type="text" id="train-unit" required placeholder="ឧ. មន្ទីរពេទ្យកាល់ម៉ែត" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+          </div>
+        </div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះវគ្គបណ្តុះបណ្តាល / សិក្ខាសាលា</label>
-          <input type="text" id="train-title" required placeholder="វគ្គ..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs">
+          <label class="block text-xs font-bold text-slate-700 mb-1">កម្មវិធី ឬឈ្មោះវគ្គសិក្សា *</label>
+          <input type="text" id="train-course" required placeholder="ឧ. Universal Health Coverage(UHS) JFY 2025" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទបណ្តុះបណ្តាល</label>
-            <select id="train-type" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-              <option value="ក្នុងប្រទេស">🇰🇭 ក្នុងប្រទេស (In-Country)</option>
-              <option value="ក្រៅប្រទេស">✈️ ក្រៅប្រទេស (Overseas)</option>
-            </select>
+            <label class="block text-xs font-bold text-slate-700 mb-1">រយៈពេល (ខែ/ឆ្នាំ)</label>
+            <input type="text" id="train-duration" required placeholder="ឧ. 6M, 1A ឬ 2A 3M" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រទេស / ទីតាំង</label>
-            <input type="text" id="train-country" required placeholder="ឧ. កម្ពុជា, ជប៉ុន, បារាំង..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ស្ថាប័នរៀបចំ / ដៃគូឧបត្ថម្ភ</label>
-            <input type="text" id="train-sponsor" required placeholder="ឧ. JICA, WHO, ក្រសួង..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ចំនួនសិក្ខាកាម (នាក់)</label>
-            <input type="number" id="train-participants" required placeholder="ឧ. 25" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs">
+            <label class="block text-xs font-bold text-slate-700 mb-1">កាលបរិច្ឆេទ នៃវគ្គ</label>
+            <input type="text" id="train-dates" required placeholder="ឧ. 25/03/26-31/03/28" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ថ្ងៃចាប់ផ្តើម</label>
-            <input type="date" id="train-start" required class="w-full border border-slate-200 rounded-xl p-2.5 text-xs">
+            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រទេស *</label>
+            <input type="text" id="train-country-input" required placeholder="ឧ. ជប៉ុន, ម៉ាឡេស៊ី, កម្ពុជា..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ថ្ងៃបញ្ចប់</label>
-            <input type="date" id="train-end" required class="w-full border border-slate-200 rounded-xl p-2.5 text-xs">
+            <label class="block text-xs font-bold text-slate-700 mb-1">ដៃគូឧបត្ថម្ភ *</label>
+            <input type="text" id="train-sponsor-input" required placeholder="ឧ. ទីភ្នាក់ងារជប៉ុន, សាមីខ្លួន..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
           </div>
         </div>
         <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
           <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600">បោះបង់</button>
-          <button type="submit" class="px-5 py-2 text-xs font-bold bg-[#2d6a4f] text-white rounded-xl">រក្សាទុកទិន្នន័យ</button>
+          <button type="submit" class="px-5 py-2 text-xs font-bold bg-[#2d6a4f] text-white rounded-xl hover:bg-[#23533e]">រក្សាទុក</button>
         </div>
       </form>
     </div>
   </div>
-
   <!-- BUREAU 3: CERT & DEGREE MODAL (ចុះបញ្ជី និងកំណត់លេខ) -->
   <div id="modal-cert" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
