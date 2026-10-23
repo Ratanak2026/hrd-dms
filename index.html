@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="km">
 <head>
-  <!DOCTYPE html>
-<html lang="km">
-<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="page-title">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស - ក្រសួងសុខាភិបាល</title>
@@ -21,7 +18,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
-  <!-- 👇 ដាក់កូដទាំង ២ បន្ទាត់នេះនៅត្រង់នេះ (មុនពេលបិទ </head>) 👇 -->
+  <!-- Google Drive API & Identity Services Libraries -->
   <script src="https://apis.google.com/js/api.js" async defer></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -30,14 +27,13 @@
     .font-moul { font-family: 'Moul', cursive; }
   </style>
 </head>
-</head>
 <body class="bg-[#f0f4f8] text-slate-800 antialiased min-h-screen flex flex-col">
 
   <!-- ================= TOP HEADER BAR ================= -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       
-      <!-- Institutional Identity (Dynamic Interface) -->
+      <!-- Institutional Identity -->
       <div class="flex items-center space-x-3">
         <div class="w-12 h-12 rounded-full border-2 border-emerald-600/30 p-1 flex items-center justify-center bg-emerald-50 shadow-inner">
           <svg class="w-8 h-8 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -55,10 +51,16 @@
         </div>
       </div>
 
-      <!-- Header Tools & Profile -->
+      <!-- Action Tools & Profile -->
       <div class="flex items-center space-x-2 sm:space-x-3">
         <button onclick="toggleScannerModal(true)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
           📷 <span>ស្កេន QR</span>
+        </button>
+
+        <!-- Google Drive Connection Status Button -->
+        <button id="btn-drive-header" onclick="handleAuthGoogleDrive()" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-emerald-200 transition">
+          <span id="drive-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+          <span id="drive-header-text">ភ្ជាប់ Google Drive</span>
         </button>
 
         <button id="btn-admin-settings" onclick="openSettingsModal()" class="px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-slate-200 transition">
@@ -69,7 +71,6 @@
           + Upload ឯកសារ
         </button>
 
-        <!-- User Profile & Logout -->
         <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
           <div class="text-right hidden md:block leading-tight">
             <div class="text-xs font-bold text-slate-800" id="current-user-fullname">ថ្នាក់ដឹកនាំរដ្ឋបាល</div>
@@ -84,7 +85,7 @@
     </div>
   </header>
 
-  <!-- ================= MAIN DASHBOARD CONTAINER ================= -->
+  <!-- ================= MAIN CONTAINER ================= -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 w-full flex-1 space-y-5">
 
     <!-- HERO GREEN BANNER -->
@@ -143,7 +144,7 @@
       </div>
     </div>
 
-    <!-- HORIZONTAL MODULE TABS -->
+    <!-- MODULE TABS -->
     <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
       <button onclick="switchTab('docs')" id="tab-btn-docs" class="px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition bg-[#2d6a4f] text-white shadow-xs">
         <span>📚 ១. បណ្ណាល័យឯកសារ (e-Library)</span>
@@ -159,14 +160,14 @@
       </button>
     </div>
 
-    <!-- ================= TAB 1: E-LIBRARY ================= -->
+    <!-- TAB 1: E-LIBRARY -->
     <div id="section-docs" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-5 shadow-2xs">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
             <span>📚</span> បណ្ណាល័យឯកសារឌីជីថល (Digital e-Library)
           </h3>
-          <p class="text-xs text-slate-500 mt-0.5">បង្ហោះឯកសារ (Upload រហូតដល់ 20MB), អានផ្ទាល់ (View), ទាញយក (Download) និងបោះពុម្ព</p>
+          <p class="text-xs text-slate-500 mt-0.5">បង្ហោះឯកសារ (Upload ≤ 10MB), អានផ្ទាល់ (View), ទាញយក (Download) និងបោះពុម្ព</p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
           <button id="btn-export-docs" onclick="exportCSV('docs')" class="px-3.5 py-2 bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-100 flex items-center gap-1.5 transition">
@@ -192,7 +193,7 @@
       <div id="docs-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2"></div>
     </div>
 
-    <!-- ================= TAB 2: DISPATCH ================= -->
+    <!-- TAB 2: DISPATCH -->
     <div id="section-dispatch" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
@@ -206,7 +207,7 @@
       <div id="dispatch-list" class="space-y-3"></div>
     </div>
 
-    <!-- ================= TAB 3: CERTS ================= -->
+    <!-- TAB 3: CERTS -->
     <div id="section-certs" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
@@ -220,7 +221,7 @@
       <div id="certs-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </div>
 
-    <!-- ================= TAB 4: PROJECTS ================= -->
+    <!-- TAB 4: PROJECTS -->
     <div id="section-projects" class="bg-white rounded-2xl border border-slate-200 p-8 text-center space-y-3 shadow-2xs hidden">
       <div class="w-16 h-16 bg-emerald-50 text-[#2d6a4f] rounded-full flex items-center justify-center mx-auto text-2xl font-bold">✨</div>
       <h3 class="text-base font-bold text-slate-900">គម្រោងថ្មី / ត្រៀមដំណើរការ</h3>
@@ -257,7 +258,7 @@
     </div>
   </div>
 
-  <!-- SETTINGS MODAL (USERS, LOGS, & INTERFACE CUSTOMIZER) -->
+  <!-- SETTINGS MODAL (USERS, INTERFACE & LOGS) -->
   <div id="modal-settings" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -274,7 +275,6 @@
 
       <!-- 1. USERS & PERMISSIONS TAB -->
       <div id="set-content-users" class="space-y-4 flex-1 overflow-y-auto pr-1">
-        <!-- Add User Form -->
         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
           <h4 class="text-xs font-bold text-slate-800 mb-2.5">➕ បង្កើតគណនីមន្ត្រី និងកំណត់សិទ្ធិ (Custom Permissions)</h4>
           <form onsubmit="handleCreateUser(event)" class="space-y-3">
@@ -319,7 +319,6 @@
           </form>
         </div>
 
-        <!-- Users Table -->
         <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
           <table class="w-full text-left">
             <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
@@ -403,23 +402,38 @@
     </div>
   </div>
 
-  <!-- UPLOAD DOC MODAL (UP TO 20MB WITH INDEXED-DB) -->
+  <!-- UPLOAD DOC MODAL (STRICT 10MB LIMIT & GOOGLE DRIVE SUPPORT) -->
   <div id="modal-doc" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
         <h3 class="text-base font-bold text-slate-900" id="doc-modal-title">បង្ហោះឯកសារថ្មី (Upload File)</h3>
         <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
       </div>
+      
+      <!-- Google Drive Connection Quick Alert -->
+      <div class="flex items-center justify-between p-3 bg-emerald-50/70 rounded-xl border border-emerald-200">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">☁️</span>
+          <div>
+            <p class="text-xs font-bold text-slate-800">ការផ្ទុកលើ Google Drive Cloud (15 GB)</p>
+            <p id="modal-drive-status" class="text-[10px] text-slate-500">មិនទាន់បានភ្ជាប់គណនី (រក្សាទុកក្នុង IndexedDB)</p>
+          </div>
+        </div>
+        <button type="button" onclick="handleAuthGoogleDrive()" id="modal-btn-connect-drive" class="px-3 py-1 bg-white border border-emerald-600 text-emerald-700 text-xs font-bold rounded-lg hover:bg-emerald-600 hover:text-white transition">
+          🔗 ភ្ជាប់ Drive
+        </button>
+      </div>
+
       <form onsubmit="handleSaveDoc(event)" class="space-y-3.5">
         <input type="hidden" id="doc-edit-id">
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ជ្រើសរើស ឬទម្លាក់ហ្វាលឯកសារ (PDF, Word, Excel, Images) រហូតដល់ 20MB</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ជ្រើសរើស ឬទម្លាក់ហ្វាលឯកសារ (PDF, Word, Excel, Images) <span class="text-emerald-700 font-extrabold">ត្រឹម 10MB ចុះក្រោម</span></label>
           <div id="drop-zone" onclick="document.getElementById('doc-file-input').click()" class="border-2 border-dashed border-emerald-400/80 bg-emerald-50/40 hover:bg-emerald-50/80 rounded-xl p-4 text-center cursor-pointer transition">
             <input type="file" id="doc-file-input" onchange="handleFileSelected(event)" class="hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.png,.jpg,.jpeg">
             <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto mb-2 text-lg">📁</div>
             <p id="file-label" class="text-xs font-bold text-slate-700">ចុចទីនេះដើម្បីជ្រើសរើសហ្វាល ឬអូសទម្លាក់ចូល (Drag & Drop)</p>
-            <p id="file-sublabel" class="text-[11px] text-slate-400 mt-1">គាំទ្រទំហំអតិបរមារហូតដល់ <strong>20MB</strong> មិនបាត់បង់ទិន្នន័យឡើយ</p>
+            <p id="file-sublabel" class="text-[11px] text-slate-500 mt-1">គាំទ្រទំហំអតិបរមាត្រឹម <strong>10MB ចុះក្រោម</strong> (PDF, DOCX, XLSX)</p>
           </div>
         </div>
 
@@ -567,7 +581,98 @@
 
   <!-- ================= JAVASCRIPT MASTER CORE ENGINE ================= -->
   <script>
-    // ១. INDEXED-DB HIGH-CAPACITY STORAGE ENGINE (FOR UP TO 20MB FILES)
+    // ១. GOOGLE DRIVE API & CLIENT ID CONFIGURATION
+    const GOOGLE_CONFIG = {
+      // ដាក់ Client ID របស់អ្នកដែលបានបង្កើតជោគជ័យ
+      CLIENT_ID: '458781655576-bla4cg8mupcb9seh3ap2fg838k96u23i.apps.googleusercontent.com',
+      // 👇 សូមដាក់ API Key របស់អ្នកដែលចាប់ផ្ដើមដោយ AIzaSy... ជំនួសនៅត្រង់នេះ 👇
+      API_KEY: 'YOUR_API_KEY_HERE',
+      DISCOVERY_DOC: 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
+      SCOPES: 'https://www.googleapis.com/auth/drive.file'
+    };
+
+    let tokenClient = null;
+    let gapiInited = false;
+    let gisInited = false;
+    let googleAccessToken = null;
+
+    function initGoogleDriveAuth() {
+      if (typeof gapi !== 'undefined') {
+        gapi.load('client', async () => {
+          try {
+            await gapi.client.init({
+              apiKey: GOOGLE_CONFIG.API_KEY,
+              discoveryDocs: [GOOGLE_CONFIG.DISCOVERY_DOC],
+            });
+            gapiInited = true;
+          } catch (err) {
+            console.log('GAPI Init Wait or Key Needed:', err);
+          }
+        });
+      }
+
+      if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CONFIG.CLIENT_ID,
+          scope: GOOGLE_CONFIG.SCOPES,
+          callback: (resp) => {
+            if (resp.error) {
+              alert('ការភ្ជាប់ Google Drive បរាជ័យ៖ ' + resp.error);
+              return;
+            }
+            googleAccessToken = resp.access_token;
+            updateDriveAuthUI(true);
+            logActivity('ភ្ជាប់ Google Drive', 'បានភ្ជាប់ Google Drive ដោយជោគជ័យ');
+          },
+        });
+        gisInited = true;
+      }
+    }
+
+    function handleAuthGoogleDrive() {
+      if (!tokenClient) {
+        initGoogleDriveAuth();
+      }
+      if (tokenClient) {
+        tokenClient.requestAccessToken({ prompt: 'consent' });
+      } else {
+        alert('ប្រព័ន្ធ Google Identity Services កំពុងដំណើរការ... សូមសាកល្បងម្ដងទៀតក្នុងរយៈពេល ៣ វិនាទី!');
+      }
+    }
+
+    function updateDriveAuthUI(isConnected) {
+      const dot = document.getElementById('drive-dot');
+      const text = document.getElementById('drive-header-text');
+      const modalStatus = document.getElementById('modal-drive-status');
+      const modalBtn = document.getElementById('modal-btn-connect-drive');
+
+      if (isConnected) {
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+        text.innerText = 'Drive: បានភ្ជាប់ ✅';
+        modalStatus.innerText = 'បានភ្ជាប់គណនីរួចរាល់ (ឯកសារនឹងរត់ចូល Google Drive របស់អ្នក)';
+        modalStatus.className = 'text-[10px] text-emerald-700 font-bold';
+        modalBtn.innerText = '✓ បានភ្ជាប់';
+        modalBtn.className = 'px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-lg cursor-default';
+      }
+    }
+
+    async function uploadToGoogleDrive(fileBlob, fileName, mimeType) {
+      const metadata = { name: fileName, mimeType: mimeType };
+      const form = new FormData();
+      form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+      form.append('file', fileBlob);
+
+      const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink,webContentLink', {
+        method: 'POST',
+        headers: new Headers({ 'Authorization': 'Bearer ' + googleAccessToken }),
+        body: form
+      });
+
+      if (!res.ok) throw new Error('Google Drive upload error');
+      return await res.json();
+    }
+
+    // ២. INDEXED-DB HIGH-CAPACITY STORAGE ENGINE (LOCAL FALLBACK)
     let dbInstance = null;
     function initIndexedDB() {
       return new Promise((resolve, reject) => {
@@ -608,15 +713,15 @@
       });
     }
 
-    // ២. STORAGE KEYS & CONFIG
+    // ៣. STORAGE KEYS & DATA INITIALIZATION
     const STORAGE_KEYS = {
-      DOCS: 'hrd_dms_unlimited_docs_v9',
-      DISPATCH: 'hrd_dms_disp_v9',
-      CERTS: 'hrd_dms_certs_v9',
-      USERS: 'hrd_dms_users_v9',
-      LOGS: 'hrd_dms_logs_v9',
-      SESSION: 'hrd_dms_session_v9',
-      UI: 'hrd_dms_ui_custom_v9'
+      DOCS: 'hrd_dms_unlimited_docs_v10',
+      DISPATCH: 'hrd_dms_disp_v10',
+      CERTS: 'hrd_dms_certs_v10',
+      USERS: 'hrd_dms_users_v10',
+      LOGS: 'hrd_dms_logs_v10',
+      SESSION: 'hrd_dms_session_v10',
+      UI: 'hrd_dms_ui_custom_v10'
     };
 
     function getLocal(key, defaultVal) {
@@ -630,7 +735,6 @@
       try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) { console.error(e); }
     }
 
-    // Default System Users
     const defaultUsers = [
       {
         id: 1,
@@ -658,7 +762,6 @@
       }
     ];
 
-    // Default Interface Settings
     const defaultUI = {
       ministry: 'ក្រសួងសុខាភិបាល',
       dept: 'នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស',
@@ -680,6 +783,7 @@
         date: '2026-10-15',
         notes: 'វិញ្ញាសារៀបចំសម្រាប់សម័យប្រឡងថ្នាក់ជាតិ',
         createdBy: 'admin',
+        driveLink: '',
         audit: [{ time: '2026-10-15 08:30:00', user: 'admin', action: 'Upload ឯកសារដំបូង' }]
       },
       {
@@ -694,6 +798,7 @@
         date: '2026-10-12',
         notes: 'ឯកសារណែនាំផ្លូវការសម្រាប់មន្ត្រីសុខាភិបាល',
         createdBy: 'admin',
+        driveLink: '',
         audit: [{ time: '2026-10-12 09:15:00', user: 'admin', action: 'Upload ឯកសារដំបូង' }]
       },
       {
@@ -708,6 +813,7 @@
         date: '2026-10-10',
         notes: 'ប្រកាសអន្តរក្រសួង',
         createdBy: 'admin',
+        driveLink: '',
         audit: [{ time: '2026-10-10 14:00:00', user: 'admin', action: 'Upload ឯកសារដំបូង' }]
       }
     ];
@@ -733,10 +839,10 @@
     let certificatesData = getLocal(STORAGE_KEYS.CERTS, defaultCerts);
     let currentBureau = 'all';
     let currentCategory = 'all';
-    let currentUploadedFile = { name: '', type: 'PDF', size: '1.5 MB', data: '' };
+    let currentUploadedFile = { name: '', type: 'PDF', size: '1.5 MB', data: '', rawFile: null };
     const stages = ['រដ្ឋបាលទទួល', 'ពិនិត្យបច្ចេកទេស', 'ថ្នាក់ដឹកនាំពិនិត្យ', 'រង់ចាំចុះហត្ថលេខា', 'បញ្ចប់រួចរាល់'];
 
-    // ៣. AUDIT LOGGING
+    // ៤. AUDIT LOGGING SYSTEM
     function logActivity(action, target) {
       const now = new Date();
       const timeStr = now.toLocaleDateString('km-KH') + ' ' + now.toLocaleTimeString('en-US');
@@ -752,7 +858,7 @@
       setLocal(STORAGE_KEYS.LOGS, auditLogs);
     }
 
-    // ៤. INTERFACE CUSTOMIZATION ENGINE
+    // ៥. INTERFACE CUSTOMIZATION ENGINE
     function applyInterfaceSettings() {
       document.getElementById('ui-header-ministry').innerText = currentUI.ministry;
       document.getElementById('ui-header-dept').innerText = currentUI.dept;
@@ -761,7 +867,6 @@
       document.getElementById('ui-banner-desc').innerText = currentUI.bannerDesc;
       document.getElementById('page-title').innerText = `${currentUI.dept} - ${currentUI.ministry}`;
 
-      // Populate Settings Inputs
       document.getElementById('setting-ui-ministry').value = currentUI.ministry;
       document.getElementById('setting-ui-dept').value = currentUI.dept;
       document.getElementById('setting-ui-sub').value = currentUI.sub;
@@ -784,7 +889,7 @@
       alert('✅ បានរក្សាទុកការកែប្រែ Interface ដោយជោគជ័យ!');
     }
 
-    // ៥. PERMISSIONS CHECK & AUTHENTICATION
+    // ៦. AUTHENTICATION & ROLE-BASED ACCESS CONTROL
     function checkAuth() {
       if (!currentUser) {
         document.getElementById('modal-login').classList.remove('hidden');
@@ -794,7 +899,6 @@
         document.getElementById('current-user-role').innerText = currentUser.role === 'Admin' ? '👑 Admin' : (currentUser.role === 'Uploader' ? '✍️ Uploader' : '👁️ Viewer');
         document.getElementById('stat-role-text').innerText = currentUser.role === 'Admin' ? 'Admin Mode' : `${currentUser.role} Mode`;
 
-        // Check Permissions for Action Buttons
         const p = currentUser.permissions || {};
         toggleElement('btn-admin-settings', p.admin);
         toggleElement('btn-header-upload', p.upload);
@@ -841,7 +945,6 @@
       }
     }
 
-    // Preset helper for checkboxes
     function applyRolePreset(role) {
       if (role === 'Admin') {
         document.getElementById('perm-upload').checked = true;
@@ -989,15 +1092,19 @@
       document.getElementById(`set-tab-${tab}`).className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#2d6a4f] text-white';
     }
 
-    // ៦. FILE UPLOAD (UP TO 20MB)
+    // ៧. STRICT 10MB FILE UPLOAD HANDLER
     function handleFileSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
 
-      // 20MB Limit Check
-      if (file.size > 20 * 1024 * 1024) {
-        alert('⚠️ ហ្វាលនេះមានទំហំធំជាង 20MB! សូមជ្រើសរើសហ្វាលក្រោម 20MB។');
+      // STRICT 10MB LIMIT CHECK (10 * 1024 * 1024 Bytes)
+      const MAX_SIZE_BYTES = 10 * 1024 * 1024;
+      if (file.size > MAX_SIZE_BYTES) {
+        alert('⚠️ ឯកសារនេះមានទំហំ ' + (file.size / (1024 * 1024)).toFixed(2) + ' MB ដែលលើសពីកម្រិតកំណត់ ១០MB!\nសូមជ្រើសរើសឯកសារទំហំ ១០MB ចុះក្រោម។');
         e.target.value = '';
+        document.getElementById('file-label').innerText = 'ចុចទីនេះដើម្បីជ្រើសរើសហ្វាល ឬអូសទម្លាក់ចូល (Drag & Drop)';
+        document.getElementById('file-sublabel').innerText = 'គាំទ្រទំហំអតិបរមាត្រឹម 10MB ចុះក្រោម (PDF, DOCX, XLSX)';
+        currentUploadedFile = { name: '', type: 'PDF', size: '', data: '', rawFile: null };
         return;
       }
 
@@ -1005,7 +1112,7 @@
       const sizeMB = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
 
       document.getElementById('file-label').innerHTML = `✅ បានជ្រើសរើស៖ <span class="text-emerald-700 font-bold">${file.name}</span>`;
-      document.getElementById('file-sublabel').innerText = `ទំហំ៖ ${sizeMB} | ប្រភេទ៖ ${ext}`;
+      document.getElementById('file-sublabel').innerText = `ទំហំ៖ ${sizeMB} (អនុញ្ញាត) | ប្រភេទ៖ ${ext}`;
 
       const titleInput = document.getElementById('doc-title');
       if (!titleInput.value) {
@@ -1018,13 +1125,14 @@
           name: file.name,
           type: ext === 'PDF' ? 'PDF' : (ext.includes('DOC') ? 'DOCX' : ext),
           size: sizeMB,
-          data: evt.target.result
+          data: evt.target.result,
+          rawFile: file
         };
       };
       reader.readAsDataURL(file);
     }
 
-    // ៧. RENDER BOOKSHELF CARDS (RESILIENT & PERMISSION CONTROLLED)
+    // ៨. RENDER BOOKSHELF CARDS
     function renderDocs() {
       const list = document.getElementById('docs-list');
       if (!list) return;
@@ -1043,6 +1151,7 @@
         const isPdf = (d.fileType || 'PDF') === 'PDF';
         const fileIcon = isPdf ? '📕' : '📘';
         const fileIconBg = isPdf ? 'bg-rose-50 border-rose-100 text-rose-500' : 'bg-blue-50 border-blue-100 text-blue-500';
+        const cloudTag = d.driveLink ? '<span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">☁️ Google Drive</span>' : '';
 
         return `
           <div class="bg-white rounded-2xl border border-slate-200 p-4.5 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group">
@@ -1059,9 +1168,10 @@
                 </div>
               </div>
 
-              <span class="text-[11px] font-bold text-emerald-800 mb-1 inline-block">
-                ${d.category || 'ឯកសារទូទៅ'}
-              </span>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <span class="text-[11px] font-bold text-emerald-800 inline-block">${d.category || 'ឯកសារទូទៅ'}</span>
+                ${cloudTag}
+              </div>
 
               <h4 class="text-xs sm:text-sm font-bold text-slate-900 leading-snug group-hover:text-emerald-700 transition">
                 ${d.title}
@@ -1100,20 +1210,36 @@
       updateStats();
     }
 
-    // ៨. SAVE & EDIT HANDLERS (SAVING FILES TO INDEXED-DB TO NEVER HIT QUOTA)
+    // ៩. SAVE & EDIT HANDLERS (WITH GOOGLE DRIVE & INDEXED-DB)
     async function handleSaveDoc(e) {
       e.preventDefault();
+      const saveBtn = document.getElementById('btn-save-doc');
+      saveBtn.disabled = true;
+      saveBtn.innerText = 'កំពុងរក្សាទុក...';
+
       const editId = document.getElementById('doc-edit-id').value;
       const now = new Date();
       const timeStr = now.toLocaleDateString('km-KH') + ' ' + now.toLocaleTimeString('en-US');
       const docId = editId ? parseInt(editId) : Date.now();
 
-      // Save large file blob to IndexedDB
+      let driveLink = '';
+
+      // Direct Upload to Google Drive if token is available
+      if (googleAccessToken && currentUploadedFile.rawFile) {
+        try {
+          saveBtn.innerText = 'កំពុង Upload ទៅ Google Drive...';
+          const driveRes = await uploadToGoogleDrive(currentUploadedFile.rawFile, currentUploadedFile.name, currentUploadedFile.rawFile.type);
+          driveLink = driveRes.webViewLink;
+        } catch (err) {
+          console.error('Drive upload failed, fallback to local storage:', err);
+        }
+      }
+
+      // Save file data to IndexedDB
       if (currentUploadedFile.data) {
         await saveFileToDB(docId, currentUploadedFile.data);
       }
 
-      // Metadata only stored in localStorage (Lightweight, never overflows)
       const record = {
         id: docId,
         code: document.getElementById('doc-code').value,
@@ -1126,6 +1252,7 @@
         date: new Date().toISOString().split('T')[0],
         notes: document.getElementById('doc-notes').value,
         createdBy: currentUser ? currentUser.username : 'admin',
+        driveLink: driveLink,
         audit: []
       };
 
@@ -1138,6 +1265,7 @@
             record.fileName = documentsData[idx].fileName;
             record.fileType = documentsData[idx].fileType;
             record.fileSize = documentsData[idx].fileSize;
+            record.driveLink = documentsData[idx].driveLink || '';
           }
           documentsData[idx] = { ...documentsData[idx], ...record };
           logActivity('កែប្រែឯកសារ', `បានកែសម្រួលឯកសារ ${record.code} (${record.title})`);
@@ -1149,9 +1277,11 @@
       }
 
       setLocal(STORAGE_KEYS.DOCS, documentsData);
+      saveBtn.disabled = false;
+      saveBtn.innerText = 'បង្ហោះ និងរក្សាទុក';
       closeModals();
       renderDocs();
-      currentUploadedFile = { name: '', type: 'PDF', size: '1.5 MB', data: '' };
+      currentUploadedFile = { name: '', type: 'PDF', size: '', data: '', rawFile: null };
     }
 
     function editDoc(id) {
@@ -1164,7 +1294,7 @@
       document.getElementById('doc-category').value = doc.category;
       document.getElementById('doc-notes').value = doc.notes || '';
       document.getElementById('doc-modal-title').innerText = 'កែសម្រួលឯកសារ';
-      document.getElementById('file-label').innerHTML = doc.fileName ? `📁 ហ្វាលបច្ចុប្បន្ន៖ <span class="text-emerald-700">${doc.fileName}</span>` : 'ចុចទីនេះដើម្បីប្តូរហ្វាលថ្មី';
+      document.getElementById('file-label').innerHTML = doc.fileName ? `📁 ហ្វាលបច្ចុប្បន្ន៖ <span class="text-emerald-700">${doc.fileName}</span>` : 'ចុចទីនេះដើម្បីប្តូរហ្វាលថ្មី (≤ 10MB)';
       openDocModal();
     }
 
@@ -1195,6 +1325,13 @@
       logActivity('មើល (View)', `បានចុចមើលឯកសារ ${doc.code} (${doc.title})`);
       renderDocs();
 
+      // If document has a direct Google Drive link
+      if (doc.driveLink) {
+        window.open(doc.driveLink, '_blank');
+        return;
+      }
+
+      // Preview from IndexedDB
       const fileData = await getFileFromDB(id);
       if (fileData) {
         const previewWin = window.open();
@@ -1228,6 +1365,8 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+      } else if (doc.driveLink) {
+        window.open(doc.driveLink, '_blank');
       } else {
         alert(`📥 កំពុងទាញយកឯកសារគំរូ៖\n«${doc.title}»`);
       }
@@ -1259,7 +1398,7 @@
       document.getElementById('modal-doc-history').classList.add('hidden');
     }
 
-    // ៩. DISPATCH & CERTS
+    // ១០. DISPATCH & CERTS
     function renderDispatches() {
       const list = document.getElementById('dispatch-list');
       if (!list) return;
@@ -1429,7 +1568,7 @@
       printWin.document.close();
     }
 
-    // ១០. UTILITIES & NAVIGATION
+    // ១១. UTILITIES & NAVIGATION
     function updateStats() {
       document.getElementById('stat-docs').innerText = documentsData.length;
       document.getElementById('stat-dispatch').innerText = dispatchesData.filter(d => d.stage !== 'បញ្ចប់រួចរាល់').length;
@@ -1468,8 +1607,8 @@
         document.querySelector('#modal-doc form').reset();
         document.getElementById('doc-modal-title').innerText = 'បង្ហោះឯកសារថ្មី (Upload File)';
         document.getElementById('file-label').innerHTML = 'ចុចទីនេះដើម្បីជ្រើសរើសហ្វាល ឬអូសទម្លាក់ចូល (Drag & Drop)';
-        document.getElementById('file-sublabel').innerText = 'គាំទ្រទំហំអតិបរមារហូតដល់ 20MB';
-        currentUploadedFile = { name: '', type: 'PDF', size: '1.5 MB', data: '' };
+        document.getElementById('file-sublabel').innerText = 'គាំទ្រទំហំអតិបរមាត្រឹម 10MB ចុះក្រោម (PDF, DOCX, XLSX)';
+        currentUploadedFile = { name: '', type: 'PDF', size: '', data: '', rawFile: null };
       }
     }
     function openDispatchModal() { document.getElementById('modal-dispatch').classList.remove('hidden'); }
@@ -1486,9 +1625,9 @@
     function exportCSV(type) {
       let csv = "\uFEFF";
       if (type === 'docs') {
-        csv += "កូដ,ចំណងជើង,ការិយាល័យ,ប្រភេទ,កាលបរិច្ឆេទ,ឈ្មោះហ្វាល,បង្ហោះដោយ\n";
+        csv += "កូដ,ចំណងជើង,ការិយាល័យ,ប្រភេទ,កាលបរិច្ឆេទ,ឈ្មោះហ្វាល,Google_Drive_Link,បង្ហោះដោយ\n";
         documentsData.forEach(d => {
-          csv += `"${d.code}","${d.title}","${d.bureau}","${d.category}","${d.date}","${d.fileName || ''}","${d.createdBy || ''}"\n`;
+          csv += `"${d.code}","${d.title}","${d.bureau}","${d.category}","${d.date}","${d.fileName || ''}","${d.driveLink || ''}","${d.createdBy || ''}"\n`;
         });
       }
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1525,7 +1664,7 @@
       }
     }
 
-    // Drag and Drop Initializer
+    // Drag & Drop Listener
     function initDragAndDrop() {
       const dropZone = document.getElementById('drop-zone');
       if (!dropZone) return;
@@ -1555,9 +1694,10 @@
       });
     }
 
-    // SYSTEM BOOTSTRAP
+    // BOOTSTRAP INITIALIZATION
     window.addEventListener('DOMContentLoaded', async () => {
       await initIndexedDB();
+      initGoogleDriveAuth();
       applyInterfaceSettings();
       checkAuth();
       initDragAndDrop();
