@@ -916,32 +916,44 @@
 
     // ៦. RENDER MODULES
 
-    // DOCS (Filtered strictly by active bureau)
+    // DOCS (បណ្ណាល័យរួម - មានសិទ្ធិមើល ស្វែងរក និងប្រើប្រាស់ស្មើគ្នាទាំង ៣ ការិយាល័យ)
     function renderDocs() {
       const list = document.getElementById('docs-list');
       if (!list) return;
       const search = (document.getElementById('doc-search')?.value || '').toLowerCase();
-      const filtered = docsData.filter(d => d.bureau === activeBureauKey && (d.title.toLowerCase().includes(search) || d.code.toLowerCase().includes(search)));
+
+      // បង្ហាញឯកសារទាំងអស់រួមគ្នា ដោយមិនបែងចែកតាមការិយាល័យឡើយ
+      const filtered = docsData.filter(d => 
+        d.title.toLowerCase().includes(search) || 
+        d.code.toLowerCase().includes(search) ||
+        (d.category && d.category.toLowerCase().includes(search))
+      );
 
       document.getElementById('stat-bureau-docs').innerText = filtered.length;
 
-      list.innerHTML = filtered.map(d => `
-        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs hover:shadow-md transition flex flex-col justify-between">
-          <div>
-            <div class="flex items-start justify-between gap-2 mb-2">
-              <span class="text-xl">📕</span>
-              <span class="text-[10px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200">${d.code}</span>
+      list.innerHTML = filtered.map(d => {
+        const bureauTag = BUREAUS[d.bureau]?.shortName || d.bureau;
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <span class="text-xl">📕</span>
+                <span class="text-[10px] font-mono font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200">${d.code}</span>
+              </div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <span class="text-[10px] font-bold text-emerald-800">${d.category}</span>
+                <span class="text-[9px] bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded border border-emerald-200 font-semibold">🏢 ${bureauTag}</span>
+              </div>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-900 mt-1">${d.title}</h4>
+              <p class="text-[10px] text-slate-400 mt-2">ទំហំ៖ ${d.fileSize} | បង្ហោះ៖ @${d.createdBy}</p>
             </div>
-            <span class="text-[10px] font-bold text-emerald-800">${d.category}</span>
-            <h4 class="text-xs sm:text-sm font-bold text-slate-900 mt-1">${d.title}</h4>
-            <p class="text-[10px] text-slate-400 mt-2">ទំហំ៖ ${d.fileSize} | បង្ហោះ៖ @${d.createdBy}</p>
+            <div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+              <button onclick="alert('📄 បើកអានឯកសារ៖ ' + '${d.title}')" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">👁️ មើល</button>
+              <button onclick="deleteDoc(${d.id})" class="text-slate-400 hover:text-rose-600">🗑️</button>
+            </div>
           </div>
-          <div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-            <button onclick="alert('📄 បើកអានឯកសារ៖ ' + '${d.title}')" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">👁️ មើល</button>
-            <button onclick="deleteDoc(${d.id})" class="text-slate-400 hover:text-rose-600">🗑️</button>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     // DISPATCH (Shows Stage, Location/Where it is, & Date)
@@ -1312,20 +1324,20 @@
       });
     }
 
-    function exportCSV(type) {
-      let csv = "\uFEFFកូដ,ចំណងជើង,ប្រភេទ,កាលបរិច្ឆេទ,ទំហំ,បង្ហោះដោយ\n";
-      const filtered = docsData.filter(d => d.bureau === activeBureauKey);
-      filtered.forEach(d => {
-        csv += `"${d.code}","${d.title}","${d.category}","${d.date}","${d.fileSize}","${d.createdBy}"\n`;
+   function exportCSV(type) {
+      let csv = "\uFEFFកូដ,ចំណងជើង,ការិយាល័យម្ចាស់ឯកសារ,ប្រភេទ,កាលបរិច្ឆេទ,ទំហំ,បង្ហោះដោយ\n";
+      // ទាញយកឯកសារបណ្ណាល័យទាំងអស់រួមគ្នា
+      docsData.forEach(d => {
+        const bName = BUREAUS[d.bureau]?.name || d.bureau;
+        csv += `"${d.code}","${d.title}","${bName}","${d.category}","${d.date}","${d.fileSize}","${d.createdBy}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${activeBureauKey}_docs_${Date.now()}.csv`;
+      a.download = `dhrd_shared_library_${Date.now()}.csv`;
       a.click();
     }
-
     let html5QrcodeScanner = null;
     function toggleScannerModal(show) {
       const modal = document.getElementById('modal-scanner');
