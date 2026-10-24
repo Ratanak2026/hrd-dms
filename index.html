@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="page-title">ប្រព័ន្ធគ្រប់គ្រងការងារតាមការិយាល័យ - DHRD ក្រសួងសុខាភិបាល</title>
+  <title id="page-title">ប្រព័ន្ធគ្រប់គ្រងការងារ និងឯកសារឌីជីថល - DHRD ក្រសួងសុខាភិបាល</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -16,8 +16,7 @@
   <!-- SheetJS Library សម្រាប់ Export Excel (.xlsx) -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <!-- Supabase & QR Tools -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- QR Tools -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <!-- Google Drive API Libraries -->
@@ -40,11 +39,11 @@
   <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       
-      <!-- Logo ថ្មីផ្លូវការក្រសួងសុខាភិបាល -->
- <div class="flex items-center space-x-3">
-  <div class="h-12 w-12 min-w-[48px] rounded-full border border-emerald-600/30 p-1 flex items-center justify-center bg-white shadow-xs overflow-hidden">
-  <img src="Logo MOH_Ok_Background.png" alt="MoH Logo" class="h-full w-full object-contain">
-</div>
+      <!-- Institutional Logo & Titles -->
+      <div class="flex items-center space-x-3">
+        <div class="h-12 w-12 min-w-[48px] rounded-full border border-emerald-600/30 p-1 flex items-center justify-center bg-white shadow-xs overflow-hidden">
+          <img src="Logo MOH_Ok_Background.png" onerror="this.src='photo_2026-10-16_22-06-11.jpg'" alt="MoH Logo" class="h-full w-full object-contain">
+        </div>
         <div>
           <div class="flex items-center gap-1.5 flex-wrap">
             <span class="font-bold text-slate-900 text-sm sm:text-base" id="ui-header-ministry">ក្រសួងសុខាភិបាល</span>
@@ -55,22 +54,49 @@
         </div>
       </div>
 
-      <!-- Action Tools & Profile -->
+      <!-- Header Tools & Profile -->
       <div class="flex items-center space-x-2 sm:space-x-3">
-        <button onclick="toggleScannerModal(true)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-          📷 <span>ស្កេន QR</span>
-        </button>
-
+        
         <!-- Google Drive Connection Status -->
         <button id="btn-drive-header" onclick="handleAuthGoogleDrive()" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-emerald-200 transition">
           <span id="drive-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
           <span id="drive-header-text">Google Drive</span>
         </button>
 
-        <button id="btn-admin-settings" onclick="openSettingsModal()" class="px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-slate-200 transition">
-          ⚙️ <span>គ្រប់គ្រង Users & Logs</span>
+        <button onclick="toggleScannerModal(true)" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+          📷 <span>ស្កេន QR</span>
         </button>
 
+        <!-- SYSTEM TOOLS DROPDOWN MENU -->
+        <div class="relative" id="tools-menu-container">
+          <button onclick="toggleToolsMenu()" class="px-3.5 py-1.5 bg-[#2563eb] hover:bg-[#1d4ed8] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-xs transition">
+            ⚙️ <span>Tools</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          
+          <div id="tools-dropdown" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 hidden">
+            <button onclick="openSystemModal('settings')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+              ⚙️ <span>Settings (ទូទៅ & Users)</span>
+            </button>
+            <button onclick="openSystemModal('location')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+              🌍 <span>Location (គ្រប់គ្រងបញ្ជីប្រទេស)</span>
+            </button>
+            <button onclick="openSystemModal('files')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+              📁 <span>File System & Cloud Backups</span>
+            </button>
+            <button onclick="openSystemModal('security')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+              🛡️ <span>Security & Permissions</span>
+            </button>
+            <button onclick="openSystemModal('logging')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2 border-b border-slate-100">
+              📋 <span>Logging (កំណត់ត្រាសកម្មភាព)</span>
+            </button>
+            <button onclick="openSystemModal('manual')" class="w-full text-left px-4 py-2 text-xs text-emerald-700 font-bold hover:bg-emerald-50 flex items-center gap-2">
+              📖 <span>User Manual (សៀវភៅណែនាំ)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- User Profile & Logout -->
         <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
           <div class="text-right hidden md:block leading-tight">
             <div class="text-xs font-bold text-slate-800" id="current-user-fullname">ថ្នាក់ដឹកនាំរដ្ឋបាល</div>
@@ -198,7 +224,7 @@
       <div id="exams-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
 
-    <!-- TAB 3B: BUREAU 2 CONTINUING TRAINING (ទម្រង់តាម EXCEL ផ្លូវការ) -->
+    <!-- TAB 3B: BUREAU 2 CONTINUING TRAINING (របាយការណ៍ស៊ីជម្រៅតាម HRMIS & EXCEL) -->
     <div id="section-training" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 space-y-4 shadow-2xs hidden">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
         <div>
@@ -208,7 +234,6 @@
           <p class="text-xs text-slate-500">តាមដានទិន្នន័យសិក្ខាកាម វគ្គសិក្សា រយៈពេល កាលបរិច្ឆេទ ប្រទេស និងដៃគូឧបត្ថម្ភ</p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
-          <!-- ប៊ូតុង Export ច្រើនជម្រើស -->
           <button onclick="exportTrainingExcel()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-xs">
             📊 Export Excel (.xlsx)
           </button>
@@ -224,37 +249,61 @@
         </div>
       </div>
 
-      <!-- ជម្រើស Filter របាយការណ៍ស៊ីជម្រៅ (Advanced Filters) -->
-      <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 text-xs">
-        <div class="flex items-center justify-between flex-wrap gap-2">
-          <span class="font-bold text-slate-700 flex items-center gap-1">🎯 ជម្រើសចម្រាញ់ទិន្នន័យរបាយការណ៍ (Advanced Filters)៖</span>
-          <button onclick="resetTrainingFilters()" class="text-xs text-rose-600 hover:underline">🔄 កំណត់ឡើងវិញ</button>
+      <!-- ជម្រើសចម្រាញ់របាយការណ៍ស៊ីជម្រៅ (ADVANCED HRMIS FILTER) -->
+      <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 text-xs">
+        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-slate-200 pb-2">
+          <div class="flex items-center gap-4">
+            <span class="font-bold text-slate-700">🎯 ប្រភេទវគ្គ៖</span>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="radio" name="train-scope" value="all" checked onchange="renderTrainingList()" class="text-emerald-600">
+              <span>ទាំងអស់</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="radio" name="train-scope" value="Domestic" onchange="renderTrainingList()" class="text-emerald-600">
+              <span>🇰🇭 ក្នុងប្រទេស (Domestic)</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="radio" name="train-scope" value="International" onchange="renderTrainingList()" class="text-emerald-600">
+              <span>✈️ ក្រៅប្រទេស (International)</span>
+            </label>
+          </div>
+          <button onclick="resetTrainingFilters()" class="text-xs text-rose-600 font-bold hover:underline">🔄 កំណត់ឡើងវិញ</button>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2.5">
           <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ស្វែងរកតាម ឈ្មោះ ឬវគ្គសិក្សា</label>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ស្វែងរក (ឈ្មោះ/វគ្គ)</label>
             <input type="text" id="filter-training-search" oninput="renderTrainingList()" placeholder="វាយពាក្យគន្លឹះ..." class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">តម្រៀបតាម ប្រទេស</label>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ប្រទេស (ទាញពី Location Tools)</label>
             <select id="filter-training-country" onchange="renderTrainingList()" class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
               <option value="all">ប្រទេសទាំងអស់</option>
             </select>
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">តម្រៀបតាម ដៃគូឧបត្ថម្ភ</label>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ដៃគូឧបត្ថម្ភ (Sponsor)</label>
             <select id="filter-training-sponsor" onchange="renderTrainingList()" class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
               <option value="all">អ្នកឧបត្ថម្ភទាំងអស់</option>
             </select>
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">តម្រៀបតាម អង្គភាព/មន្ទីរពេទ្យ</label>
-            <input type="text" id="filter-training-unit" oninput="renderTrainingList()" placeholder="ឧ. កាល់ម៉ែត, UHS..." class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">តម្រៀបតាម (Order By)</label>
+            <select id="filter-training-order" onchange="renderTrainingList()" class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
+              <option value="name">ឈ្មោះសិក្ខាកាម (A-Z)</option>
+              <option value="country">ប្រទេស (Location)</option>
+              <option value="sponsor">ដៃគូឧបត្ថម្ភ (Sponsor)</option>
+              <option value="duration">រយៈពេល</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">អង្គភាព/មន្ទីរពេទ្យ</label>
+            <input type="text" id="filter-training-unit" oninput="renderTrainingList()" placeholder="ឧ. កាល់ម៉ែត..." class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
           </div>
         </div>
       </div>
 
-      <!-- តារាងទិន្នន័យតាមគំរូ EXCEL ជាក់ស្តែង -->
+      <!-- តារាងទិន្នន័យតាម EXCEL ជាក់ស្តែង -->
       <div class="border border-slate-200 rounded-xl overflow-x-auto shadow-2xs">
         <table class="w-full text-left text-xs">
           <thead class="bg-[#1b4332] text-white font-bold border-b border-slate-200">
@@ -298,12 +347,181 @@
 
   </main>
 
-  <!-- ================= MODALS & FORMS ================= -->
+  <!-- ================= SYSTEM TOOLS & SETTINGS MODAL ================= -->
+  <div id="modal-system-tools" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2" id="system-tools-title">⚙️ System Tools Dashboard</h3>
+        <button onclick="closeSystemModal()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
+      </div>
+
+      <!-- Navigation for System Tools -->
+      <div class="flex items-center gap-2 border-b border-slate-100 pb-2 overflow-x-auto scrollbar-none text-xs">
+        <button onclick="switchSystemToolTab('settings')" id="systab-settings" class="px-3.5 py-1.5 rounded-lg font-bold bg-[#2d6a4f] text-white">⚙️ Settings</button>
+        <button onclick="switchSystemToolTab('location')" id="systab-location" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">🌍 Location (ប្រទេស)</button>
+        <button onclick="switchSystemToolTab('files')" id="systab-files" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">📁 File System</button>
+        <button onclick="switchSystemToolTab('security')" id="systab-security" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">🛡️ Security</button>
+        <button onclick="switchSystemToolTab('logging')" id="systab-logging" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">📋 Logging</button>
+        <button onclick="switchSystemToolTab('manual')" id="systab-manual" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">📖 User Manual</button>
+      </div>
+
+      <!-- 1. SETTINGS TAB (Users & Interface) -->
+      <div id="syscontent-settings" class="space-y-4 flex-1 overflow-y-auto pr-1">
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+          <h4 class="text-xs font-bold text-slate-800 mb-2">➕ បង្កើតគណនីមន្ត្រីថ្មី</h4>
+          <form onsubmit="handleCreateUser(event)" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះពេញមន្ត្រី</label>
+                <input type="text" id="new-user-fullname" required placeholder="ឧ. វេជ្ជ. សុខ វិបុល" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះគណនី (Username)</label>
+                <input type="text" id="new-user-username" required placeholder="vibul.moh" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">លេខសម្ងាត់</label>
+                <input type="password" id="new-user-password" required placeholder="••••••••" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ការិយាល័យ</label>
+                <select id="new-user-bureau" class="w-full border border-slate-200 rounded-lg p-2 text-xs bg-white">
+                  <option value="bureau_1">ការិយាល័យមុនពេលបម្រើការងារ</option>
+                  <option value="bureau_2">ការិយាល័យបណ្តុះបណ្តាលបន្ត</option>
+                  <option value="bureau_3">ការិយាល័យចុះបញ្ជិកា/វិញ្ញាបនបត្រ</option>
+                  <option value="all">👑 ទាំងអស់ (Admin នាយកដ្ឋាន)</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex justify-end pt-1">
+              <button type="submit" class="px-5 py-2 bg-[#2d6a4f] text-white rounded-lg text-xs font-bold">+ បង្កើតគណនី</button>
+            </div>
+          </form>
+        </div>
+        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
+          <table class="w-full text-left">
+            <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-2.5">ឈ្មោះ</th>
+                <th class="p-2.5">Username</th>
+                <th class="p-2.5">ការិយាល័យ</th>
+                <th class="p-2.5 text-right">សកម្មភាព</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 2. LOCATION TAB (គ្រប់គ្រងបញ្ជីប្រទេសតាមរូបភាពទី១៨) -->
+      <div id="syscontent-location" class="space-y-4 flex-1 overflow-y-auto pr-1 hidden">
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+          <h4 class="text-xs font-bold text-slate-800 mb-2">➕ បញ្ចូលប្រទេសថ្មី (នឹងបង្ហាញក្នុង Dropdown Form ស្វ័យប្រវត្តិ)</h4>
+          <form onsubmit="handleAddCountry(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-2.5 items-end">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">លេខកូដ (Code)</label>
+              <input type="text" id="new-country-code" required placeholder="ឧ. KH, JP, AU" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះជាភាសាខ្មែរ (Description Kh)</label>
+              <input type="text" id="new-country-kh" required placeholder="ឧ. កម្ពុជា, ជប៉ុន..." class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះជាភាសាអង់គ្លេស (Description En)</label>
+              <input type="text" id="new-country-en" required placeholder="ឧ. Cambodia, Japan..." class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+            </div>
+            <div>
+              <button type="submit" class="w-full py-2 bg-[#2d6a4f] text-white rounded-lg text-xs font-bold">+ បន្ថែមប្រទេស</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
+          <table class="w-full text-left">
+            <thead class="bg-[#1b4332] text-white font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-2.5 w-16">Code</th>
+                <th class="p-2.5">Description (Kh)</th>
+                <th class="p-2.5">Description (En)</th>
+                <th class="p-2.5 text-right">សកម្មភាព</th>
+              </tr>
+            </thead>
+            <tbody id="countries-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 3. FILE SYSTEM & CLOUD BACKUPS -->
+      <div id="syscontent-files" class="space-y-4 flex-1 overflow-y-auto pr-1 hidden">
+        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-center justify-between">
+          <div>
+            <h4 class="text-xs font-bold text-blue-900">💾 ទាញយកទិន្នន័យប្រព័ន្ធទាំងមូល (Full System Backup)</h4>
+            <p class="text-[11px] text-blue-700 mt-0.5">ទាញយកឯកសារបណ្ណាល័យ លិខិតចេញ-ចូល និងទិន្នន័យបណ្តុះបណ្តាលជា JSON</p>
+          </div>
+          <button onclick="backupEntireSystem()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition">
+            📥 Export Backup JSON
+          </button>
+        </div>
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
+          <div class="p-3 bg-slate-100 font-bold text-slate-700 border-b border-slate-200">
+            📂 បញ្ជីឯកសារដែលបានផ្ទុកក្នុងប្រព័ន្ធ និង Google Drive
+          </div>
+          <div id="files-system-list" class="divide-y divide-slate-100 max-h-72 overflow-y-auto bg-white"></div>
+        </div>
+      </div>
+
+      <!-- 4. SECURITY & PERMISSIONS -->
+      <div id="syscontent-security" class="space-y-3 flex-1 overflow-y-auto pr-1 hidden text-xs">
+        <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-2">
+          <h4 class="font-bold text-emerald-900">🛡️ គោលការណ៍សុវត្ថិភាពទិន្នន័យ (Role-Based Access Control)</h4>
+          <ul class="list-disc list-inside space-y-1 text-slate-700">
+            <li><strong>Admin:</strong> មានសិទ្ធិមើល គ្រប់គ្រងការិយាល័យទាំង ៣ បង្កើត User និងចូលប្រើប្រាស់ Settings[cite: 17]។</li>
+            <li><strong>User1, User2, User3:</strong> ត្រូវបានចាក់សោរឱ្យមើលឃើញ និងធ្វើការបានតែក្នុងដែនសមត្ថកិច្ចការិយាល័យរបស់ខ្លួនប៉ុណ្ណោះ។</li>
+            <li><strong>បណ្ណាល័យរួម (Shared e-Library):</strong> គ្រប់ការិយាល័យអាចមើល និងទាញយកឯកសារចំណេះដឹងរួមគ្នាបានស្មើភាព។</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 5. LOGGING TAB -->
+      <div id="syscontent-logging" class="space-y-2.5 flex-1 overflow-y-auto pr-1 hidden">
+        <div class="flex justify-between items-center text-xs">
+          <span class="text-slate-500">កំណត់ត្រាសកម្មភាពមន្ត្រីក្នុងប្រព័ន្ធ</span>
+          <button onclick="clearActivityLogs()" class="text-rose-600 hover:underline">ជម្រះ Logs ចាស់ៗ</button>
+        </div>
+        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
+          <table class="w-full text-left">
+            <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-2.5">កាលបរិច្ឆេទ</th>
+                <th class="p-2.5">មន្ត្រី (User)</th>
+                <th class="p-2.5">សកម្មភាព</th>
+                <th class="p-2.5">គោលដៅ</th>
+              </tr>
+            </thead>
+            <tbody id="logs-table-body" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 6. USER MANUAL TAB -->
+      <div id="syscontent-manual" class="space-y-3 flex-1 overflow-y-auto pr-1 hidden text-xs leading-relaxed text-slate-700">
+        <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+          <h4 class="font-bold text-slate-900 text-sm">📖 សៀវភៅណែនាំអ្នកប្រើប្រាស់សង្ខេប (User Manual)</h4>
+          <p><strong>១. ការបង្ហោះឯកសារ៖</strong> ត្រូវប្រាកដថាឯកសារមានទំហំ ≤ 10MB។ អាចភ្ជាប់ Google Drive ដើម្បីផ្ទុកឡើង Cloud អូតូ។</p>
+          <p><strong>២. ការគ្រប់គ្រងវគ្គបណ្តុះបណ្តាល៖</strong> ជ្រើសរើស «ពីថ្ងៃខែឆ្នាំ ដល់ ថ្ងៃខែឆ្នាំ» លើប្រតិទិន និងជ្រើសរើសប្រទេសដែលបានកំណត់ក្នុង Tools -> Location[cite: 17, 18]។</p>
+          <p><strong>៣. ការទាញរបាយការណ៍៖</strong> អាច Export ជា Excel (.xlsx) ផ្លូវការ, CSV ឬចុចលើ Preview ដើម្បីផ្ទៀងផ្ទាត់ក្បាលសំបុត្រ និងហត្ថលេខាមុននឹងបោះពុម្ព[cite: 19]។</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- LOGIN MODAL (WITH NEW LOGO) -->
-  <div class="w-20 h-20 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs overflow-hidden">
-  <img src="Logo MOH_Ok_Background.png" alt="MoH Logo" class="w-full h-full object-contain">
-</div>
+  <div id="modal-login" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-4 text-center">
+      <div class="w-20 h-20 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs overflow-hidden">
+        <img src="Logo MOH_Ok_Background.png" onerror="this.src='photo_2026-10-16_22-06-11.jpg'" alt="MoH Logo" class="w-full h-full object-contain">
+      </div>
       <div>
         <h3 class="text-base font-bold text-slate-900">ចូលប្រព័ន្ធតាមការិយាល័យ</h3>
         <p class="text-xs text-emerald-700 font-semibold mt-0.5">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស - MoH</p>
@@ -325,92 +543,6 @@
         <div>🏢 ការិយាល័យទី១: <strong class="text-slate-600">user1</strong> / <strong class="text-slate-600">123</strong></div>
         <div>🏢 ការិយាល័យទី២: <strong class="text-slate-600">user2</strong> / <strong class="text-slate-600">123</strong></div>
         <div>🏢 ការិយាល័យទី៣: <strong class="text-slate-600">user3</strong> / <strong class="text-slate-600">123</strong></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADMIN SETTINGS & USER MANAGEMENT MODAL -->
-  <div id="modal-settings" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-base font-bold text-slate-900">⚙️ ផ្ទាំងគ្រប់គ្រងរដ្ឋបាលជាន់ខ្ពស់ (Admin Control)</h3>
-        <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
-      </div>
-
-      <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
-        <button onclick="switchSettingsTab('users')" id="set-tab-users" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#2d6a4f] text-white">👥 កំណត់ Users & ការិយាល័យ</button>
-        <button onclick="switchSettingsTab('logs')" id="set-tab-logs" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600">🕒 កំណត់ត្រា Logs</button>
-      </div>
-
-      <!-- USERS TAB -->
-      <div id="set-content-users" class="space-y-4 flex-1 overflow-y-auto pr-1">
-        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
-          <h4 class="text-xs font-bold text-slate-800 mb-2.5">➕ បង្កើតគណនីមន្ត្រី និងកំណត់ទៅតាមការិយាល័យជាក់លាក់</h4>
-          <form onsubmit="handleCreateUser(event)" class="space-y-3">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
-              <div>
-                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះពេញមន្ត្រី</label>
-                <input type="text" id="new-user-fullname" required placeholder="ឧ. វេជ្ជ. សុខ វិបុល" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
-              </div>
-              <div>
-                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះគណនី (Username)</label>
-                <input type="text" id="new-user-username" required placeholder="vibul.moh" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
-              </div>
-              <div>
-                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">លេខសម្ងាត់</label>
-                <input type="password" id="new-user-password" required placeholder="••••••••" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
-              </div>
-              <div>
-                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ការិយាល័យទទួលបន្ទុក</label>
-                <select id="new-user-bureau" class="w-full border border-slate-200 rounded-lg p-2 text-xs bg-white">
-                  <option value="bureau_1">ការិយាល័យមុនពេលបម្រើការងារ</option>
-                  <option value="bureau_2">ការិយាល័យបណ្តុះបណ្តាលបន្ត</option>
-                  <option value="bureau_3">ការិយាល័យចុះបញ្ជិកា/វិញ្ញាបនបត្រ</option>
-                  <option value="all">👑 ទាំងអស់ (Admin នាយកដ្ឋាន)</option>
-                </select>
-              </div>
-            </div>
-            <div class="flex justify-between items-center pt-2 border-t border-slate-200">
-              <div class="flex items-center gap-3 text-xs">
-                <label class="flex items-center gap-1"><input type="checkbox" id="perm-upload" checked class="rounded text-emerald-600"> <span>បង្ហោះ/បង្កើត</span></label>
-                <label class="flex items-center gap-1"><input type="checkbox" id="perm-edit" checked class="rounded text-emerald-600"> <span>កែសម្រួល</span></label>
-                <label class="flex items-center gap-1"><input type="checkbox" id="perm-delete" class="rounded text-rose-600"> <span>លុប</span></label>
-              </div>
-              <button type="submit" class="px-5 py-2 bg-[#2d6a4f] text-white rounded-lg text-xs font-bold">+ បង្កើតគណនី</button>
-            </div>
-          </form>
-        </div>
-
-        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
-          <table class="w-full text-left">
-            <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
-              <tr>
-                <th class="p-2.5">ឈ្មោះមន្ត្រី</th>
-                <th class="p-2.5">Username</th>
-                <th class="p-2.5">ការិយាល័យដែលត្រូវចូល</th>
-                <th class="p-2.5 text-right">សកម្មភាព</th>
-              </tr>
-            </thead>
-            <tbody id="users-table-body" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- LOGS TAB -->
-      <div id="set-content-logs" class="space-y-2.5 flex-1 overflow-y-auto pr-1 hidden">
-        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
-          <table class="w-full text-left">
-            <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
-              <tr>
-                <th class="p-2.5">កាលបរិច្ឆេទ</th>
-                <th class="p-2.5">មន្ត្រី (User)</th>
-                <th class="p-2.5">សកម្មភាព</th>
-                <th class="p-2.5">គោលដៅ</th>
-              </tr>
-            </thead>
-            <tbody id="logs-table-body" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
       </div>
     </div>
   </div>
@@ -571,14 +703,14 @@
     </div>
   </div>
 
-  <!-- BUREAU 2: CONTINUING TRAINING MODAL (FORM ថ្មីតាម EXCEL) -->
+  <!-- BUREAU 2: CONTINUING TRAINING MODAL (FORM ថ្មី កាលបរិច្ឆេទ & ប្រទេសទាញពី TOOLS) -->
   <div id="modal-training" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
         <h3 class="text-base font-bold text-slate-900">បញ្ចូលទិន្នន័យវគ្គបណ្តុះបណ្តាលថ្មី</h3>
         <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
       </div>
-     <form onsubmit="handleSaveTraining(event)" class="space-y-3">
+      <form onsubmit="handleSaveTraining(event)" class="space-y-3">
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះសិក្ខាកាម *</label>
@@ -595,12 +727,21 @@
           <input type="text" id="train-course" required placeholder="ឧ. Universal Health Coverage(UHS) JFY 2025" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
         </div>
 
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">រយៈពេល (ខែ/ឆ្នាំ) *</label>
-          <input type="text" id="train-duration" required placeholder="ឧ. 6M, 1A ឬ 2A 3M" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">រយៈពេល (ខែ/ឆ្នាំ) *</label>
+            <input type="text" id="train-duration" required placeholder="ឧ. 6M, 1A ឬ 2A 3M" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទទីតាំង</label>
+            <select id="train-scope-input" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none bg-white">
+              <option value="International">✈️ ក្រៅប្រទេស (International)</option>
+              <option value="Domestic">🇰🇭 ក្នុងប្រទេស (Domestic)</option>
+            </select>
+          </div>
         </div>
 
-        <!-- ១. ពីថ្ងៃខែឆ្នាំ ដល់ ថ្ងៃខែឆ្នាំ (អាចជ្រើសរើសប្រតិទិន ឬវាយលេខចូលក៏បាន) -->
+        <!-- ពីថ្ងៃខែឆ្នាំ ដល់ ថ្ងៃខែឆ្នាំ -->
         <div class="grid grid-cols-2 gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">📅 ពីថ្ងៃខែឆ្នាំ (ចាប់ផ្តើម) *</label>
@@ -612,41 +753,27 @@
           </div>
         </div>
 
-        <!-- ២. ប្រទេស (មាន Dropdown បញ្ជីស្រាប់ និងអាចវាយឈ្មោះប្រទេសថ្មីបាន) -->
+        <!-- ប្រទេស (ទាញបញ្ជីចេញពី TOOLS LOCATION) -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រទេស (ជ្រើសរើស ឬវាយបញ្ចូល) *</label>
-            <input list="country-suggestions" id="train-country-input" required placeholder="ចុចរើស ឬវាយឈ្មោះប្រទេស..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none bg-white">
-            <datalist id="country-suggestions">
-              <option value="កម្ពុជា">
-              <option value="ជប៉ុន">
-              <option value="ម៉ាឡេស៊ី">
-              <option value="ឥណ្ឌូនេស៊ី">
-              <option value="អូស្រ្តាលី">
-              <option value="នូវែលសេឡង់">
-              <option value="សហរដ្ឋអាមេរិក">
-              <option value="កាណាដា">
-              <option value="បារាំង">
-              <option value="សិង្ហបុរី">
-              <option value="ថៃ">
-              <option value="វៀតណាម">
-              <option value="ហ្វីលីពីន">
-              <option value="កូរ៉េខាងត្បូង">
-              <option value="ចិន">
-              <option value="ឡាវ">
-            </datalist>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-xs font-bold text-slate-700">ប្រទេស *</label>
+              <button type="button" onclick="openSystemModal('location')" class="text-[10px] text-blue-600 font-bold hover:underline">+ ថែមប្រទេស</button>
+            </div>
+            <select id="train-country-select" required class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none bg-white"></select>
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">ដៃគូឧបត្ថម្ភ *</label>
-            <input type="text" id="train-sponsor-input" required placeholder="ឧ. ទីភ្នាក់ងារជប៉ុន, សាមីខ្លួន, WHO..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+            <input type="text" id="train-sponsor-input" required placeholder="ឧ. ទីភ្នាក់ងារជប៉ុន, សាមីខ្លួន..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
           </div>
         </div>
 
         <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">បោះបង់</button>
-          <button type="submit" class="px-5 py-2 text-xs font-bold bg-[#2d6a4f] text-white rounded-xl hover:bg-[#23533e]">រក្សាទុក</button>
+          <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600">បោះបង់</button>
+          <button type="submit" class="px-5 py-2 text-xs font-bold bg-[#2d6a4f] text-white rounded-xl">រក្សាទុក</button>
         </div>
-      </form>    </div>
+      </form>
+    </div>
   </div>
 
   <!-- PRINT PREVIEW & PDF MODAL -->
@@ -669,7 +796,9 @@
         <!-- Official Letterhead -->
         <div class="flex justify-between items-start border-b pb-4">
           <div class="flex items-center gap-3">
-            <img src="photo_2026-10-16_22-06-11.jpg" onerror="this.src='logo.png'" alt="MoH Logo" class="w-16 h-16 object-contain">
+            <div class="h-16 w-16 min-w-[64px] rounded-full border border-emerald-600/30 p-1 flex items-center justify-center bg-white shadow-xs overflow-hidden">
+              <img src="Logo MOH_Ok_Background.png" onerror="this.src='photo_2026-10-16_22-06-11.jpg'" alt="MoH Logo" class="h-full w-full object-contain">
+            </div>
             <div class="leading-tight">
               <h4 class="font-bold text-xs sm:text-sm text-slate-900">ក្រសួងសុខាភិបាល</h4>
               <p class="text-xs text-slate-700 font-semibold">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស</p>
@@ -865,19 +994,35 @@
 
     // ៣. STORAGE & DEFAULT DATA
     const STORAGE_KEYS = {
-      DOCS: 'hrd_shared_docs_v12',
-      DISPATCH: 'hrd_bureau_disp_v12',
-      EXAMS: 'hrd_bureau_exams_v12',
-      TRAINING: 'hrd_bureau_train_v12',
-      CERTS: 'hrd_bureau_certs_v12',
-      USERS: 'hrd_bureau_users_v12',
-      LOGS: 'hrd_bureau_logs_v12',
-      SESSION: 'hrd_bureau_session_v12',
-      ACTIVE_BUREAU: 'hrd_active_bureau_v12'
+      DOCS: 'hrd_shared_docs_v14',
+      DISPATCH: 'hrd_bureau_disp_v14',
+      EXAMS: 'hrd_bureau_exams_v14',
+      TRAINING: 'hrd_bureau_train_v14',
+      CERTS: 'hrd_bureau_certs_v14',
+      USERS: 'hrd_bureau_users_v14',
+      LOGS: 'hrd_bureau_logs_v14',
+      COUNTRIES: 'hrd_bureau_countries_v14',
+      SESSION: 'hrd_bureau_session_v14',
+      ACTIVE_BUREAU: 'hrd_active_bureau_v14'
     };
 
     function getLocal(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
     function setLocal(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+    const defaultCountries = [
+      { code: 'KH', kh: 'កម្ពុជា', en: 'Cambodia' },
+      { code: 'JP', kh: 'ជប៉ុន', en: 'Japan' },
+      { code: 'MY', kh: 'ម៉ាឡេស៊ី', en: 'Malaysia' },
+      { code: 'ID', kh: 'ឥណ្ឌូនេស៊ី', en: 'Indonesia' },
+      { code: 'NZ', kh: 'នូវែលសេឡង់', en: 'New Zealand' },
+      { code: 'CA', kh: 'កាណាដា', en: 'Canada' },
+      { code: 'US', kh: 'សហរដ្ឋអាមេរិក', en: 'United States' },
+      { code: 'AU', kh: 'អូស្រ្តាលី', en: 'Australia' },
+      { code: 'FR', kh: 'បារាំង', en: 'France' },
+      { code: 'SG', kh: 'សិង្ហបុរី', en: 'Singapore' },
+      { code: 'TH', kh: 'ថៃ', en: 'Thailand' },
+      { code: 'VN', kh: 'វៀតណាម', en: 'Vietnam' }
+    ];
 
     const defaultUsers = [
       { id: 1, username: 'admin', password: 'admin123', fullname: 'ថ្នាក់ដឹកនាំរដ្ឋបាល', bureau: 'all', permissions: { upload: true, edit: true, delete: true, admin: true } },
@@ -886,6 +1031,7 @@
       { id: 4, username: 'user3', password: '123', fullname: 'មន្ត្រីចុះបញ្ជិកា/វិញ្ញាបនបត្រ', bureau: 'bureau_3', permissions: { upload: true, edit: true, delete: false, admin: false } }
     ];
 
+    let countriesData = getLocal(STORAGE_KEYS.COUNTRIES, defaultCountries);
     let usersData = getLocal(STORAGE_KEYS.USERS, defaultUsers);
     let auditLogs = getLocal(STORAGE_KEYS.LOGS, []);
     let currentUser = getLocal(STORAGE_KEYS.SESSION, null);
@@ -909,17 +1055,17 @@
       { id: 2, major: 'ឱសថសាស្ត្រ (Pharmacy)', type: 'ប្រឡងចូល (Entrance Exam)', session: 'សម័យប្រឡង ១៥ វិច្ឆិកា ២០២៦', candidates: 180, status: 'កំពុងដំណើរការប្រឡង' }
     ]);
 
-    // ទិន្នន័យជាក់ស្តែងតាម Excel ផ្លូវការរបស់ការិយាល័យបណ្តុះបណ្តាលបន្ត
     let trainingData = getLocal(STORAGE_KEYS.TRAINING, [
-      { id: 1, trainee: 'លោកវេជ្ជ នង មុន្នីពេជ្យ', unit: 'គណៈអភិបាលខេត្តពោធិសាត', course: 'Diploma in parasitology and entomology(DAP&E)', duration: '6 M', dates: '06/04/26-18/10/26', country: 'ម៉ាឡេស៊ី', sponsor: 'Seameo Tromed' },
-      { id: 2, trainee: 'លោក. សន បូណា', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'Universal Health Coverage(UHS)JFY 2025', duration: '(3A)', dates: '25/03/26-31/03/28', country: 'ជប៉ុន', sponsor: 'ទីភ្នាក់ងារជប៉ុន' },
-      { id: 3, trainee: 'លោកស្រី.សុធី សុផាណា', unit: 'មន្ទីរពេទ្យមិត្តភាពខ្មែរ-សូវៀត', course: 'Cardiac Operating', duration: '6M', dates: '30/09/25-04/05/26', country: 'ឥណ្ឌូនេស៊ី', sponsor: 'សាមីខ្លួន' },
-      { id: 4, trainee: 'លោក.ង៉ាយ ចាន់', unit: 'មន្ទីរពេទ្យមិត្តភាពខ្មែរ-សូវៀត', course: 'Arrhythmia and Eledrophysiology', duration: '6M', dates: '02/06/25-02/12/25', country: 'ឥណ្ឌូនេស៊ី', sponsor: 'សាមីខ្លួន' },
-      { id: 5, trainee: 'លោកស្រី. ឈឿន ស៊ីនួន', unit: 'UHS', course: 'បរិញ្ញាបត្រជាន់ខ្ពស់សុខភាពសាធារណៈ', duration: '2A 3M', dates: '23/06/25-15/09/27', country: 'នូវែសសេឡង់', sponsor: 'រដ្ឋាភិបាលនូវែសសេឡង់' },
-      { id: 6, trainee: 'លោកស្រី. ចាន់ បូរ៉ា', unit: 'រាជាធានីភ្នំពេញ', course: 'Madical Laboratory', duration: '1A', dates: '14/04/25-10/04/26', country: 'កាណាដា', sponsor: 'សាមីខ្លួន' },
-      { id: 7, trainee: 'លោក.ហៃ វណ្ណនិត', unit: 'វិទ្យាស្ថានជាតិសិខភាពសាធារណៈ', course: 'PhD in food Science and Technology', duration: '2A', dates: '08/25-07/27', country: 'សហរដ្ឋអាមេរិក', sponsor: 'University of Nebraska Lincoln' },
-      { id: 8, trainee: 'លោកជំទាវ.អេង ឡេងស៊ា', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'PhD of public Health', duration: '1A', dates: '04/11/24-02/11/25', country: 'អូស្រ្តាលី', sponsor: 'រដ្ឋបាលអូស្រ្តាលី' },
-      { id: 9, trainee: 'លោកស្រី.ប៉េង បញ្ញា', unit: 'រដ្ឋបាលខេត្តបាត់ដំបង', course: 'បរិញ្ញាបត្រជាន់ខ្ពស់សុខភាពសាធារណៈ', duration: '1A 6M', dates: '06/01/25-31/07/26', country: 'អូស្រ្តាលី', sponsor: 'រដ្ឋបាលអូស្រ្តាលី' }
+      { id: 1, trainee: 'លោកវេជ្ជ នង មុន្នីពេជ្យ', unit: 'គណៈអភិបាលខេត្តពោធិសាត', course: 'Diploma in parasitology and entomology(DAP&E)', duration: '6 M', dates: '06/04/26-18/10/26', country: 'ម៉ាឡេស៊ី', sponsor: 'Seameo Tromed', scope: 'International' },
+      { id: 2, trainee: 'លោក. សន បូណា', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'Universal Health Coverage(UHS)JFY 2025', duration: '(3A)', dates: '25/03/26-31/03/28', country: 'ជប៉ុន', sponsor: 'ទីភ្នាក់ងារជប៉ុន', scope: 'International' },
+      { id: 3, trainee: 'លោកស្រី.សុធី សុផាណា', unit: 'មន្ទីរពេទ្យមិត្តភាពខ្មែរ-សូវៀត', course: 'Cardiac Operating', duration: '6M', dates: '30/09/25-04/05/26', country: 'ឥណ្ឌូនេស៊ី', sponsor: 'សាមីខ្លួន', scope: 'International' },
+      { id: 4, trainee: 'លោក.ង៉ាយ ចាន់', unit: 'មន្ទីរពេទ្យមិត្តភាពខ្មែរ-សូវៀត', course: 'Arrhythmia and Eledrophysiology', duration: '6M', dates: '02/06/25-02/12/25', country: 'ឥណ្ឌូនេស៊ី', sponsor: 'សាមីខ្លួន', scope: 'International' },
+      { id: 5, trainee: 'លោកស្រី. ឈឿន ស៊ីនួន', unit: 'UHS', course: 'បរិញ្ញាបត្រជាន់ខ្ពស់សុខភាពសាធារណៈ', duration: '2A 3M', dates: '23/06/25-15/09/27', country: 'នូវែលសេឡង់', sponsor: 'រដ្ឋាភិបាលនូវែសសេឡង់', scope: 'International' },
+      { id: 6, trainee: 'លោកស្រី. ចាន់ បូរ៉ា', unit: 'រាជាធានីភ្នំពេញ', course: 'Madical Laboratory', duration: '1A', dates: '14/04/25-10/04/26', country: 'កាណាដា', sponsor: 'សាមីខ្លួន', scope: 'International' },
+      { id: 7, trainee: 'លោក.ហៃ វណ្ណនិត', unit: 'វិទ្យាស្ថានជាតិសិខភាពសាធារណៈ', course: 'PhD in food Science and Technology', duration: '2A', dates: '08/25-07/27', country: 'សហរដ្ឋអាមេរិក', sponsor: 'University of Nebraska Lincoln', scope: 'International' },
+      { id: 8, trainee: 'លោកជំទាវ.អេង ឡេងស៊ា', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'PhD of public Health', duration: '1A', dates: '04/11/24-02/11/25', country: 'អូស្រ្តាលី', sponsor: 'រដ្ឋបាលអូស្រ្តាលី', scope: 'International' },
+      { id: 9, trainee: 'លោកស្រី.ប៉េង បញ្ញា', unit: 'រដ្ឋបាលខេត្តបាត់ដំបង', course: 'បរិញ្ញាបត្រជាន់ខ្ពស់សុខភាពសាធារណៈ', duration: '1A 6M', dates: '06/01/25-31/07/26', country: 'អូស្រ្តាលី', sponsor: 'រដ្ឋបាលអូស្រ្តាលី', scope: 'International' },
+      { id: 10, trainee: 'វេជ្ជ. កែវ វិសាល', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'វគ្គសង្គ្រោះបន្ទាន់កម្រិតខ្ពស់ (ACLS)', duration: '1M', dates: '01/02/26-28/02/26', country: 'កម្ពុជា', sponsor: 'WHO Cambodia', scope: 'Domestic' }
     ]);
 
     let certsData = getLocal(STORAGE_KEYS.CERTS, [
@@ -944,28 +1090,25 @@
 
     function checkAuth() {
       if (!currentUser) {
-        document.getElementById('').classList.remove('hidden');
+        document.getElementById('modal-login').classList.remove('hidden');
       } else {
-        document.getElementById('').classList.add('hidden');
+        document.getElementById('modal-login').classList.add('hidden');
         document.getElementById('current-user-fullname').innerText = currentUser.fullname;
         document.getElementById('current-user-role').innerText = currentUser.bureau === 'all' ? '👑 Admin (នាយកដ្ឋាន)' : `🏢 ${BUREAUS[currentUser.bureau]?.shortName || 'មន្ត្រី'}`;
 
         const isSuperAdmin = (currentUser.bureau === 'all');
         const selectBox = document.getElementById('active-bureau-select');
         const lockNotice = document.getElementById('bureau-lock-notice');
-        const btnAdmin = document.getElementById('btn-admin-settings');
 
         if (isSuperAdmin) {
           selectBox.disabled = false;
           lockNotice.classList.add('hidden');
-          btnAdmin.classList.remove('hidden');
         } else {
           activeBureauKey = currentUser.bureau;
           setLocal(STORAGE_KEYS.ACTIVE_BUREAU, activeBureauKey);
           selectBox.value = activeBureauKey;
           selectBox.disabled = true;
           lockNotice.classList.remove('hidden');
-          btnAdmin.classList.add('hidden');
         }
 
         renderBureauWorkspace();
@@ -1051,9 +1194,151 @@
       renderBureauWorkspace();
     }
 
-    // ៦. RENDER MODULES
+    // ៦. SYSTEM TOOLS & LOCATION ENGINE
+    function toggleToolsMenu() {
+      const dd = document.getElementById('tools-dropdown');
+      dd.classList.toggle('hidden');
+    }
 
-    // DOCS (Shared Across all bureaus)
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('tools-menu-container');
+      if (container && !container.contains(e.target)) {
+        document.getElementById('tools-dropdown').classList.add('hidden');
+      }
+    });
+
+    function openSystemModal(tab = 'settings') {
+      document.getElementById('tools-dropdown').classList.add('hidden');
+      document.getElementById('modal-system-tools').classList.remove('hidden');
+      switchSystemToolTab(tab);
+    }
+
+    function closeSystemModal() {
+      document.getElementById('modal-system-tools').classList.add('hidden');
+    }
+
+    function switchSystemToolTab(tab) {
+      const tabs = ['settings', 'location', 'files', 'security', 'logging', 'manual'];
+      tabs.forEach(t => {
+        const c = document.getElementById(`syscontent-${t}`);
+        const b = document.getElementById(`systab-${t}`);
+        if (c) c.classList.add('hidden');
+        if (b) b.className = 'px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600';
+      });
+
+      const activeC = document.getElementById(`syscontent-${tab}`);
+      const activeB = document.getElementById(`systab-${tab}`);
+      if (activeC) activeC.classList.remove('hidden');
+      if (activeB) activeB.className = 'px-3.5 py-1.5 rounded-lg font-bold bg-[#2d6a4f] text-white';
+
+      if (tab === 'settings') renderUsersTable();
+      if (tab === 'location') renderCountriesTable();
+      if (tab === 'files') renderFilesSystemList();
+      if (tab === 'logging') renderLogsTable();
+    }
+
+    // LOCATION / COUNTRY ENGINE (SYNC DIRECTLY WITH FORMS)
+    function renderCountriesTable() {
+      const tbody = document.getElementById('countries-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = countriesData.map((c, idx) => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="p-2.5 font-mono font-bold text-slate-700">${c.code}</td>
+          <td class="p-2.5 font-bold text-slate-900">${c.kh}</td>
+          <td class="p-2.5 text-slate-600">${c.en}</td>
+          <td class="p-2.5 text-right">
+            <button onclick="deleteCountry(${idx})" class="text-rose-600 hover:underline">លុប</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function handleAddCountry(e) {
+      e.preventDefault();
+      const code = document.getElementById('new-country-code').value.trim().toUpperCase();
+      const kh = document.getElementById('new-country-kh').value.trim();
+      const en = document.getElementById('new-country-en').value.trim();
+
+      if (countriesData.some(c => c.kh === kh || c.code === code)) {
+        alert('ប្រទេសនេះមានក្នុងបញ្ជីរួចរាល់ហើយ!');
+        return;
+      }
+
+      countriesData.push({ code, kh, en });
+      setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
+      logActivity('បន្ថែមប្រទេស', `បានបន្ថែមប្រទេស ${kh} (${code})`);
+      renderCountriesTable();
+      populateCountryDropdowns();
+      e.target.reset();
+      alert(`✅ បានបញ្ចូលប្រទេស "${kh}" ដោយជោគជ័យ!`);
+    }
+
+    function deleteCountry(idx) {
+      const c = countriesData[idx];
+      if (confirm(`តើអ្នកពិតជាចង់លុបប្រទេស "${c.kh}" មែនទេ?`)) {
+        countriesData.splice(idx, 1);
+        setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
+        logActivity('លុបប្រទេស', `បានលុបប្រទេស ${c.kh}`);
+        renderCountriesTable();
+        populateCountryDropdowns();
+      }
+    }
+
+    function populateCountryDropdowns() {
+      const formSel = document.getElementById('train-country-select');
+      const filterSel = document.getElementById('filter-training-country');
+      if (!formSel || !filterSel) return;
+
+      const currentFilter = filterSel.value;
+
+      formSel.innerHTML = '<option value="">-- ជ្រើសរើសប្រទេស --</option>' + countriesData.map(c => `
+        <option value="${c.kh}">${c.kh} (${c.en})</option>
+      `).join('');
+
+      filterSel.innerHTML = '<option value="all">ប្រទេសទាំងអស់</option>' + countriesData.map(c => `
+        <option value="${c.kh}" ${c.kh === currentFilter ? 'selected' : ''}>${c.kh}</option>
+      `).join('');
+    }
+
+    // FILE SYSTEM & BACKUP ENGINE
+    function renderFilesSystemList() {
+      const list = document.getElementById('files-system-list');
+      if (!list) return;
+      if (docsData.length === 0) {
+        list.innerHTML = '<div class="p-4 text-center text-slate-400">មិនមានឯកសារឡើយ</div>';
+        return;
+      }
+      list.innerHTML = docsData.map(d => `
+        <div class="p-3 flex items-center justify-between hover:bg-slate-50">
+          <div>
+            <p class="font-bold text-slate-800 text-xs">${d.title} (${d.code})</p>
+            <p class="text-[10px] text-slate-500">ការិយាល័យ៖ ${BUREAUS[d.bureau]?.shortName || d.bureau} | ទំហំ៖ ${d.fileSize}</p>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-mono font-bold">Local File</span>
+        </div>
+      `).join('');
+    }
+
+    function backupEntireSystem() {
+      const fullBackup = {
+        exportedAt: new Date().toISOString(),
+        users: usersData,
+        countries: countriesData,
+        documents: docsData,
+        dispatches: dispatchData,
+        exams: examsData,
+        trainings: trainingData,
+        certificates: certsData
+      };
+      const blob = new Blob([JSON.stringify(fullBackup, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `DHRD_SYSTEM_BACKUP_${Date.now()}.json`;
+      a.click();
+      logActivity('ទាញយក Backup', 'បានទាញយកទិន្នន័យប្រព័ន្ធជា JSON');
+    }
+
+    // ៧. RENDER WORKSPACES & MODULES
     function renderDocs() {
       const list = document.getElementById('docs-list');
       if (!list) return;
@@ -1092,7 +1377,6 @@
       }).join('');
     }
 
-    // DISPATCH (Shows Stage, Location & Date)
     function renderDispatch() {
       const list = document.getElementById('dispatch-list');
       if (!list) return;
@@ -1123,7 +1407,6 @@
       `).join('');
     }
 
-    // BUREAU 1: EXAMS
     function renderExams() {
       const list = document.getElementById('exams-list');
       if (!list) return;
@@ -1144,27 +1427,13 @@
       `).join('');
     }
 
-    // BUREAU 2: ADVANCED TRAINING LIST (ACCORDING TO EXCEL FORMAT)
-    function populateTrainingFilterDropdowns() {
-      const countrySel = document.getElementById('filter-training-country');
-      const sponsorSel = document.getElementById('filter-training-sponsor');
-      if (!countrySel || !sponsorSel) return;
-
-      const currentCountry = countrySel.value;
-      const currentSponsor = sponsorSel.value;
-
-      const countries = [...new Set(trainingData.map(t => t.country).filter(Boolean))];
-      const sponsors = [...new Set(trainingData.map(t => t.sponsor).filter(Boolean))];
-
-      countrySel.innerHTML = '<option value="all">ប្រទេសទាំងអស់</option>' + countries.map(c => `<option value="${c}" ${c === currentCountry ? 'selected' : ''}>${c}</option>`).join('');
-      sponsorSel.innerHTML = '<option value="all">អ្នកឧបត្ថម្ភទាំងអស់</option>' + sponsors.map(s => `<option value="${s}" ${s === currentSponsor ? 'selected' : ''}>${s}</option>`).join('');
-    }
-
+    // BUREAU 2: ADVANCED TRAINING REPORT & FILTERING
     function resetTrainingFilters() {
       document.getElementById('filter-training-search').value = '';
       document.getElementById('filter-training-country').value = 'all';
       document.getElementById('filter-training-sponsor').value = 'all';
       document.getElementById('filter-training-unit').value = '';
+      document.querySelector('input[name="train-scope"][value="all"]').checked = true;
       renderTrainingList();
     }
 
@@ -1173,20 +1442,43 @@
       const country = document.getElementById('filter-training-country')?.value || 'all';
       const sponsor = document.getElementById('filter-training-sponsor')?.value || 'all';
       const unit = (document.getElementById('filter-training-unit')?.value || '').toLowerCase();
+      const scope = document.querySelector('input[name="train-scope"]:checked')?.value || 'all';
+      const orderBy = document.getElementById('filter-training-order')?.value || 'name';
 
-      return trainingData.filter(t => {
+      let result = trainingData.filter(t => {
         const matchSearch = !search || t.trainee.toLowerCase().includes(search) || t.course.toLowerCase().includes(search);
         const matchCountry = (country === 'all' || t.country === country);
         const matchSponsor = (sponsor === 'all' || t.sponsor === sponsor);
         const matchUnit = !unit || t.unit.toLowerCase().includes(unit);
-        return matchSearch && matchCountry && matchSponsor && matchUnit;
+        const matchScope = (scope === 'all' || (t.scope || 'International') === scope);
+        return matchSearch && matchCountry && matchSponsor && matchUnit && matchScope;
       });
+
+      // Sorting
+      result.sort((a, b) => {
+        if (orderBy === 'country') return a.country.localeCompare(b.country);
+        if (orderBy === 'sponsor') return a.sponsor.localeCompare(b.sponsor);
+        if (orderBy === 'duration') return a.duration.localeCompare(b.duration);
+        return a.trainee.localeCompare(b.trainee);
+      });
+
+      return result;
     }
 
     function renderTrainingList() {
       const tbody = document.getElementById('training-table-body');
       if (!tbody) return;
-      populateTrainingFilterDropdowns();
+      populateCountryDropdowns();
+
+      // Populate Sponsor Dropdown
+      const sponsorSel = document.getElementById('filter-training-sponsor');
+      if (sponsorSel) {
+        const curSponsor = sponsorSel.value;
+        const sponsors = [...new Set(trainingData.map(t => t.sponsor).filter(Boolean))];
+        sponsorSel.innerHTML = '<option value="all">អ្នកឧបត្ថម្ភទាំងអស់</option>' + sponsors.map(s => `
+          <option value="${s}" ${s === curSponsor ? 'selected' : ''}>${s}</option>
+        `).join('');
+      }
 
       const filtered = getFilteredTrainingData();
       document.getElementById('stat-custom-label').innerText = 'វគ្គបណ្តុះបណ្តាល';
@@ -1217,21 +1509,16 @@
       `).join('');
     }
 
-   function formatDateDisplay(dStr) {
+    function formatDateDisplay(dStr) {
       if (!dStr) return '';
-      const parts = dStr.split('-'); // Format: YYYY-MM-DD
-      if (parts.length === 3) {
-        return `${parts[2]}/${parts[1]}/${parts[0].slice(-2)}`; // ចេញទម្រង់: DD/MM/YY
-      }
-      return dStr;
+      const parts = dStr.split('-');
+      return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0].slice(-2)}` : dStr;
     }
 
     function handleSaveTraining(e) {
       e.preventDefault();
       const dStart = document.getElementById('train-date-start').value;
       const dEnd = document.getElementById('train-date-end').value;
-      
-      // ច្របាច់កាលបរិច្ឆេទទាំងពីរចូលគ្នាជាទម្រង់ DD/MM/YY-DD/MM/YY
       const formattedDates = `${formatDateDisplay(dStart)}-${formatDateDisplay(dEnd)}`;
 
       const newT = {
@@ -1240,8 +1527,9 @@
         unit: document.getElementById('train-unit').value.trim(),
         course: document.getElementById('train-course').value.trim(),
         duration: document.getElementById('train-duration').value.trim(),
+        scope: document.getElementById('train-scope-input').value,
         dates: formattedDates,
-        country: document.getElementById('train-country-input').value.trim(),
+        country: document.getElementById('train-country-select').value,
         sponsor: document.getElementById('train-sponsor-input').value.trim()
       };
 
@@ -1253,7 +1541,15 @@
       alert('✅ បានរក្សាទុកទិន្នន័យសិក្ខាកាមដោយជោគជ័យ!');
     }
 
-    // EXPORT EXCEL (.XLSX) WITH SHEETJS
+    function deleteTraining(id) {
+      if (confirm('តើអ្នកពិតជាចង់លុបទិន្នន័យសិក្ខាកាមនេះមែនទេ?')) {
+        trainingData = trainingData.filter(t => t.id !== id);
+        setLocal(STORAGE_KEYS.TRAINING, trainingData);
+        renderTrainingList();
+      }
+    }
+
+    // EXPORT FUNCTIONS
     function exportTrainingExcel() {
       const filtered = getFilteredTrainingData();
       const excelRows = filtered.map((t, idx) => ({
@@ -1273,7 +1569,6 @@
       XLSX.writeFile(workbook, `របាយការណ៍_វគ្គបណ្តុះបណ្តាលបន្ត_${Date.now()}.xlsx`);
     }
 
-    // EXPORT CSV
     function exportTrainingCSV() {
       const filtered = getFilteredTrainingData();
       let csv = "\uFEFFល.រ,ឈ្មោះ,តួនាទី និងអង្គភាព,កម្មវិធី ឬឈ្មោះវគ្គសិក្សា,រយៈពេល,កាលបរិច្ឆេទ,ប្រទេស,ឧបត្ថម្ភ\n";
@@ -1288,7 +1583,6 @@
       a.click();
     }
 
-    // PRINT PREVIEW & PDF
     function openPrintPreviewModal() {
       const filtered = getFilteredTrainingData();
       const tbody = document.getElementById('preview-table-body');
@@ -1319,7 +1613,6 @@
       window.print();
     }
 
-    // BUREAU 3: CERTS & DEGREES
     function renderCerts() {
       const list = document.getElementById('certs-list');
       if (!list) return;
@@ -1345,12 +1638,12 @@
       `).join('');
     }
 
-    // ៧. ACTIONS & FORM HANDLERS (STRICT ≤ 10MB)
+    // ៨. FILE UPLOAD & OTHER HANDLERS
     function handleFileSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
       if (file.size > 10 * 1024 * 1024) {
-        alert('⚠️ ឯកសារនេះមានទំហំ ' + (file.size / (1024 * 1024)).toFixed(2) + ' MB លើសពីកម្រិតកំណត់ ១០MB!\nសូមជ្រើសរើសឯកសារទំហំ ១០MB ចុះក្រោម។');
+        alert('⚠️ ឯកសារនេះមានទំហំ ' + (file.size / (1024 * 1024)).toFixed(2) + ' MB លើសពីកម្រិតកំណត់ ១០MB!');
         e.target.value = '';
         return;
       }
@@ -1462,7 +1755,7 @@
       }
     }
 
-    // ៨. USERS MANAGEMENT (ADMIN)
+    // ៩. USER & LOG RENDERING
     function handleCreateUser(e) {
       e.preventDefault();
       const username = document.getElementById('new-user-username').value.trim();
@@ -1476,12 +1769,7 @@
         username: username,
         password: document.getElementById('new-user-password').value.trim(),
         bureau: document.getElementById('new-user-bureau').value,
-        permissions: {
-          upload: document.getElementById('perm-upload').checked,
-          edit: document.getElementById('perm-edit').checked,
-          delete: document.getElementById('perm-delete').checked,
-          admin: (document.getElementById('new-user-bureau').value === 'all')
-        }
+        permissions: { upload: true, edit: true, delete: false, admin: (document.getElementById('new-user-bureau').value === 'all') }
       };
       usersData.unshift(newUser);
       setLocal(STORAGE_KEYS.USERS, usersData);
@@ -1533,26 +1821,22 @@
       `).join('');
     }
 
-    function openSettingsModal() {
-      document.getElementById('modal-settings').classList.remove('hidden');
-      renderUsersTable();
-      renderLogsTable();
-    }
-    function closeSettingsModal() { document.getElementById('modal-settings').classList.add('hidden'); }
-    function switchSettingsTab(tab) {
-      ['users', 'logs'].forEach(t => {
-        document.getElementById(`set-content-${t}`).classList.add('hidden');
-        document.getElementById(`set-tab-${t}`).className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600';
-      });
-      document.getElementById(`set-content-${tab}`).classList.remove('hidden');
-      document.getElementById(`set-tab-${tab}`).className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-[#2d6a4f] text-white';
+    function clearActivityLogs() {
+      if (confirm('តើអ្នកចង់ជម្រះ Logs ចាស់ៗទាំងអស់មែនទេ?')) {
+        auditLogs = [];
+        setLocal(STORAGE_KEYS.LOGS, auditLogs);
+        renderLogsTable();
+      }
     }
 
-    // ៩. MODAL UTILITIES
+    // MODAL UTILITIES
     function openDocModal() { document.getElementById('modal-doc').classList.remove('hidden'); }
     function openDispatchModal() { document.getElementById('modal-dispatch').classList.remove('hidden'); }
     function openExamModal() { document.getElementById('modal-exam').classList.remove('hidden'); }
-    function openTrainingModal() { document.getElementById('modal-training').classList.remove('hidden'); }
+    function openTrainingModal() { 
+      document.getElementById('modal-training').classList.remove('hidden'); 
+      populateCountryDropdowns();
+    }
     function openCertModal() { document.getElementById('modal-cert').classList.remove('hidden'); }
     function closeModals() {
       ['modal-doc', 'modal-dispatch', 'modal-exam', 'modal-training', 'modal-cert'].forEach(id => {
@@ -1568,9 +1852,8 @@
         csv += `"${d.code}","${d.title}","${bName}","${d.category}","${d.date}","${d.fileSize}","${d.createdBy}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url;
+      a.href = URL.createObjectURL(blob);
       a.download = `dhrd_shared_library_${Date.now()}.csv`;
       a.click();
     }
@@ -1599,10 +1882,11 @@
       }
     }
 
-    // INITIALIZATION
+    // BOOTSTRAP
     window.addEventListener('DOMContentLoaded', () => {
       initGoogleDriveAuth();
       checkAuth();
+      populateCountryDropdowns();
     });
   </script>
 </body>
