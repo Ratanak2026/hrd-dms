@@ -1219,31 +1219,40 @@
       `).join('');
     }
 
+   function formatDateDisplay(dStr) {
+      if (!dStr) return '';
+      const parts = dStr.split('-'); // Format: YYYY-MM-DD
+      if (parts.length === 3) {
+        return `${parts[2]}/${parts[1]}/${parts[0].slice(-2)}`; // ចេញទម្រង់: DD/MM/YY
+      }
+      return dStr;
+    }
+
     function handleSaveTraining(e) {
       e.preventDefault();
+      const dStart = document.getElementById('train-date-start').value;
+      const dEnd = document.getElementById('train-date-end').value;
+      
+      // ច្របាច់កាលបរិច្ឆេទទាំងពីរចូលគ្នាជាទម្រង់ DD/MM/YY-DD/MM/YY
+      const formattedDates = `${formatDateDisplay(dStart)}-${formatDateDisplay(dEnd)}`;
+
       const newT = {
         id: Date.now(),
         trainee: document.getElementById('train-trainee').value.trim(),
         unit: document.getElementById('train-unit').value.trim(),
         course: document.getElementById('train-course').value.trim(),
         duration: document.getElementById('train-duration').value.trim(),
-        dates: document.getElementById('train-dates').value.trim(),
+        dates: formattedDates,
         country: document.getElementById('train-country-input').value.trim(),
         sponsor: document.getElementById('train-sponsor-input').value.trim()
       };
+
       trainingData.unshift(newT);
       setLocal(STORAGE_KEYS.TRAINING, trainingData);
-      logActivity('កត់ត្រាវគ្គបណ្តុះបណ្តាល', `${newT.trainee} - ${newT.course}`);
+      logActivity('កត់ត្រាវគ្គបណ្តុះបណ្តាល', `${newT.trainee} (${newT.country})`);
       closeModals();
       renderTrainingList();
-    }
-
-    function deleteTraining(id) {
-      if (confirm('តើអ្នកពិតជាចង់លុបទិន្នន័យសិក្ខាកាមនេះមែនទេ?')) {
-        trainingData = trainingData.filter(t => t.id !== id);
-        setLocal(STORAGE_KEYS.TRAINING, trainingData);
-        renderTrainingList();
-      }
+      alert('✅ បានរក្សាទុកទិន្នន័យសិក្ខាកាមដោយជោគជ័យ!');
     }
 
     // EXPORT EXCEL (.XLSX) WITH SHEETJS
