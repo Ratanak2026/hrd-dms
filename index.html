@@ -580,7 +580,7 @@
         <h3 class="text-base font-bold text-slate-900">បញ្ចូលទិន្នន័យវគ្គបណ្តុះបណ្តាលថ្មី</h3>
         <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
       </div>
-      <form onsubmit="handleSaveTraining(event)" class="space-y-3">
+     <form onsubmit="handleSaveTraining(event)" class="space-y-3">
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះសិក្ខាកាម *</label>
@@ -591,36 +591,64 @@
             <input type="text" id="train-unit" required placeholder="ឧ. មន្ទីរពេទ្យកាល់ម៉ែត" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
           </div>
         </div>
+
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">កម្មវិធី ឬឈ្មោះវគ្គសិក្សា *</label>
           <input type="text" id="train-course" required placeholder="ឧ. Universal Health Coverage(UHS) JFY 2025" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
         </div>
-        <div class="grid grid-cols-2 gap-3">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">រយៈពេល (ខែ/ឆ្នាំ) *</label>
+          <input type="text" id="train-duration" required placeholder="ឧ. 6M, 1A ឬ 2A 3M" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+        </div>
+
+        <!-- ១. ពីថ្ងៃខែឆ្នាំ ដល់ ថ្ងៃខែឆ្នាំ (អាចជ្រើសរើសប្រតិទិន ឬវាយលេខចូលក៏បាន) -->
+        <div class="grid grid-cols-2 gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">រយៈពេល (ខែ/ឆ្នាំ)</label>
-            <input type="text" id="train-duration" required placeholder="ឧ. 6M, 1A ឬ 2A 3M" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">📅 ពីថ្ងៃខែឆ្នាំ (ចាប់ផ្តើម) *</label>
+            <input type="date" id="train-date-start" required class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white outline-none focus:ring-1 focus:ring-emerald-500">
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">កាលបរិច្ឆេទ នៃវគ្គ</label>
-            <input type="text" id="train-dates" required placeholder="ឧ. 25/03/26-31/03/28" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">📅 ដល់ថ្ងៃខែឆ្នាំ (បញ្ចប់) *</label>
+            <input type="date" id="train-date-end" required class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-white outline-none focus:ring-1 focus:ring-emerald-500">
           </div>
         </div>
+
+        <!-- ២. ប្រទេស (មាន Dropdown បញ្ជីស្រាប់ និងអាចវាយឈ្មោះប្រទេសថ្មីបាន) -->
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រទេស *</label>
-            <input type="text" id="train-country-input" required placeholder="ឧ. ជប៉ុន, ម៉ាឡេស៊ី, កម្ពុជា..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រទេស (ជ្រើសរើស ឬវាយបញ្ចូល) *</label>
+            <input list="country-suggestions" id="train-country-input" required placeholder="ចុចរើស ឬវាយឈ្មោះប្រទេស..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none bg-white">
+            <datalist id="country-suggestions">
+              <option value="កម្ពុជា">
+              <option value="ជប៉ុន">
+              <option value="ម៉ាឡេស៊ី">
+              <option value="ឥណ្ឌូនេស៊ី">
+              <option value="អូស្រ្តាលី">
+              <option value="នូវែលសេឡង់">
+              <option value="សហរដ្ឋអាមេរិក">
+              <option value="កាណាដា">
+              <option value="បារាំង">
+              <option value="សិង្ហបុរី">
+              <option value="ថៃ">
+              <option value="វៀតណាម">
+              <option value="ហ្វីលីពីន">
+              <option value="កូរ៉េខាងត្បូង">
+              <option value="ចិន">
+              <option value="ឡាវ">
+            </datalist>
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">ដៃគូឧបត្ថម្ភ *</label>
-            <input type="text" id="train-sponsor-input" required placeholder="ឧ. ទីភ្នាក់ងារជប៉ុន, សាមីខ្លួន..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
+            <input type="text" id="train-sponsor-input" required placeholder="ឧ. ទីភ្នាក់ងារជប៉ុន, សាមីខ្លួន, WHO..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs outline-none">
           </div>
         </div>
+
         <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600">បោះបង់</button>
+          <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">បោះបង់</button>
           <button type="submit" class="px-5 py-2 text-xs font-bold bg-[#2d6a4f] text-white rounded-xl hover:bg-[#23533e]">រក្សាទុក</button>
         </div>
-      </form>
-    </div>
+      </form>    </div>
   </div>
 
   <!-- PRINT PREVIEW & PDF MODAL -->
