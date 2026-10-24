@@ -43,8 +43,8 @@
       <!-- Logo ថ្មីផ្លូវការក្រសួងសុខាភិបាល -->
  <div class="flex items-center space-x-3">
   <div class="h-12 w-12 min-w-[48px] rounded-full border border-emerald-600/30 p-1 flex items-center justify-center bg-white shadow-xs overflow-hidden">
-    <img src="photo_2026-10-16_22-06-11.jpg" onerror="this.src='logo.png'" alt="MoH Logo" class="h-full w-full object-contain">
-  </div>
+  <img src="Logo MOH_Ok_Background.png" alt="MoH Logo" class="h-full w-full object-contain">
+</div>
         <div>
           <div class="flex items-center gap-1.5 flex-wrap">
             <span class="font-bold text-slate-900 text-sm sm:text-base" id="ui-header-ministry">ក្រសួងសុខាភិបាល</span>
@@ -301,11 +301,9 @@
   <!-- ================= MODALS & FORMS ================= -->
 
   <!-- LOGIN MODAL (WITH NEW LOGO) -->
-  <div id="modal-login" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-4 text-center">
-      <div class="w-20 h-20 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs overflow-hidden">
-        <img src="photo_2026-10-16_22-06-11.jpg" onerror="this.src='logo.png'" alt="MoH Logo" class="w-full h-full object-contain">
-      </div>
+  <div class="w-20 h-20 rounded-full border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs overflow-hidden">
+  <img src="Logo MOH_Ok_Background.png" alt="MoH Logo" class="w-full h-full object-contain">
+</div>
       <div>
         <h3 class="text-base font-bold text-slate-900">ចូលប្រព័ន្ធតាមការិយាល័យ</h3>
         <p class="text-xs text-emerald-700 font-semibold mt-0.5">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស - MoH</p>
@@ -946,9 +944,9 @@
 
     function checkAuth() {
       if (!currentUser) {
-        document.getElementById('modal-login').classList.remove('hidden');
+        document.getElementById('').classList.remove('hidden');
       } else {
-        document.getElementById('modal-login').classList.add('hidden');
+        document.getElementById('').classList.add('hidden');
         document.getElementById('current-user-fullname').innerText = currentUser.fullname;
         document.getElementById('current-user-role').innerText = currentUser.bureau === 'all' ? '👑 Admin (នាយកដ្ឋាន)' : `🏢 ${BUREAUS[currentUser.bureau]?.shortName || 'មន្ត្រី'}`;
 
