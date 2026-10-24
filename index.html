@@ -1656,176 +1656,97 @@
       currentUploadedFile = { name: file.name, type: 'PDF', size: sizeMB, rawFile: file };
     }
 
-    function handleSaveDoc(e) {
-      e.preventDefault();
-      const newDoc = {
-        id: Date.now(),
-        bureau: activeBureauKey,
-        code: document.getElementById('doc-code').value,
-        title: document.getElementById('doc-title').value,
-        category: document.getElementById('doc-category').value,
-        notes: document.getElementById('doc-notes').value,
-        date: new Date().toISOString().split('T')[0],
-        fileSize: currentUploadedFile.size || '2.0 MB',
-        fileName: currentUploadedFile.name || 'document.pdf',
-        createdBy: currentUser ? currentUser.username : 'user'
-      };
-      docsData.unshift(newDoc);
-      setLocal(STORAGE_KEYS.DOCS, docsData);
-      logActivity('Upload ឯកសារ', `${newDoc.code} ចូល ${activeBureauKey}`);
-      closeModals();
-      renderDocs();
-    }
-
-    function deleteDoc(id) {
-      if (confirm('តើអ្នកចង់លុបឯកសារនេះមែនទេ?')) {
-        docsData = docsData.filter(d => d.id !== id);
-        setLocal(STORAGE_KEYS.DOCS, docsData);
-        renderDocs();
+    // អនុគមន៍បញ្ជូនសាច់ហ្វាលទៅផ្ទុកក្នុង Google Drive ផ្ទាល់
+    async function uploadFileToGoogleDrive(file) {
+      if (!googleAccessToken) {
+        throw new Error('សូមចុចប៊ូតុង «Google Drive» នៅខាងលើដើម្បីភ្ជាប់គណនីជាមុនសិន!');
       }
-    }
 
-    function handleSaveDispatch(e) {
-      e.preventDefault();
-      const newDisp = {
-        id: Date.now(),
-        bureau: activeBureauKey,
-        type: document.getElementById('disp-type').value,
-        code: document.getElementById('disp-code').value,
-        title: document.getElementById('disp-title').value,
-        stage: document.getElementById('disp-stage').value,
-        location: document.getElementById('disp-location').value,
-        date: document.getElementById('disp-date').value,
-        assignee: document.getElementById('disp-assignee').value
+      const metadata = {
+        name: file.name,
+        mimeType: file.type || 'application/octet-stream'
       };
-      dispatchData.unshift(newDisp);
-      setLocal(STORAGE_KEYS.DISPATCH, dispatchData);
-      logActivity('កត់ត្រាលិខិត', `${newDisp.code} នៅ ${newDisp.location}`);
-      closeModals();
-      renderDispatch();
-    }
 
-    function deleteDispatch(id) {
-      if (confirm('តើអ្នកចង់លុបកត់ត្រានេះមែនទេ?')) {
-        dispatchData = dispatchData.filter(d => d.id !== id);
-        setLocal(STORAGE_KEYS.DISPATCH, dispatchData);
-        renderDispatch();
+      const form = new FormData();
+      form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+      form.append('file', file);
+
+      const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink,webContentLink', {
+        method: 'POST',
+        headers: new Headers({ 'Authorization': 'Bearer ' + googleAccessToken }),
+        body: form
+      });
+
+      if (!response.ok) {
+        throw new Error('ការ Upload ទៅ Google Drive បរាជ័យ!');
       }
+
+      return await response.json();
     }
 
-    function handleSaveExam(e) {
+    // កែសម្រួលការ Save ឯកសារឱ្យរត់ចូល Google Drive ផ្ទាល់តែម្តង
+    async function handleSaveDoc(e) {
       e.preventDefault();
-      const newExam = {
-        id: Date.now(),
-        type: document.getElementById('exam-type').value,
-        major: document.getElementById('exam-major').value,
-        session: document.getElementById('exam-session').value,
-        candidates: parseInt(document.getElementById('exam-candidates').value),
-        status: document.getElementById('exam-status').value
-      };
-      examsData.unshift(newExam);
-      setLocal(STORAGE_KEYS.EXAMS, examsData);
-      logActivity('កត់ត្រាប្រឡង', `${newExam.type} - ${newExam.major}`);
-      closeModals();
-      renderExams();
-    }
-
-    function handleSaveCert(e) {
-      e.preventDefault();
-      const newC = {
-        id: Date.now(),
-        num: document.getElementById('cert-num').value,
-        recipient: document.getElementById('cert-recipient').value,
-        type: document.getElementById('cert-type').value,
-        date: document.getElementById('cert-date').value,
-        signer: document.getElementById('cert-signer').value || 'ប្រធាននាយកដ្ឋាន'
-      };
-      certsData.unshift(newC);
-      setLocal(STORAGE_KEYS.CERTS, certsData);
-      logActivity('ចុះបញ្ជីសញ្ញាបត្រ', `${newC.num} - ${newC.recipient}`);
-      closeModals();
-      renderCerts();
-    }
-
-    function deleteCert(id) {
-      if (confirm('តើអ្នកចង់លុបបញ្ជីនេះមែនទេ?')) {
-        certsData = certsData.filter(c => c.id !== id);
-        setLocal(STORAGE_KEYS.CERTS, certsData);
-        renderCerts();
-      }
-    }
-
-    // ៩. USER & LOG RENDERING
-    function handleCreateUser(e) {
-      e.preventDefault();
-      const username = document.getElementById('new-user-username').value.trim();
-      if (usersData.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-        alert('Username នេះមានរួចហើយ!');
+      const saveBtn = document.getElementById('btn-save-doc');
+      
+      if (!currentUploadedFile.rawFile) {
+        alert('សូមជ្រើសរើសហ្វាលឯកសារជាមុនសិន!');
         return;
       }
-      const newUser = {
-        id: Date.now(),
-        fullname: document.getElementById('new-user-fullname').value.trim(),
-        username: username,
-        password: document.getElementById('new-user-password').value.trim(),
-        bureau: document.getElementById('new-user-bureau').value,
-        permissions: { upload: true, edit: true, delete: false, admin: (document.getElementById('new-user-bureau').value === 'all') }
-      };
-      usersData.unshift(newUser);
-      setLocal(STORAGE_KEYS.USERS, usersData);
-      logActivity('បង្កើត User', `@${newUser.username} ប្រចាំ ${newUser.bureau}`);
-      renderUsersTable();
-      e.target.reset();
-      alert('✅ បានបង្កើតគណនីជោគជ័យ!');
-    }
 
-    function deleteUser(id) {
-      const u = usersData.find(x => x.id === id);
-      if (u && u.username === 'admin') return alert('មិនអាចលុប Admin ដើមបានឡើយ!');
-      if (confirm(`តើអ្នកចង់លុបគណនី @${u.username} មែនទេ?`)) {
-        usersData = usersData.filter(x => x.id !== id);
-        setLocal(STORAGE_KEYS.USERS, usersData);
-        renderUsersTable();
-      }
-    }
+      try {
+        saveBtn.disabled = true;
+        saveBtn.innerText = '⏳ កំពុង Upload ទៅ Drive...';
 
-    function renderUsersTable() {
-      const tbody = document.getElementById('users-table-body');
-      if (!tbody) return;
-      tbody.innerHTML = usersData.map(u => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="p-2.5 font-bold text-slate-800">${u.fullname}</td>
-          <td class="p-2.5 font-mono text-emerald-700 font-semibold">@${u.username}</td>
-          <td class="p-2.5">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.bureau === 'all' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
-              ${u.bureau === 'all' ? '👑 ទាំងអស់ (Admin)' : (BUREAUS[u.bureau]?.shortName || u.bureau)}
-            </span>
-          </td>
-          <td class="p-2.5 text-right">
-            ${u.username !== 'admin' ? `<button onclick="deleteUser(${u.id})" class="text-rose-600 hover:underline">លុប</button>` : '<span class="text-slate-400">Default</span>'}
-          </td>
-        </tr>
-      `).join('');
-    }
+        let driveFile = null;
+        let storageType = 'Local File';
+        let fileLink = '';
 
-    function renderLogsTable() {
-      const tbody = document.getElementById('logs-table-body');
-      if (!tbody) return;
-      tbody.innerHTML = auditLogs.map(l => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="p-2.5 text-slate-400 font-mono text-[10px]">${l.time}</td>
-          <td class="p-2.5 font-bold text-slate-700">${l.user}</td>
-          <td class="p-2.5 font-semibold text-emerald-700">${l.action}</td>
-          <td class="p-2.5 text-slate-600">${l.target}</td>
-        </tr>
-      `).join('');
-    }
+        // ប្រសិនបើបានភ្ជាប់ Google Drive នោះហ្វាលនឹងរត់ចូល Drive ផ្ទាល់ភ្លាមៗ
+        if (googleAccessToken) {
+          driveFile = await uploadFileToGoogleDrive(currentUploadedFile.rawFile);
+          storageType = '☁️ Google Drive';
+          fileLink = driveFile.webViewLink;
+        } else {
+          const proceed = confirm('Google Drive មិនទាន់បានភ្ជាប់ឡើយ! តើអ្នកចង់រក្សាទុកក្នុងកុំព្យូទ័រជាបណ្តោះអាសន្នសិន (Local File) ឬទេ?');
+          if (!proceed) {
+            saveBtn.disabled = false;
+            saveBtn.innerText = 'រក្សាទុក';
+            return;
+          }
+        }
 
-    function clearActivityLogs() {
-      if (confirm('តើអ្នកចង់ជម្រះ Logs ចាស់ៗទាំងអស់មែនទេ?')) {
-        auditLogs = [];
-        setLocal(STORAGE_KEYS.LOGS, auditLogs);
-        renderLogsTable();
+        const newDoc = {
+          id: Date.now(),
+          bureau: activeBureauKey,
+          code: document.getElementById('doc-code').value.trim(),
+          title: document.getElementById('doc-title').value.trim(),
+          category: document.getElementById('doc-category').value,
+          notes: document.getElementById('doc-notes').value.trim(),
+          date: new Date().toISOString().split('T')[0],
+          fileSize: currentUploadedFile.size || '2.0 MB',
+          fileName: currentUploadedFile.name || 'document.pdf',
+          storage: storageType,
+          driveLink: fileLink,
+          createdBy: currentUser ? currentUser.username : 'user'
+        };
+
+        docsData.unshift(newDoc);
+        setLocal(STORAGE_KEYS.DOCS, docsData);
+        logActivity('Upload ឯកសារ', `${newDoc.code} ចូល ${storageType}`);
+        
+        closeModals();
+        renderDocs();
+        e.target.reset();
+        currentUploadedFile = { name: '', type: 'PDF', size: '', rawFile: null };
+        document.getElementById('file-label').innerHTML = 'ចុចជ្រើសរើសហ្វាល ឬអូសទម្លាក់ចូល (Drag & Drop)';
+        alert(`✅ ឯកសារត្រូវបានរក្សាទុកចូលក្នុង ${storageType} ដោយជោគជ័យ!`);
+
+      } catch (err) {
+        alert('⚠️ កំហុស៖ ' + err.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'រក្សាទុក';
       }
     }
 
