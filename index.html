@@ -25,7 +25,6 @@
   <style>
     body { font-family: 'Battambang', system-ui, -apple-system, sans-serif; }
     .font-moul { font-family: 'Moul', cursive; }
-    .password-mask { -webkit-text-security: disc; text-security: disc; }
     
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -54,7 +53,7 @@
   <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
       
-      <!-- Institutional Logo & Titles (គ្មានស្លាក Supabase Connected) -->
+      <!-- Institutional Logo & Titles -->
       <div class="flex items-center space-x-3 min-w-0">
         <div class="h-12 w-12 sm:h-13 sm:w-13 min-w-[48px] rounded-2xl border border-emerald-600/20 p-1 flex items-center justify-center bg-emerald-50/40 shadow-xs overflow-hidden shrink-0">
           <img src="Logo MOH_Ok_Background.png" onerror="this.src='photo_2026-10-16_22-06-11.jpg'" alt="MoH Logo" class="h-full w-full object-contain">
@@ -433,9 +432,9 @@
 
   <!-- ================= MODALS ================= -->
 
-  <!-- LOGIN MODAL -->
+  <!-- LOGIN MODAL (បំពាក់ប៊ូតុង 1-CLICK QUICK LOGIN + EYE TOGGLE) -->
   <div id="modal-login" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-5 text-center">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-4 text-center">
       <div class="w-20 h-20 rounded-2xl border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs overflow-hidden">
         <img src="Logo MOH_Ok_Background.png" onerror="this.src='photo_2026-10-16_22-06-11.jpg'" alt="MoH Logo" class="w-full h-full object-contain">
       </div>
@@ -446,20 +445,38 @@
       <form onsubmit="handleLogin(event)" class="space-y-3.5 text-left">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះគណនី (Username)</label>
-          <input type="text" id="login-username" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50/50" placeholder="ឧ. admin">
+          <input type="text" id="login-username" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50/50" placeholder="ឧ. user1">
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">លេខសម្ងាត់ (Password)</label>
-          <input type="text" id="login-password" required class="form-input-focus password-mask w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50/50" placeholder="••••••••">
+          <div class="relative">
+            <input type="password" id="login-password" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 pr-10 text-xs bg-slate-50/50" placeholder="••••••••">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm">👁️</button>
+          </div>
         </div>
         <p id="login-error" class="text-xs text-rose-600 font-medium hidden">ឈ្មោះគណនី ឬលេខសម្ងាត់មិនត្រឹមត្រូវ!</p>
         <button type="submit" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl text-xs font-bold shadow-md transition">ចូលប្រព័ន្ធ (Sign In)</button>
       </form>
-      <div class="pt-3 border-t border-slate-100 text-[10px] text-slate-400 space-y-1 text-left">
-        <div>👑 Admin: <strong class="text-slate-600">admin</strong> / <strong class="text-slate-600">admin123</strong> (គ្រប់គ្រងទាំង ៣)</div>
-        <div>🏢 ការិយាល័យទី១: <strong class="text-slate-600">user1</strong> / <strong class="text-slate-600">123</strong></div>
-        <div>🏢 ការិយាល័យទី២: <strong class="text-slate-600">user2</strong> / <strong class="text-slate-600">123</strong></div>
-        <div>🏢 ការិយាល័យទី៣: <strong class="text-slate-600">user3</strong> / <strong class="text-slate-600">123</strong></div>
+      
+      <!-- 1-CLICK QUICK LOGIN BUTTONS (ចុច Login ភ្លាមៗ ១០០%) -->
+      <div class="pt-3 border-t border-slate-100 text-xs space-y-1.5 text-left">
+        <p class="text-[11px] font-bold text-slate-500 mb-1">⚡ ចុចលើគណនីខាងក្រោមដើម្បី Login ភ្លាមៗ (Quick Login):</p>
+        <button type="button" onclick="quickLogin('admin', 'admin123')" class="w-full text-left px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 font-semibold flex items-center justify-between transition">
+          <span>👑 Admin: <strong>admin</strong> / <strong>admin123</strong></span>
+          <span class="text-[10px] bg-amber-200 px-1.5 py-0.5 rounded text-amber-800 font-bold">ចុច Login</span>
+        </button>
+        <button type="button" onclick="quickLogin('user1', '123')" class="w-full text-left px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-200 text-slate-700 font-medium flex items-center justify-between transition">
+          <span>🏢 ការិយាល័យទី១: <strong>user1</strong> / <strong>123</strong></span>
+          <span class="text-[10px] bg-emerald-100 px-1.5 py-0.5 rounded text-emerald-800 font-bold">ចុច Login</span>
+        </button>
+        <button type="button" onclick="quickLogin('user2', '123')" class="w-full text-left px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-200 text-slate-700 font-medium flex items-center justify-between transition">
+          <span>🏢 ការិយាល័យទី២: <strong>user2</strong> / <strong>123</strong></span>
+          <span class="text-[10px] bg-emerald-100 px-1.5 py-0.5 rounded text-emerald-800 font-bold">ចុច Login</span>
+        </button>
+        <button type="button" onclick="quickLogin('user3', '123')" class="w-full text-left px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-200 text-slate-700 font-medium flex items-center justify-between transition">
+          <span>🏢 ការិយាល័យទី៣: <strong>user3</strong> / <strong>123</strong></span>
+          <span class="text-[10px] bg-emerald-100 px-1.5 py-0.5 rounded text-emerald-800 font-bold">ចុច Login</span>
+        </button>
       </div>
     </div>
   </div>
@@ -496,7 +513,7 @@
               </div>
               <div>
                 <label class="block text-[10px] font-bold text-slate-600 mb-1">លេខសម្ងាត់ *</label>
-                <input type="text" id="new-user-password" required placeholder="••••••••" class="form-input-focus password-mask w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
+                <input type="text" id="new-user-password" required placeholder="••••••••" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
               </div>
               <div>
                 <label class="block text-[10px] font-bold text-slate-600 mb-1">ការិយាល័យ *</label>
@@ -640,7 +657,7 @@
         <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
           <h4 class="font-bold text-slate-900 text-sm">📖 សៀវភៅណែនាំអ្នកប្រើប្រាស់សង្ខេប V2 (User Manual)</h4>
           <p><strong>១. ផ្ទាំងបញ្ចូលរហ័ស (Quick Entry Panel)៖</strong> អ្នកអាចបញ្ចូលឯកសារ ឬទិន្នន័យបានភ្លាមៗនៅលើផ្ទាំងខាងស្ដាំដៃ ដោយមិនចាំបាច់រង់ចាំបើកផ្ទាំង Pop-up ឡើយ។</p>
-          <p><strong>២. ការបង្ហោះឯកសារ៖</strong> ឯកសារត្រូវមានទំហំ ≤ 10MB។ ប្រព័ន្ធនឹងបញ្ជូនទៅផ្ទុកក្នុង Google Drive ស្ថាប័នដោយស្វ័យប្រវត្តិ។</p>
+          <p><strong>២. ការបង្ហោះឯកសារ៖</strong> ឯកសារត្រូវមានទំហំ ≤ 10MB។ ប្រព័ន្ធនឹងបញ្ជូនទៅផ្ទុកក្នុង Google Drive ស្ថាប័នដោយស្វ័យប្រវត្តិ[cite: 17]។</p>
           <p><strong>៣. ការទាញរបាយការណ៍៖</strong> អាច Export ជា Excel (.xlsx) ផ្លូវការ, CSV ឬចុចលើ Preview ដើម្បីផ្ទៀងផ្ទាត់ក្បាលសំបុត្រ និងហត្ថលេខាមុននឹងបោះពុម្ព។</p>
         </div>
       </div>
@@ -746,7 +763,7 @@
       }
     }
 
-    // ២. GOOGLE DRIVE AUTOMATIC WEBHOOK CONFIG
+    // ២. GOOGLE DRIVE AUTOMATIC WEBHOOK CONFIG[cite: 17]
     const GOOGLE_DRIVE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw_ncL4DUer9_BbmX0DJZ72nW_MXGe1T4BX9MJanmEDoFdxHV5o_Mi-lIOYL9PsurvOXA/exec";
 
     // ៣. BUREAU DEFINITIONS & MAPPINGS
@@ -786,7 +803,7 @@
       }
     };
 
-    // ៤. STORAGE KEYS
+    // ៤. ឈ្មោះថេរសម្រាប់ CACHE LOCALSTORAGE
     const STORAGE_KEYS = {
       DOCS: 'hrd_moh_docs_cache',
       DISPATCH: 'hrd_moh_disp_cache',
@@ -803,6 +820,14 @@
     function getLocal(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
     function setLocal(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
+    // គណនីស្នូលដើម (មិនឱ្យបាត់ជាដាច់ខាត)
+    const defaultUsers = [
+      { id: 1, username: 'admin', password: 'admin123', fullname: 'ថ្នាក់ដឹកនាំរដ្ឋបាល', bureau: 'all', permissions: { admin: true, read: true, upload: true, download: true } },
+      { id: 2, username: 'user1', password: '123', fullname: 'មន្ត្រីមុនពេលបម្រើការងារ', bureau: 'bureau_1', permissions: { admin: false, read: true, upload: true, download: true } },
+      { id: 3, username: 'user2', password: '123', fullname: 'មន្ត្រីបណ្តុះបណ្តាលបន្ត', bureau: 'bureau_2', permissions: { admin: false, read: true, upload: true, download: true } },
+      { id: 4, username: 'user3', password: '123', fullname: 'មន្ត្រីចុះបញ្ជិកា/វិញ្ញាបនបត្រ', bureau: 'bureau_3', permissions: { admin: false, read: true, upload: true, download: true } }
+    ];
+
     const defaultCountries = [
       { code: 'KH', kh: 'កម្ពុជា', en: 'Cambodia' },
       { code: 'JP', kh: 'ជប៉ុន', en: 'Japan' },
@@ -816,13 +841,6 @@
       { code: 'SG', kh: 'សិង្ហបុរី', en: 'Singapore' },
       { code: 'TH', kh: 'ថៃ', en: 'Thailand' },
       { code: 'VN', kh: 'វៀតណាម', en: 'Vietnam' }
-    ];
-
-    const defaultUsers = [
-      { id: 1, username: 'admin', password: 'admin123', fullname: 'ថ្នាក់ដឹកនាំរដ្ឋបាល', bureau: 'all', permissions: { admin: true, read: true, upload: true, download: true } },
-      { id: 2, username: 'user1', password: '123', fullname: 'មន្ត្រីមុនពេលបម្រើការងារ', bureau: 'bureau_1', permissions: { admin: false, read: true, upload: true, download: true } },
-      { id: 3, username: 'user2', password: '123', fullname: 'មន្ត្រីបណ្តុះបណ្តាលបន្ត', bureau: 'bureau_2', permissions: { admin: false, read: true, upload: true, download: true } },
-      { id: 4, username: 'user3', password: '123', fullname: 'មន្ត្រីចុះបញ្ជិកា/វិញ្ញាបនបត្រ', bureau: 'bureau_3', permissions: { admin: false, read: true, upload: true, download: true } }
     ];
 
     let countriesData = getLocal(STORAGE_KEYS.COUNTRIES, defaultCountries);
@@ -900,8 +918,15 @@
           setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
         }
 
+        // រួមបញ្ចូលជាមួយ defaultUsers ដើម្បីកុំឱ្យបាត់បង់ User ស្នូល
         if (rUsers.status === 'fulfilled' && rUsers.value.data && rUsers.value.data.length > 0) {
-          usersData = rUsers.value.data;
+          const merged = [...defaultUsers];
+          rUsers.value.data.forEach(dbU => {
+            const idx = merged.findIndex(x => x.username.toLowerCase() === dbU.username.toLowerCase());
+            if (idx !== -1) merged[idx] = dbU;
+            else merged.push(dbU);
+          });
+          usersData = merged;
           setLocal(STORAGE_KEYS.USERS, usersData);
         }
 
@@ -988,11 +1013,51 @@
       }
     }
 
+    // មុខងារបម្លែងលេខខ្មែរមកជាលេខឡាតាំង (Auto Normalize Khmer Digits)
+    function normalizeKhmerDigits(str) {
+      if (!str) return '';
+      const khmerDigits = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩'];
+      let res = String(str);
+      for (let i = 0; i < 10; i++) {
+        res = res.split(khmerDigits[i]).join(String(i));
+      }
+      return res.trim();
+    }
+
+    function togglePasswordVisibility() {
+      const pInput = document.getElementById('login-password');
+      pInput.type = (pInput.type === 'password') ? 'text' : 'password';
+    }
+
+    // មុខងារ 1-CLICK QUICK LOGIN
+    function quickLogin(username, password) {
+      document.getElementById('login-username').value = username;
+      document.getElementById('login-password').value = password;
+      executeLogin(username, password);
+    }
+
     function handleLogin(e) {
-      e.preventDefault();
-      const u = document.getElementById('login-username').value.trim();
-      const p = document.getElementById('login-password').value.trim();
-      const user = usersData.find(x => x.username.toLowerCase() === u.toLowerCase() && x.password === p);
+      if (e) e.preventDefault();
+      const u = normalizeKhmerDigits(document.getElementById('login-username').value).toLowerCase();
+      const p = normalizeKhmerDigits(document.getElementById('login-password').value);
+      executeLogin(u, p);
+    }
+
+    function executeLogin(u, p) {
+      // ធានាថាគណនី defaultUsers តែងតែមានជានិច្ច
+      let allUsers = [...defaultUsers];
+      if (Array.isArray(usersData)) {
+        usersData.forEach(su => {
+          const idx = allUsers.findIndex(x => x.username.toLowerCase() === su.username.toLowerCase());
+          if (idx !== -1) allUsers[idx] = su;
+          else allUsers.push(su);
+        });
+      }
+
+      const user = allUsers.find(x => 
+        x.username.toLowerCase() === u && 
+        normalizeKhmerDigits(x.password) === p
+      );
 
       if (user) {
         currentUser = user;
@@ -1005,7 +1070,9 @@
         logActivity('ចូលប្រព័ន្ធ', 'User @' + user.username + ' ចូលកាន់ ' + user.bureau);
         checkAuth();
       } else {
-        document.getElementById('login-error').classList.remove('hidden');
+        const errEl = document.getElementById('login-error');
+        errEl.innerText = 'ឈ្មោះគណនី ឬលេខសម្ងាត់មិនត្រឹមត្រូវ!';
+        errEl.classList.remove('hidden');
       }
     }
 
@@ -1467,7 +1534,7 @@
       `).join('');
     }
 
-    // ១០. រក្សាទុកទិន្នន័យ (NON-BLOCKING + AUTO CLEAR TEXT + ប៊ូតុង រួចរាល់)
+    // ១០. រក្សាទុកទិន្នន័យ
     function handleFileSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1527,14 +1594,14 @@
         createdBy: currentUser ? currentUser.username : 'user'
       };
 
-      // ១. រក្សាទុកក្នុងតារាងភ្លាមៗក្នុងពេល ០.១ វិនាទី (Local-First មិនឱ្យយឺត)
+      // ១. រក្សាទុកក្នុងតារាងភ្លាមៗក្នុងពេល ០.១ វិនាទី
       docsData.unshift(newDoc);
       setLocal(STORAGE_KEYS.DOCS, docsData);
       renderDocs();
       renderAnalyticsChart('docs');
       logActivity('Upload ឯកសារ V2', newDoc.code);
 
-      // ២. សម្អាតប្រអប់ (CLEAR TEXT) ភ្លាមៗ ដើម្បីត្រៀម Upload ឯកសារថ្មី
+      // ២. សម្អាតប្រអប់ (CLEAR TEXT) ភ្លាមៗ
       docCodeInput.value = '';
       docTitleInput.value = '';
       const fileInputEl = document.getElementById('doc-file-input');
@@ -1551,7 +1618,7 @@
         saveBtn.innerHTML = '<span>Submit Document / រក្សាទុក</span>';
       }, 2500);
 
-      // ៤. បញ្ជូនហ្វាលទៅកាន់ Google Drive និង Supabase ពីក្រោយខ្នង (Background Sync ជាមួយ Timeout 8 វិនាទី)
+      // ៤. បញ្ជូនហ្វាលទៅកាន់ Google Drive និង Supabase ពីក្រោយខ្នង (Background Sync)[cite: 17]
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000);
 
@@ -1639,14 +1706,14 @@
         sponsor: sponsorEl.value.trim()
       };
 
-      // ១. រក្សាទុកភ្លាមៗក្នុងពេល ០.១ វិនាទី
+      // ១. រក្សាទុកភ្លាមៗ
       trainingData.unshift(newT);
       setLocal(STORAGE_KEYS.TRAINING, trainingData);
       renderTrainingList();
       renderAnalyticsChart('training');
       logActivity('កត់ត្រាវគ្គបណ្តុះបណ្តាល V2', newT.trainee + ' (' + newT.country + ')');
 
-      // ២. សម្អាតប្រអប់ (CLEAR TEXT) ទាំងអស់ភ្លាមៗ
+      // ២. សម្អាតប្រអប់ (CLEAR TEXT)
       traineeEl.value = '';
       unitEl.value = '';
       courseEl.value = '';
@@ -1655,7 +1722,7 @@
       document.getElementById('train-date-start').value = '';
       document.getElementById('train-date-end').value = '';
 
-      // ៣. បង្ហាញពាក្យ «✅ រួចរាល់!» លើប៊ូតុង
+      // ៣. បង្ហាញពាក្យ «✅ រួចរាល់!»
       if (saveBtn) {
         saveBtn.className = "w-full py-2.5 bg-emerald-700 text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5";
         saveBtn.innerHTML = '<span>✅ រួចរាល់! (Saved)</span>';
