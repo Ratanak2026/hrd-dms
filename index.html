@@ -65,22 +65,24 @@
           </button>
           
           <div id="tools-dropdown" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 hidden">
-            <button onclick="openSystemModal('settings')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+            <!-- ADMIN ONLY ITEMS -->
+            <button onclick="openSystemModal('settings')" id="menu-item-settings" class="admin-only-tool w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
               ⚙️ <span>Settings (ទូទៅ & Users)</span>
             </button>
-            <button onclick="openSystemModal('location')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
-              🌍 <span>Location (គ្រប់គ្រងបញ្ជីប្រទេស)</span>
+            <button onclick="openSystemModal('location')" id="menu-item-location" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+              🌍 <span>Location (គ្រប់គ្រងប្រទេស)</span>
             </button>
-            <button onclick="openSystemModal('files')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+            <button onclick="openSystemModal('files')" id="menu-item-files" class="admin-only-tool w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
               📁 <span>File System & Cloud Backups</span>
             </button>
-            <button onclick="openSystemModal('security')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+            <button onclick="openSystemModal('security')" id="menu-item-security" class="admin-only-tool w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2">
               🛡️ <span>Security & Permissions</span>
             </button>
-            <button onclick="openSystemModal('logging')" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2 border-b border-slate-100">
+            <button onclick="openSystemModal('logging')" id="menu-item-logging" class="admin-only-tool w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 flex items-center gap-2 border-b border-slate-100">
               📋 <span>Logging (កំណត់ត្រាសកម្មភាព)</span>
             </button>
-            <button onclick="openSystemModal('manual')" class="w-full text-left px-4 py-2 text-xs text-emerald-700 font-bold hover:bg-emerald-50 flex items-center gap-2">
+            <!-- ALL USERS ITEM -->
+            <button onclick="openSystemModal('manual')" id="menu-item-manual" class="w-full text-left px-4 py-2 text-xs text-emerald-700 font-bold hover:bg-emerald-50 flex items-center gap-2">
               📖 <span>User Manual (សៀវភៅណែនាំ)</span>
             </button>
           </div>
@@ -174,11 +176,11 @@
           <p class="text-xs text-slate-500 mt-0.5">ផ្ទុកក្នុង Google Drive ស្វ័យប្រវត្តិ (≤10MB) និងបើកអានបានស្មើគ្នាទាំង ៣ ការិយាល័យ[cite: 17]</p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
-          <button onclick="exportCSV('docs')" class="px-3.5 py-2 bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-100 transition">
+          <button onclick="exportCSV('docs')" id="btn-export-docs" class="perm-download-el px-3.5 py-2 bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-100 transition">
             📊 Export CSV
           </button>
           <input type="text" id="doc-search" oninput="renderDocs()" placeholder="🔍 ស្វែងរកឯកសារក្នុងបណ្ណាល័យ..." class="border border-slate-200 rounded-xl px-3 py-1.5 text-xs w-48 sm:w-56 focus:ring-1 focus:ring-emerald-500 outline-none">
-          <button id="btn-upload-doc" onclick="openDocModal()" class="px-3.5 py-2 bg-[#2d6a4f] hover:bg-[#23533e] text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-1">
+          <button id="btn-upload-doc" onclick="openDocModal()" class="perm-upload-el px-3.5 py-2 bg-[#2d6a4f] hover:bg-[#23533e] text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-1">
             + Upload ឯកសារ
           </button>
         </div>
@@ -193,7 +195,7 @@
           <h3 class="text-base sm:text-lg font-bold text-slate-900">📤📥 តាមដានឯកសារចេញ-ចូល (ការិយាល័យ)</h3>
           <p class="text-xs text-slate-500">តាមដានដំណាក់កាលរត់ការ, ទីតាំងបច្ចុប្បន្ន (អគ្គនាយក, ខុទ្ទកាល័យ...) និងកាលបរិច្ឆេទ</p>
         </div>
-        <button id="btn-add-disp" onclick="openDispatchModal()" class="px-3.5 py-2 bg-[#2d6a4f] text-white rounded-xl text-xs font-bold hover:bg-[#23533e]">
+        <button id="btn-add-disp" onclick="openDispatchModal()" class="perm-upload-el px-3.5 py-2 bg-[#2d6a4f] text-white rounded-xl text-xs font-bold hover:bg-[#23533e]">
           + កត់ត្រាលិខិតចេញ-ចូលថ្មី
         </button>
       </div>
@@ -207,7 +209,7 @@
           <h3 class="text-base sm:text-lg font-bold text-slate-900">🎓 ការគ្រប់គ្រងការប្រឡងចូល និងចេញថ្នាក់ជាតិ</h3>
           <p class="text-xs text-slate-500">កត់ត្រាសម័យប្រឡង ជំនាញវេជ្ជសាស្ត្រ ចំនួនបេក្ខជន និងស្ថានភាពប្រឡង</p>
         </div>
-        <button id="btn-add-exam" onclick="openExamModal()" class="px-3.5 py-2 bg-[#2d6a4f] text-white rounded-xl text-xs font-bold hover:bg-[#23533e]">
+        <button id="btn-add-exam" onclick="openExamModal()" class="perm-upload-el px-3.5 py-2 bg-[#2d6a4f] text-white rounded-xl text-xs font-bold hover:bg-[#23533e]">
           + បង្កើតសម័យប្រឡងថ្មី
         </button>
       </div>
@@ -224,16 +226,16 @@
           <p class="text-xs text-slate-500">តាមដានទិន្នន័យសិក្ខាកាម វគ្គសិក្សា រយៈពេល កាលបរិច្ឆេទ ប្រទេស និងដៃគូឧបត្ថម្ភ</p>
         </div>
         <div class="flex items-center gap-2 flex-wrap">
-          <button onclick="exportTrainingExcel()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-xs">
+          <button onclick="exportTrainingExcel()" class="perm-download-el px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-xs">
             📊 Export Excel (.xlsx)
           </button>
-          <button onclick="exportTrainingCSV()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">
+          <button onclick="exportTrainingCSV()" class="perm-download-el px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition">
             📄 CSV
           </button>
-          <button onclick="openPrintPreviewModal()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-xs">
+          <button onclick="openPrintPreviewModal()" class="perm-download-el px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-xs">
             👁️ Preview មុន Print/PDF
           </button>
-          <button id="btn-add-training" onclick="openTrainingModal()" class="px-3.5 py-1.5 bg-[#2d6a4f] text-white rounded-lg text-xs font-bold hover:bg-[#23533e]">
+          <button id="btn-add-training" onclick="openTrainingModal()" class="perm-upload-el px-3.5 py-1.5 bg-[#2d6a4f] text-white rounded-lg text-xs font-bold hover:bg-[#23533e]">
             + បញ្ចូលទិន្នន័យថ្មី
           </button>
         </div>
@@ -266,7 +268,7 @@
             <input type="text" id="filter-training-search" oninput="renderTrainingList()" placeholder="វាយពាក្យគន្លឹះ..." class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ប្រទេស (ទាញពី Location Tools)</label>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ប្រទេស (Location)</label>
             <select id="filter-training-country" onchange="renderTrainingList()" class="w-full border border-slate-200 rounded-lg p-2 bg-white outline-none">
               <option value="all">ប្រទេសទាំងអស់</option>
             </select>
@@ -321,7 +323,7 @@
           <h3 class="text-base sm:text-lg font-bold text-slate-900">📜 ចុះបញ្ជីការ និងកំណត់លេខសញ្ញាបត្រ/វិញ្ញាបនបត្រ</h3>
           <p class="text-xs text-slate-500">ចុះបញ្ជី កំណត់លេខកូដផ្លូវការ បោះពុម្ពទម្រង់ និងផ្ទៀងផ្ទាត់ QR Code</p>
         </div>
-        <button id="btn-add-cert" onclick="openCertModal()" class="px-3.5 py-2 bg-[#2d6a4f] text-white rounded-xl text-xs font-bold hover:bg-[#23533e]">
+        <button id="btn-add-cert" onclick="openCertModal()" class="perm-upload-el px-3.5 py-2 bg-[#2d6a4f] text-white rounded-xl text-xs font-bold hover:bg-[#23533e]">
           + ចុះបញ្ជី និងកំណត់លេខថ្មី
         </button>
       </div>
@@ -345,57 +347,83 @@
         <button onclick="closeSystemModal()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
       </div>
 
-      <!-- Navigation for System Tools -->
-      <div class="flex items-center gap-2 border-b border-slate-100 pb-2 overflow-x-auto scrollbar-none text-xs">
-        <button onclick="switchSystemToolTab('settings')" id="systab-settings" class="px-3.5 py-1.5 rounded-lg font-bold bg-[#2d6a4f] text-white">⚙️ Settings</button>
+      <!-- Navigation Tabs (Controlled by Role: Admin vs Normal User) -->
+      <div class="flex items-center gap-2 border-b border-slate-100 pb-2 overflow-x-auto scrollbar-none text-xs" id="system-tools-nav-bar">
+        <button onclick="switchSystemToolTab('settings')" id="systab-settings" class="admin-only-tab px-3.5 py-1.5 rounded-lg font-bold bg-[#2d6a4f] text-white">⚙️ Settings</button>
         <button onclick="switchSystemToolTab('location')" id="systab-location" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">🌍 Location (ប្រទេស)</button>
-        <button onclick="switchSystemToolTab('files')" id="systab-files" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">📁 File System</button>
-        <button onclick="switchSystemToolTab('security')" id="systab-security" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">🛡️ Security</button>
-        <button onclick="switchSystemToolTab('logging')" id="systab-logging" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">📋 Logging</button>
+        <button onclick="switchSystemToolTab('files')" id="systab-files" class="admin-only-tab px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">📁 File System</button>
+        <button onclick="switchSystemToolTab('security')" id="systab-security" class="admin-only-tab px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">🛡️ Security</button>
+        <button onclick="switchSystemToolTab('logging')" id="systab-logging" class="admin-only-tab px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">📋 Logging</button>
         <button onclick="switchSystemToolTab('manual')" id="systab-manual" class="px-3.5 py-1.5 rounded-lg font-bold bg-slate-100 text-slate-600">📖 User Manual</button>
       </div>
 
-      <!-- 1. SETTINGS TAB (Users & Interface) -->
+      <!-- 1. SETTINGS TAB (Users & Granular Permissions) -->
       <div id="syscontent-settings" class="space-y-4 flex-1 overflow-y-auto pr-1">
         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
-          <h4 class="text-xs font-bold text-slate-800 mb-2">➕ បង្កើតគណនីមន្ត្រីថ្មី</h4>
+          <h4 class="text-xs font-bold text-slate-800 mb-2">➕ បង្កើតគណនីមន្ត្រីថ្មី (ភ្ជាប់សិទ្ធិ Permissions ភ្លាមៗ)[cite: 19]</h4>
           <form onsubmit="handleCreateUser(event)" class="space-y-3">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
               <div>
-                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះពេញមន្ត្រី</label>
-                <input type="text" id="new-user-fullname" required placeholder="ឧ. វេជ្ជ. សុខ វិបុល" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះពេញមន្ត្រី *[cite: 19]</label>
+                <input type="text" id="new-user-fullname" required placeholder="ឧ. វេជ្ជ. សុខ វិបុល" class="w-full border border-slate-200 rounded-lg p-2 text-xs outline-none">
               </div>
               <div>
-                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះគណនី (Username)</label>
-                <input type="text" id="new-user-username" required placeholder="vibul.moh" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ឈ្មោះគណនី (Username) *[cite: 19]</label>
+                <input type="text" id="new-user-username" required placeholder="vibul.moh" class="w-full border border-slate-200 rounded-lg p-2 text-xs outline-none">
               </div>
               <div>
-                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">លេខសម្ងាត់</label>
-                <input type="password" id="new-user-password" required placeholder="••••••••" class="w-full border border-slate-200 rounded-lg p-2 text-xs">
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">លេខសម្ងាត់ *[cite: 19]</label>
+                <input type="password" id="new-user-password" required placeholder="••••••••" class="w-full border border-slate-200 rounded-lg p-2 text-xs outline-none">
               </div>
               <div>
-                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ការិយាល័យ</label>
-                <select id="new-user-bureau" class="w-full border border-slate-200 rounded-lg p-2 text-xs bg-white">
-                  <option value="bureau_1">ការិយាល័យមុនពេលបម្រើការងារ</option>
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ការិយាល័យ *[cite: 19]</label>
+                <select id="new-user-bureau" class="w-full border border-slate-200 rounded-lg p-2 text-xs bg-white outline-none">
+                  <option value="bureau_1">ការិយាល័យមុនពេលបម្រើការងារ[cite: 19]</option>
                   <option value="bureau_2">ការិយាល័យបណ្តុះបណ្តាលបន្ត</option>
                   <option value="bureau_3">ការិយាល័យចុះបញ្ជិកា/វិញ្ញាបនបត្រ</option>
-                  <option value="all">👑 ទាំងអស់ (Admin នាយកដ្ឋាន)</option>
+                  <option value="all">👑 ទាំងអស់ (Admin នាយកដ្ឋាន)[cite: 19]</option>
                 </select>
               </div>
             </div>
+
+            <!-- PERMISSIONS CHECKBOXES (ADMIN, READ, UPLOAD, DOWNLOAD) -->
+            <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1.5">
+              <label class="block text-[11px] font-bold text-slate-700">🔒 កំណត់សិទ្ធិប្រើប្រាស់ជាក់លាក់ (Permissions Assignment)៖</label>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <label class="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer">
+                  <input type="checkbox" id="perm-admin" onchange="toggleAdminCheckbox(this.checked)" class="text-amber-600 rounded">
+                  <span class="font-bold text-amber-700">👑 Admin (ពេញលេញ)</span>
+                </label>
+                <label class="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer">
+                  <input type="checkbox" id="perm-read" checked class="text-blue-600 rounded">
+                  <span class="font-semibold text-blue-700">👁️ Read (មើល/អាន)</span>
+                </label>
+                <label class="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer">
+                  <input type="checkbox" id="perm-upload" checked class="text-emerald-600 rounded">
+                  <span class="font-semibold text-emerald-700">📤 Upload (បង្ហោះ/បញ្ចូល)</span>
+                </label>
+                <label class="flex items-center gap-1.5 p-1.5 rounded-lg border border-slate-200 bg-slate-50 cursor-pointer">
+                  <input type="checkbox" id="perm-download" checked class="text-purple-600 rounded">
+                  <span class="font-semibold text-purple-700">📥 Download (ទាញយក)</span>
+                </label>
+              </div>
+            </div>
+
             <div class="flex justify-end pt-1">
-              <button type="submit" class="px-5 py-2 bg-[#2d6a4f] text-white rounded-lg text-xs font-bold">+ បង្កើតគណនី</button>
+              <button type="submit" class="px-5 py-2 bg-[#2d6a4f] text-white rounded-lg text-xs font-bold hover:bg-[#23533e]">+ បង្កើតគណនី</button>
             </div>
           </form>
         </div>
-        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs">
+
+        <div class="border border-slate-200 rounded-xl overflow-hidden text-xs shadow-2xs">
           <table class="w-full text-left">
             <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
               <tr>
-                <th class="p-2.5">ឈ្មោះ</th>
-                <th class="p-2.5">Username</th>
-                <th class="p-2.5">ការិយាល័យ</th>
-                <th class="p-2.5 text-right">សកម្មភាព</th>
+                <th class="p-2.5">ឈ្មោះ[cite: 19]</th>
+                <th class="p-2.5">Username[cite: 19]</th>
+                <th class="p-2.5">ការិយាល័យ[cite: 19]</th>
+                <th class="p-2.5">សិទ្ធិ (Permissions)</th>
+                <th class="p-2.5 text-right">សកម្មភាព[cite: 19]</th>
               </tr>
             </thead>
             <tbody id="users-table-body" class="divide-y divide-slate-100"></tbody>
@@ -403,7 +431,7 @@
         </div>
       </div>
 
-      <!-- 2. LOCATION TAB (គ្រប់គ្រងបញ្ជីប្រទេស) -->
+      <!-- 2. LOCATION TAB (គ្រប់គ្រងបញ្ជីប្រទេស)[cite: 19] -->
       <div id="syscontent-location" class="space-y-4 flex-1 overflow-y-auto pr-1 hidden">
         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4">
           <h4 class="text-xs font-bold text-slate-800 mb-2">➕ បញ្ចូលប្រទេសថ្មី (នឹងបង្ហាញក្នុង Dropdown Form ស្វ័យប្រវត្តិ)</h4>
@@ -441,7 +469,7 @@
         </div>
       </div>
 
-      <!-- 3. FILE SYSTEM & CLOUD BACKUPS -->
+      <!-- 3. FILE SYSTEM & CLOUD BACKUPS (ADMIN ONLY)[cite: 19] -->
       <div id="syscontent-files" class="space-y-4 flex-1 overflow-y-auto pr-1 hidden">
         <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-center justify-between">
           <div>
@@ -461,19 +489,20 @@
         </div>
       </div>
 
-      <!-- 4. SECURITY & PERMISSIONS -->
+      <!-- 4. SECURITY & PERMISSIONS (ADMIN ONLY)[cite: 19] -->
       <div id="syscontent-security" class="space-y-3 flex-1 overflow-y-auto pr-1 hidden text-xs">
         <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl space-y-2">
           <h4 class="font-bold text-emerald-900">🛡️ គោលការណ៍សុវត្ថិភាពទិន្នន័យ (Role-Based Access Control)</h4>
-          <ul class="list-disc list-inside space-y-1 text-slate-700">
-            <li><strong>Admin:</strong> មានសិទ្ធិមើល គ្រប់គ្រងការិយាល័យទាំង ៣ បង្កើត User និងចូលប្រើប្រាស់ Settings[cite: 17]។</li>
-            <li><strong>User1, User2, User3:</strong> ត្រូវបានចាក់សោរឱ្យមើលឃើញ និងធ្វើការបានតែក្នុងដែនសមត្ថកិច្ចការិយាល័យរបស់ខ្លួនប៉ុណ្ណោះ។</li>
-            <li><strong>បណ្ណាល័យរួម (Shared e-Library):</strong> គ្រប់ការិយាល័យអាចមើល និងទាញយកឯកសារចំណេះដឹងរួមគ្នាបានស្មើភាព។</li>
+          <ul class="list-disc list-inside space-y-1 text-slate-700 leading-relaxed">
+            <li><strong>Admin:</strong> មានសិទ្ធិមើល គ្រប់គ្រងការិយាល័យទាំង ៣ បង្កើត User, កំណត់ Permissions, និងចូលមើល Logging[cite: 17, 19]។</li>
+            <li><strong>Read:</strong> មានសិទ្ធិមើល ស្វែងរកឯកសារ និងពិនិត្យទិន្នន័យក្នុងប្រព័ន្ធ។</li>
+            <li><strong>Upload:</strong> មានសិទ្ធិ Upload ឯកសារ បញ្ចូលវគ្គបណ្តុះបណ្តាល ឬកត់ត្រាលិខិតចេញ-ចូល។</li>
+            <li><strong>Download:</strong> មានសិទ្ធិទាញយករបាយការណ៍ជា Excel, CSV, និង Print Preview មុន Save PDF។</li>
           </ul>
         </div>
       </div>
 
-      <!-- 5. LOGGING TAB -->
+      <!-- 5. LOGGING TAB (ADMIN ONLY)[cite: 19] -->
       <div id="syscontent-logging" class="space-y-2.5 flex-1 overflow-y-auto pr-1 hidden">
         <div class="flex justify-between items-center text-xs">
           <span class="text-slate-500">កំណត់ត្រាសកម្មភាពមន្ត្រីក្នុងប្រព័ន្ធ</span>
@@ -494,7 +523,7 @@
         </div>
       </div>
 
-      <!-- 6. USER MANUAL TAB -->
+      <!-- 6. USER MANUAL TAB (ALL USERS)[cite: 19] -->
       <div id="syscontent-manual" class="space-y-3 flex-1 overflow-y-auto pr-1 hidden text-xs leading-relaxed text-slate-700">
         <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
           <h4 class="font-bold text-slate-900 text-sm">📖 សៀវភៅណែនាំអ្នកប្រើប្រាស់សង្ខេប (User Manual)</h4>
@@ -581,7 +610,7 @@
     </div>
   </div>
 
-  <!-- DISPATCH MODAL (WITH STAGE, LOCATION & DATE) -->
+  <!-- DISPATCH MODAL -->
   <div id="modal-dispatch" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -608,7 +637,7 @@
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ដំណើរការដល់ណា (ដំណាក់កាល)</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">ដំណាក់កាល</label>
             <select id="disp-stage" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
               <option value="រដ្ឋបាលទទួល">រដ្ឋបាលទទួល</option>
               <option value="កំពុងពិនិត្យបច្ចេកទេស">កំពុងពិនិត្យបច្ចេកទេស</option>
@@ -617,7 +646,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">នៅទីណា (ទីតាំងបច្ចុប្បន្ន)</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">នៅទីណា (ទីតាំង)</label>
             <select id="disp-location" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
               <option value="ការិយាល័យសាមី">ការិយាល័យសាមី</option>
               <option value="ប្រធាននាយកដ្ឋាន (DHRD)">ប្រធាននាយកដ្ឋាន (DHRD)</option>
@@ -693,7 +722,7 @@
     </div>
   </div>
 
-  <!-- BUREAU 2: CONTINUING TRAINING MODAL (FORM ថ្មី កាលបរិច្ឆេទ & ប្រទេសទាញពី TOOLS) -->
+  <!-- BUREAU 2: CONTINUING TRAINING MODAL -->
   <div id="modal-training" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -731,7 +760,6 @@
           </div>
         </div>
 
-        <!-- ពីថ្ងៃខែឆ្នាំ ដល់ ថ្ងៃខែឆ្នាំ -->
         <div class="grid grid-cols-2 gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">📅 ពីថ្ងៃខែឆ្នាំ (ចាប់ផ្តើម) *</label>
@@ -743,7 +771,6 @@
           </div>
         </div>
 
-        <!-- ប្រទេស (ទាញបញ្ជីចេញពី TOOLS LOCATION) -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <div class="flex justify-between items-center mb-1">
@@ -781,9 +808,7 @@
         </div>
       </div>
       
-      <!-- Printable Document Container with Official Header & Logo -->
       <div id="printable-preview-content" class="flex-1 overflow-y-auto p-4 sm:p-8 bg-white my-3 border border-slate-200 rounded-xl text-slate-900 space-y-4">
-        <!-- Official Letterhead -->
         <div class="flex justify-between items-start border-b pb-4">
           <div class="flex items-center gap-3">
             <div class="h-16 w-16 min-w-[64px] rounded-full border border-emerald-600/30 p-1 flex items-center justify-center bg-white shadow-xs overflow-hidden">
@@ -806,7 +831,6 @@
           <p id="preview-report-subtitle" class="text-xs text-slate-500 mt-1"></p>
         </div>
 
-        <!-- Preview Table -->
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs border-collapse border border-slate-300">
             <thead class="bg-slate-100 font-bold">
@@ -825,7 +849,6 @@
           </table>
         </div>
 
-        <!-- Official Signatures Block -->
         <div class="grid grid-cols-2 pt-8 text-center text-xs">
           <div>
             <p>បានឃើញ និងឯកភាព</p>
@@ -938,21 +961,21 @@
       }
     };
 
-    // ២. GOOGLE DRIVE AUTOMATIC WEBHOOK CONFIG (LIVE WEBHOOK ផ្ទាល់ខ្លួនរបស់អ្នក)
+    // ២. GOOGLE DRIVE AUTOMATIC WEBHOOK CONFIG
     const GOOGLE_DRIVE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw_ncL4DUer9_BbmX0DJZ72nW_MXGe1T4BX9MJanmEDoFdxHV5o_Mi-lIOYL9PsurvOXA/exec";
 
     // ៣. STORAGE & DEFAULT DATA
     const STORAGE_KEYS = {
-      DOCS: 'hrd_shared_docs_v16',
-      DISPATCH: 'hrd_bureau_disp_v16',
-      EXAMS: 'hrd_bureau_exams_v16',
-      TRAINING: 'hrd_bureau_train_v16',
-      CERTS: 'hrd_bureau_certs_v16',
-      USERS: 'hrd_bureau_users_v16',
-      LOGS: 'hrd_bureau_logs_v16',
-      COUNTRIES: 'hrd_bureau_countries_v16',
-      SESSION: 'hrd_bureau_session_v16',
-      ACTIVE_BUREAU: 'hrd_active_bureau_v16'
+      DOCS: 'hrd_shared_docs_v17',
+      DISPATCH: 'hrd_bureau_disp_v17',
+      EXAMS: 'hrd_bureau_exams_v17',
+      TRAINING: 'hrd_bureau_train_v17',
+      CERTS: 'hrd_bureau_certs_v17',
+      USERS: 'hrd_bureau_users_v17',
+      LOGS: 'hrd_bureau_logs_v17',
+      COUNTRIES: 'hrd_bureau_countries_v17',
+      SESSION: 'hrd_bureau_session_v17',
+      ACTIVE_BUREAU: 'hrd_active_bureau_v17'
     };
 
     function getLocal(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
@@ -974,10 +997,10 @@
     ];
 
     const defaultUsers = [
-      { id: 1, username: 'admin', password: 'admin123', fullname: 'ថ្នាក់ដឹកនាំរដ្ឋបាល', bureau: 'all', permissions: { upload: true, edit: true, delete: true, admin: true } },
-      { id: 2, username: 'user1', password: '123', fullname: 'មន្ត្រីមុនពេលបម្រើការងារ', bureau: 'bureau_1', permissions: { upload: true, edit: true, delete: false, admin: false } },
-      { id: 3, username: 'user2', password: '123', fullname: 'មន្ត្រីបណ្តុះបណ្តាលបន្ត', bureau: 'bureau_2', permissions: { upload: true, edit: true, delete: false, admin: false } },
-      { id: 4, username: 'user3', password: '123', fullname: 'មន្ត្រីចុះបញ្ជិកា/វិញ្ញាបនបត្រ', bureau: 'bureau_3', permissions: { upload: true, edit: true, delete: false, admin: false } }
+      { id: 1, username: 'admin', password: 'admin123', fullname: 'ថ្នាក់ដឹកនាំរដ្ឋបាល', bureau: 'all', permissions: { admin: true, read: true, upload: true, download: true } },
+      { id: 2, username: 'user1', password: '123', fullname: 'មន្ត្រីមុនពេលបម្រើការងារ', bureau: 'bureau_1', permissions: { admin: false, read: true, upload: true, download: true } },
+      { id: 3, username: 'user2', password: '123', fullname: 'មន្ត្រីបណ្តុះបណ្តាលបន្ត', bureau: 'bureau_2', permissions: { admin: false, read: true, upload: true, download: true } },
+      { id: 4, username: 'user3', password: '123', fullname: 'មន្ត្រីចុះបញ្ជិកា/វិញ្ញាបនបត្រ', bureau: 'bureau_3', permissions: { admin: false, read: true, upload: true, download: true } }
     ];
 
     let countriesData = getLocal(STORAGE_KEYS.COUNTRIES, defaultCountries);
@@ -1043,9 +1066,10 @@
       } else {
         document.getElementById('modal-login').classList.add('hidden');
         document.getElementById('current-user-fullname').innerText = currentUser.fullname;
-        document.getElementById('current-user-role').innerText = currentUser.bureau === 'all' ? '👑 Admin (នាយកដ្ឋាន)' : `🏢 ${BUREAUS[currentUser.bureau]?.shortName || 'មន្ត្រី'}`;
+        
+        const isSuperAdmin = (currentUser.permissions?.admin === true || currentUser.bureau === 'all');
+        document.getElementById('current-user-role').innerText = isSuperAdmin ? '👑 Admin (នាយកដ្ឋាន)' : `🏢 ${BUREAUS[currentUser.bureau]?.shortName || 'មន្ត្រី'}`;
 
-        const isSuperAdmin = (currentUser.bureau === 'all');
         const selectBox = document.getElementById('active-bureau-select');
         const lockNotice = document.getElementById('bureau-lock-notice');
 
@@ -1060,7 +1084,43 @@
           lockNotice.classList.remove('hidden');
         }
 
+        applyUserPermissionsUI(isSuperAdmin);
         renderBureauWorkspace();
+      }
+    }
+
+    // បិទ/បើក UI តាមសិទ្ធិមន្ត្រី (ADMIN VS NORMAL USER)[cite: 19]
+    function applyUserPermissionsUI(isAdmin) {
+      const perms = currentUser?.permissions || { read: true, upload: true, download: true, admin: false };
+
+      // ១. គ្រប់គ្រងលើ TOOLS DROPDOWN & TABS[cite: 19]
+      const adminToolItems = document.querySelectorAll('.admin-only-tool, .admin-only-tab');
+      adminToolItems.forEach(el => {
+        if (isAdmin) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden'); // លាក់ Settings, File System, Security, Logging មិនឱ្យ User ធម្មតាឃើញឡើយ[cite: 19]
+        }
+      });
+
+      // ២. គ្រប់គ្រងលើប៊ូតុង Upload
+      const uploadBtns = document.querySelectorAll('.perm-upload-el');
+      uploadBtns.forEach(btn => {
+        btn.style.display = (perms.upload || isAdmin) ? '' : 'none';
+      });
+
+      // ៣. គ្រប់គ្រងលើប៊ូតុង Download / Export
+      const downloadBtns = document.querySelectorAll('.perm-download-el');
+      downloadBtns.forEach(btn => {
+        btn.style.display = (perms.download || isAdmin) ? '' : 'none';
+      });
+    }
+
+    function toggleAdminCheckbox(isAdmin) {
+      if (isAdmin) {
+        document.getElementById('perm-read').checked = true;
+        document.getElementById('perm-upload').checked = true;
+        document.getElementById('perm-download').checked = true;
       }
     }
 
@@ -1158,6 +1218,13 @@
 
     function openSystemModal(tab = 'settings') {
       document.getElementById('tools-dropdown').classList.add('hidden');
+      const isAdmin = (currentUser?.permissions?.admin === true || currentUser?.bureau === 'all');
+      
+      // ការពារ User ធម្មតាមិនឱ្យចូល tab សម្ងាត់[cite: 19]
+      if (!isAdmin && ['settings', 'files', 'security', 'logging'].includes(tab)) {
+        tab = 'manual'; // ប្តូរទៅកាន់សៀវភៅណែនាំជំនួស[cite: 19]
+      }
+
       document.getElementById('modal-system-tools').classList.remove('hidden');
       switchSystemToolTab(tab);
     }
@@ -1186,7 +1253,7 @@
       if (tab === 'logging') renderLogsTable();
     }
 
-    // LOCATION / COUNTRY ENGINE (SYNC DIRECTLY WITH FORMS)
+    // LOCATION / COUNTRY ENGINE
     function renderCountriesTable() {
       const tbody = document.getElementById('countries-table-body');
       if (!tbody) return;
@@ -1771,7 +1838,7 @@
       }
     }
 
-    // ៩. USER & LOG RENDERING
+    // ៩. USER & GRANULAR PERMISSIONS HANDLING[cite: 19]
     function handleCreateUser(e) {
       e.preventDefault();
       const username = document.getElementById('new-user-username').value.trim();
@@ -1779,20 +1846,32 @@
         alert('Username នេះមានរួចហើយ!');
         return;
       }
+
+      const isAdminRole = document.getElementById('perm-admin').checked || (document.getElementById('new-user-bureau').value === 'all');
+
       const newUser = {
         id: Date.now(),
         fullname: document.getElementById('new-user-fullname').value.trim(),
         username: username,
         password: document.getElementById('new-user-password').value.trim(),
         bureau: document.getElementById('new-user-bureau').value,
-        permissions: { upload: true, edit: true, delete: false, admin: (document.getElementById('new-user-bureau').value === 'all') }
+        permissions: {
+          admin: isAdminRole,
+          read: document.getElementById('perm-read').checked,
+          upload: document.getElementById('perm-upload').checked,
+          download: document.getElementById('perm-download').checked
+        }
       };
+
       usersData.unshift(newUser);
       setLocal(STORAGE_KEYS.USERS, usersData);
-      logActivity('បង្កើត User', `@${newUser.username} ប្រចាំ ${newUser.bureau}`);
+      logActivity('បង្កើត User ថ្មី', `@${newUser.username} (Admin: ${isAdminRole})`);
       renderUsersTable();
       e.target.reset();
-      alert('✅ បានបង្កើតគណនីជោគជ័យ!');
+      document.getElementById('perm-read').checked = true;
+      document.getElementById('perm-upload').checked = true;
+      document.getElementById('perm-download').checked = true;
+      alert('✅ បានបង្កើតគណនីមន្ត្រី និងភ្ជាប់សិទ្ធិជោគជ័យ!');
     }
 
     function deleteUser(id) {
@@ -1808,20 +1887,33 @@
     function renderUsersTable() {
       const tbody = document.getElementById('users-table-body');
       if (!tbody) return;
-      tbody.innerHTML = usersData.map(u => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="p-2.5 font-bold text-slate-800">${u.fullname}</td>
-          <td class="p-2.5 font-mono text-emerald-700 font-semibold">@${u.username}</td>
-          <td class="p-2.5">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.bureau === 'all' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
-              ${u.bureau === 'all' ? '👑 ទាំងអស់ (Admin)' : (BUREAUS[u.bureau]?.shortName || u.bureau)}
-            </span>
-          </td>
-          <td class="p-2.5 text-right">
-            ${u.username !== 'admin' ? `<button onclick="deleteUser(${u.id})" class="text-rose-600 hover:underline">លុប</button>` : '<span class="text-slate-400">Default</span>'}
-          </td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = usersData.map(u => {
+        const p = u.permissions || { admin: false, read: true, upload: true, download: true };
+        const bureauLabel = u.bureau === 'all' ? '👑 ទាំងអស់ (Admin)' : (BUREAUS[u.bureau]?.shortName || u.bureau);[cite: 19]
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-2.5 font-bold text-slate-800">${u.fullname}</td>
+            <td class="p-2.5 font-mono text-emerald-700 font-semibold">@${u.username}</td>
+            <td class="p-2.5">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.bureau === 'all' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}">
+                ${bureauLabel}
+              </span>
+            </td>
+            <td class="p-2.5">
+              <div class="flex items-center gap-1 flex-wrap text-[9px]">
+                ${p.admin ? '<span class="bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">Admin</span>' : ''}
+                ${p.read ? '<span class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-semibold">Read</span>' : ''}
+                ${p.upload ? '<span class="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-semibold">Upload</span>' : ''}
+                ${p.download ? '<span class="bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded font-semibold">Download</span>' : ''}
+              </div>
+            </td>
+            <td class="p-2.5 text-right">
+              ${u.username !== 'admin' ? `<button onclick="deleteUser(${u.id})" class="text-rose-600 hover:underline">លុប</button>` : '<span class="text-slate-400">Default</span>'}
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function renderLogsTable() {
