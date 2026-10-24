@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="page-title">ប្រព័ន្ធគ្រប់គ្រងការងារ និងឯកសារឌីជីថល - DHRD ក្រសួងសុខាភិបាល</title>
+  <title id="page-title">ប្រព័ន្ធគ្រប់គ្រងការងារ និងឯកសារឌីជីថល V2 - DHRD ក្រសួងសុខាភិបាល</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -24,20 +24,20 @@
     .font-moul { font-family: 'Moul', cursive; }
     .password-mask { -webkit-text-security: disc; text-security: disc; }
     
-    /* Smooth Scroll & Custom Scrollbar */
+    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-    /* Interactive Form Focus States */
+    /* Interactive Form Inputs */
     .form-input-focus {
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .form-input-focus:focus {
       outline: none;
       border-color: #059669;
-      box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.15);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
     }
 
     @media print {
@@ -47,9 +47,9 @@
     }
   </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-800 antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
+<body class="bg-[#f4f7f6] text-slate-800 antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900 pb-16 lg:pb-0">
 
-  <!-- ================= TOP HEADER BAR ================= -->
+  <!-- ================= TOP HEADER BAR (RESPONSIVE) ================= -->
   <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
       
@@ -63,6 +63,7 @@
             <span class="font-bold text-slate-900 text-sm sm:text-base leading-tight">ក្រសួងសុខាភិបាល</span>
             <span class="text-slate-300 hidden sm:inline">|</span>
             <span class="font-bold text-slate-900 text-xs sm:text-base leading-tight">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស</span>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">V2</span>
           </div>
           <p class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate mt-0.5">Department of Human Resource Development (DHRD - MoH)</p>
         </div>
@@ -77,13 +78,13 @@
 
         <!-- SYSTEM TOOLS DROPDOWN MENU -->
         <div class="relative" id="tools-menu-container">
-          <button onclick="toggleToolsMenu()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition">
+          <button onclick="toggleToolsMenu()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition">
             ⚙️ <span>Tools</span>
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </button>
           
           <div id="tools-dropdown" class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200/80 py-1.5 z-50 hidden">
-            <!-- ADMIN ONLY MENU ITEMS -->
+            <!-- ADMIN ONLY ITEMS -->
             <button onclick="openSystemModal('settings')" id="menu-item-settings" class="admin-only-item w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2">
               ⚙️ <span>Settings (ទូទៅ & Users)</span>
             </button>
@@ -110,7 +111,7 @@
         <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
           <div class="text-right hidden sm:block leading-tight">
             <div class="text-xs font-bold text-slate-800" id="current-user-fullname">ថ្នាក់ដឹកនាំរដ្ឋបាល</div>
-            <div class="text-[10px] text-amber-600 font-semibold" id="current-user-role">👑 Admin</div>
+            <div class="text-[10px] text-emerald-700 font-semibold" id="current-user-role">👑 Admin</div>
           </div>
           <button onclick="handleLogout()" title="ចាកចេញ (Logout)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 text-slate-600 hover:text-rose-600 font-bold flex items-center justify-center text-xs transition">
             🚪
@@ -122,23 +123,23 @@
   </header>
 
   <!-- ================= MAIN CONTAINER ================= -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-7 w-full flex-1 space-y-6">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 w-full flex-1 space-y-6">
 
-    <!-- HERO EMERALD BANNER (MODERN GRADIENT & SOFT SHADOW) -->
-    <div class="bg-gradient-to-r from-[#0f3d2e] via-[#1b4332] to-[#2d6a4f] rounded-3xl p-6 sm:p-7 text-white shadow-md relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-6 border border-emerald-600/30">
+    <!-- HERO GREEN BANNER (INSPIRED BY IMAGE 2 MUNICIPALITY BANNER) -->
+    <div class="bg-gradient-to-r from-[#143e2e] via-[#1b503b] to-[#267355] rounded-3xl p-5 sm:p-7 text-white shadow-md relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-5 border border-emerald-600/30">
       <div class="space-y-1.5 relative z-10 max-w-2xl">
-        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/10 text-emerald-300 text-[11px] font-semibold tracking-wide backdrop-blur-xs border border-white/10">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>កន្លែងការងារជំនាញឌីជីថល</span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 text-[11px] font-semibold tracking-wide backdrop-blur-xs border border-white/10">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>ប្រព័ន្ធរដ្ឋបាលឌីជីថល DHRD Smart Workplace</span>
         </div>
         <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white font-moul sm:font-sans" id="active-bureau-title">ការិយាល័យជំនាញ</h2>
         <p class="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-light" id="active-bureau-desc">ប្រព័ន្ធគ្រប់គ្រងឯកសារ តាមដានលិខិតចេញ-ចូល និងភារកិច្ចជាក់ស្តែងរបស់ការិយាល័យ</p>
       </div>
 
       <!-- Bureau Selector -->
-      <div id="admin-bureau-switch-box" class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 sm:w-84 space-y-1.5 relative z-10 shrink-0">
+      <div id="admin-bureau-switch-box" class="bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 sm:w-84 space-y-1.5 relative z-10 shrink-0">
         <label class="block text-[11px] text-emerald-200 font-semibold">🏛️ ការិយាល័យដែលកំពុងប្រតិបត្តិការ៖</label>
-        <select id="active-bureau-select" onchange="changeActiveBureau(this.value)" class="w-full bg-[#143d2c] text-white text-xs border border-emerald-400/40 rounded-xl p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 font-medium cursor-pointer">
+        <select id="active-bureau-select" onchange="changeActiveBureau(this.value)" class="w-full bg-[#12392b] text-white text-xs border border-emerald-400/40 rounded-xl p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 font-medium cursor-pointer">
           <option value="bureau_1">១. ការិយាល័យបណ្តុះបណ្តាលមុនពេលបម្រើការងារ</option>
           <option value="bureau_2">២. ការិយាល័យបណ្តុះបណ្តាលបន្ត</option>
           <option value="bureau_3">៣. ការិយាល័យចុះបញ្ជិកា និងវិញ្ញាបនបត្រ</option>
@@ -147,224 +148,335 @@
       </div>
     </div>
 
-    <!-- MODERN STAT SUMMARY CARDS (CLEAN SHADOW & CONSISTENT METRICS) -->
+    <!-- METRIC SUMMARY CARDS (INSPIRED BY IMAGE 2) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
-      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition group">
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition">
         <div class="flex items-center justify-between">
           <p class="text-xs text-slate-500 font-medium">បណ្ណាល័យរួម (៣ ការិយាល័យ)</p>
-          <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-base font-bold group-hover:scale-105 transition">📚</div>
+          <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">📚</div>
         </div>
         <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-2" id="stat-bureau-docs">0</h3>
-        <span class="inline-block mt-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md font-semibold">☁️ Cloud Drive</span>
+        <span class="inline-block mt-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md font-semibold">☁️ Cloud Drive Sync</span>
       </div>
 
-      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition group">
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition">
         <div class="flex items-center justify-between">
           <p class="text-xs text-slate-500 font-medium">លិខិតកំពុងរត់ការ</p>
-          <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-base font-bold group-hover:scale-105 transition">⏳</div>
+          <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold">⏳</div>
         </div>
         <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-2" id="stat-bureau-disp">0</h3>
         <span class="inline-block mt-1 text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md font-semibold">ដំណាក់កាលរដ្ឋបាល</span>
       </div>
 
-      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition group">
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition">
         <div class="flex items-center justify-between">
           <p class="text-xs text-slate-500 font-medium" id="stat-custom-label">ការងារជំនាញ</p>
-          <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-base font-bold group-hover:scale-105 transition" id="stat-custom-icon">🎯</div>
+          <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold" id="stat-custom-icon">🎯</div>
         </div>
         <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-2" id="stat-custom-val">0</h3>
         <span class="inline-block mt-1 text-[10px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md font-semibold">ទិន្នន័យជាក់ស្តែង</span>
       </div>
 
-      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition group">
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition">
         <div class="flex items-center justify-between">
           <p class="text-xs text-slate-500 font-medium">ការិយាល័យសាមី</p>
-          <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-base font-bold group-hover:scale-105 transition">🏢</div>
+          <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold">🏢</div>
         </div>
         <h3 class="text-xs sm:text-sm font-bold text-emerald-800 mt-3 truncate" id="stat-bureau-badge">ការិយាល័យទី១</h3>
-        <span class="inline-block mt-1 text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md font-semibold">Active Bureau</span>
+        <span class="inline-block mt-1 text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md font-semibold">Active Workspace</span>
+      </div>
+    </div>
+
+    <!-- VISUAL ANALYTICS BAR CHART SECTION (INSPIRED BY IMAGE 2) -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+        <div>
+          <h3 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+            <span>📊</span> ក្រាហ្វិកស្ថិតិទិន្នន័យ (Visual Analytics Overview)
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5">ស្ថិតិសិក្ខាកាមតាមប្រទេស និងឯកសារការិយាល័យក្នុងពេលជាក់ស្តែង</p>
+        </div>
+        <div class="flex items-center gap-1.5 self-start sm:self-auto text-xs bg-slate-100 p-1 rounded-xl">
+          <button onclick="renderAnalyticsChart('training')" id="btn-chart-train" class="px-3 py-1 rounded-lg font-bold bg-white text-emerald-800 shadow-2xs">សិក្ខាកាមតាមប្រទេស</button>
+          <button onclick="renderAnalyticsChart('docs')" id="btn-chart-docs" class="px-3 py-1 rounded-lg font-bold text-slate-600 hover:text-slate-900">ឯកសារតាមការិយាល័យ</button>
+        </div>
+      </div>
+      <!-- DYNAMIC BAR CHART CONTAINER -->
+      <div class="pt-5 pb-2">
+        <div id="analytics-bars-container" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 items-end h-48 border-b border-slate-200 px-2 pb-2">
+          <!-- BARS GENERATED DYNAMICALLY BY JS -->
+        </div>
+        <div id="analytics-labels-container" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 pt-2 px-2 text-[10px] text-center text-slate-500 font-medium">
+          <!-- LABELS GENERATED DYNAMICALLY BY JS -->
+        </div>
       </div>
     </div>
 
     <!-- DYNAMIC NAVIGATION TABS -->
     <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none" id="bureau-tabs-nav"></div>
 
-    <!-- ================= CONTENT AREAS ================= -->
+    <!-- ================= 2-PANEL SPLIT WORKSPACE (INSPIRED BY IMAGE 1) ================= -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-    <!-- TAB 1: E-LIBRARY -->
-    <div id="section-docs" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 space-y-5 shadow-xs">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
-        <div>
-          <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-            <span>📚</span> បណ្ណាល័យឯកសារឌីជីថលរួម (Shared Cloud Library)
-          </h3>
-          <p class="text-xs text-slate-500 mt-0.5">ផ្ទុកក្នុង Google Drive ស្វ័យប្រវត្តិ (≤10MB) និងបើកអានបានស្មើគ្នាទាំង ៣ ការិយាល័យ[cite: 17]</p>
-        </div>
-        <div class="flex items-center gap-2.5 flex-wrap">
-          <button onclick="exportCSV('docs')" id="btn-export-docs" class="perm-download-el px-3.5 py-2.5 bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-100 transition shadow-2xs">
-            📊 Export CSV
-          </button>
-          <input type="text" id="doc-search" oninput="renderDocs()" placeholder="🔍 ស្វែងរកឯកសារក្នុងបណ្ណាល័យ..." class="form-input-focus border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs w-48 sm:w-60 bg-slate-50/50">
-          <button id="btn-upload-doc" onclick="openDocModal()" class="perm-upload-el px-4 py-2.5 bg-[#0f3d2e] hover:bg-[#1b4332] text-white rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-1.5">
-            + Upload ឯកសារ
-          </button>
-        </div>
-      </div>
-      <div id="docs-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1"></div>
-    </div>
+      <!-- LEFT PANEL: MAIN DATA TABLE & SEARCH (8 COLS ON DESKTOP) -->
+      <div class="lg:col-span-8 space-y-4">
 
-    <!-- TAB 2: DISPATCH -->
-    <div id="section-dispatch" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 space-y-4 shadow-xs hidden">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
-        <div>
-          <h3 class="text-base sm:text-lg font-bold text-slate-900">📤📥 តាមដានឯកសារចេញ-ចូល (ការិយាល័យ)</h3>
-          <p class="text-xs text-slate-500">តាមដានដំណាក់កាលរត់ការ, ទីតាំងបច្ចុប្បន្ន (អគ្គនាយក, ខុទ្ទកាល័យ...) និងកាលបរិច្ឆេទ</p>
-        </div>
-        <button id="btn-add-disp" onclick="openDispatchModal()" class="perm-upload-el px-4 py-2.5 bg-[#0f3d2e] text-white rounded-xl text-xs font-bold hover:bg-[#1b4332] shadow-xs transition">
-          + កត់ត្រាលិខិតចេញ-ចូលថ្មី
-        </button>
-      </div>
-      <div id="dispatch-list" class="space-y-3 pt-1"></div>
-    </div>
-
-    <!-- TAB 3A: BUREAU 1 EXAMS -->
-    <div id="section-exams" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 space-y-4 shadow-xs hidden">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
-        <div>
-          <h3 class="text-base sm:text-lg font-bold text-slate-900">🎓 ការគ្រប់គ្រងការប្រឡងចូល និងចេញថ្នាក់ជាតិ</h3>
-          <p class="text-xs text-slate-500">កត់ត្រាសម័យប្រឡង ជំនាញវេជ្ជសាស្ត្រ ចំនួនបេក្ខជន និងស្ថានភាពប្រឡង</p>
-        </div>
-        <button id="btn-add-exam" onclick="openExamModal()" class="perm-upload-el px-4 py-2.5 bg-[#0f3d2e] text-white rounded-xl text-xs font-bold hover:bg-[#1b4332] shadow-xs transition">
-          + បង្កើតសម័យប្រឡងថ្មី
-        </button>
-      </div>
-      <div id="exams-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1"></div>
-    </div>
-
-    <!-- TAB 3B: BUREAU 2 CONTINUING TRAINING -->
-    <div id="section-training" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 space-y-4 shadow-xs hidden">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
-        <div>
-          <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-            <span>🌐</span> របាយការណ៍ អំពីវគ្គបណ្តុះបណ្តាលនានា នៃការិយាល័យបណ្តុះបណ្តាលបន្ត
-          </h3>
-          <p class="text-xs text-slate-500">តាមដានទិន្នន័យសិក្ខាកាម វគ្គសិក្សា រយៈពេល កាលបរិច្ឆេទ ប្រទេស និងដៃគូឧបត្ថម្ភ</p>
-        </div>
-        <div class="flex items-center gap-2 flex-wrap">
-          <button onclick="exportTrainingExcel()" class="perm-download-el px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs">
-            📊 Export Excel (.xlsx)
-          </button>
-          <button onclick="exportTrainingCSV()" class="perm-download-el px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
-            📄 CSV
-          </button>
-          <button onclick="openPrintPreviewModal()" class="perm-download-el px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs">
-            👁️ Preview មុន Print/PDF
-          </button>
-          <button id="btn-add-training" onclick="openTrainingModal()" class="perm-upload-el px-4 py-2 bg-[#0f3d2e] text-white rounded-xl text-xs font-bold hover:bg-[#1b4332] shadow-xs">
-            + បញ្ចូលទិន្នន័យថ្មី
-          </button>
-        </div>
-      </div>
-
-      <!-- FILTER HRMIS -->
-      <div class="bg-slate-50/70 p-4 sm:p-5 rounded-2xl border border-slate-200/80 space-y-3.5 text-xs">
-        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-slate-200/80 pb-2.5">
-          <div class="flex items-center gap-4">
-            <span class="font-bold text-slate-700">🎯 ប្រភេទវគ្គ៖</span>
-            <label class="flex items-center gap-1.5 cursor-pointer">
-              <input type="radio" name="train-scope" value="all" checked onchange="renderTrainingList()" class="text-emerald-600 focus:ring-emerald-500">
-              <span class="font-medium">ទាំងអស់</span>
-            </label>
-            <label class="flex items-center gap-1.5 cursor-pointer">
-              <input type="radio" name="train-scope" value="Domestic" onchange="renderTrainingList()" class="text-emerald-600 focus:ring-emerald-500">
-              <span class="font-medium">🇰🇭 ក្នុងប្រទេស (Domestic)</span>
-            </label>
-            <label class="flex items-center gap-1.5 cursor-pointer">
-              <input type="radio" name="train-scope" value="International" onchange="renderTrainingList()" class="text-emerald-600 focus:ring-emerald-500">
-              <span class="font-medium">✈️ ក្រៅប្រទេស (International)</span>
-            </label>
+        <!-- TAB 1: E-LIBRARY TABLE -->
+        <div id="section-docs" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 flex-1">
+              <span class="text-slate-400">🔍</span>
+              <input type="text" id="doc-search" oninput="renderDocs()" placeholder="ស្វែងរកឯកសារតាមកូដ ឬចំណងជើង..." class="form-input-focus border border-slate-200 rounded-xl px-3.5 py-2 text-xs w-full max-w-sm bg-slate-50/50">
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="exportCSV('docs')" id="btn-export-docs" class="perm-download-el px-3.5 py-2 bg-slate-50 border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-100 transition shadow-2xs">
+                Export as CSV
+              </button>
+            </div>
           </div>
-          <button onclick="resetTrainingFilters()" class="text-xs text-rose-600 font-bold hover:underline">🔄 កំណត់ឡើងវិញ</button>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
-          <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-1">ស្វែងរក (ឈ្មោះ/វគ្គ)</label>
-            <input type="text" id="filter-training-search" oninput="renderTrainingList()" placeholder="វាយពាក្យគន្លឹះ..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs">
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-1">ប្រទេស (Location)</label>
-            <select id="filter-training-country" onchange="renderTrainingList()" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs">
-              <option value="all">ប្រទេសទាំងអស់</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-1">ដៃគូឧបត្ថម្ភ (Sponsor)</label>
-            <select id="filter-training-sponsor" onchange="renderTrainingList()" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs">
-              <option value="all">អ្នកឧបត្ថម្ភទាំងអស់</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-1">តម្រៀបតាម (Order By)</label>
-            <select id="filter-training-order" onchange="renderTrainingList()" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs">
-              <option value="name">ឈ្មោះសិក្ខាកាម (A-Z)</option>
-              <option value="country">ប្រទេស (Location)</option>
-              <option value="sponsor">ដៃគូឧបត្ថម្ភ (Sponsor)</option>
-              <option value="duration">រយៈពេល</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-1">អង្គភាព/មន្ទីរពេទ្យ</label>
-            <input type="text" id="filter-training-unit" oninput="renderTrainingList()" placeholder="ឧ. កាល់ម៉ែត..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs">
+          <!-- DATA TABLE (IMAGE 1 STYLE) -->
+          <div class="border border-slate-200 rounded-2xl overflow-x-auto shadow-2xs">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3 w-10 text-center"><input type="checkbox" class="rounded text-emerald-600"></th>
+                  <th class="p-3">Doc ID</th>
+                  <th class="p-3 min-w-[180px]">ចំណងជើងឯកសារ</th>
+                  <th class="p-3 text-center">ប្រភេទ</th>
+                  <th class="p-3 text-center">ស្ថានភាព</th>
+                  <th class="p-3 text-center">ទំហំ</th>
+                  <th class="p-3">ការិយាល័យ</th>
+                  <th class="p-3 text-center">សកម្មភាព</th>
+                </tr>
+              </thead>
+              <tbody id="docs-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+            </table>
           </div>
         </div>
-      </div>
 
-      <!-- TABLE EXCEL (SUBTLE STRIPES & HOVER EFFECTS) -->
-      <div class="border border-slate-200 rounded-2xl overflow-x-auto shadow-xs">
-        <table class="w-full text-left text-xs">
-          <thead class="bg-[#0f3d2e] text-white font-bold border-b border-slate-200">
-            <tr>
-              <th class="p-3 text-center w-12 border-r border-emerald-900/40">ល.រ</th>
-              <th class="p-3 border-r border-emerald-900/40 min-w-[150px]">ឈ្មោះ</th>
-              <th class="p-3 border-r border-emerald-900/40 min-w-[160px]">តួនាទី និងអង្គភាព</th>
-              <th class="p-3 border-r border-emerald-900/40 min-w-[200px]">កម្មវិធី ឬឈ្មោះវគ្គសិក្សា</th>
-              <th class="p-3 text-center border-r border-emerald-900/40 min-w-[80px]">រយៈពេល</th>
-              <th class="p-3 text-center border-r border-emerald-900/40 min-w-[140px]">កាលបរិច្ឆេទ នៃវគ្គ</th>
-              <th class="p-3 text-center border-r border-emerald-900/40 min-w-[100px]">ប្រទេស</th>
-              <th class="p-3 border-r border-emerald-900/40 min-w-[140px]">ឧបត្ថម្ភ</th>
-              <th class="p-3 text-center min-w-[80px]">សកម្មភាព</th>
-            </tr>
-          </thead>
-          <tbody id="training-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- TAB 3C: BUREAU 3 CERTS & DEGREES -->
-    <div id="section-certs" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 space-y-4 shadow-xs hidden">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-wrap gap-2">
-        <div>
-          <h3 class="text-base sm:text-lg font-bold text-slate-900">📜 ចុះបញ្ជីការ និងកំណត់លេខសញ្ញាបត្រ/វិញ្ញាបនបត្រ</h3>
-          <p class="text-xs text-slate-500">ចុះបញ្ជី កំណត់លេខកូដផ្លូវការ បោះពុម្ពទម្រង់ និងផ្ទៀងផ្ទាត់ QR Code</p>
+        <!-- TAB 2: DISPATCH TABLE -->
+        <div id="section-dispatch" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4 hidden">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-900">📤📥 តាមដានលិខិតចេញ-ចូល</h3>
+            <span class="text-xs text-slate-400">តាមដានដំណាក់កាល និងទីតាំងបច្ចុប្បន្ន</span>
+          </div>
+          <div class="border border-slate-200 rounded-2xl overflow-x-auto shadow-2xs">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3 w-10 text-center"><input type="checkbox" class="rounded text-emerald-600"></th>
+                  <th class="p-3">ប្រភេទ</th>
+                  <th class="p-3">លេខលិខិត</th>
+                  <th class="p-3 min-w-[200px]">កម្មវត្ថុ / ខ្លឹមសារ</th>
+                  <th class="p-3 text-center">ដំណាក់កាល</th>
+                  <th class="p-3">ទីតាំងបច្ចុប្បន្ន</th>
+                  <th class="p-3 text-center">កាលបរិច្ឆេទ</th>
+                  <th class="p-3 text-center">សកម្មភាព</th>
+                </tr>
+              </thead>
+              <tbody id="dispatch-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+            </table>
+          </div>
         </div>
-        <button id="btn-add-cert" onclick="openCertModal()" class="perm-upload-el px-4 py-2.5 bg-[#0f3d2e] text-white rounded-xl text-xs font-bold hover:bg-[#1b4332] shadow-xs transition">
-          + ចុះបញ្ជី និងកំណត់លេខថ្មី
-        </button>
-      </div>
-      <div id="certs-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1"></div>
-    </div>
 
-    <!-- TAB 4: OTHER / PENDING PROJECTS -->
-    <div id="section-other" class="bg-white rounded-3xl border border-slate-200/80 p-8 sm:p-12 text-center space-y-3.5 shadow-xs hidden">
-      <div class="w-16 h-16 bg-emerald-50 text-[#0f3d2e] rounded-2xl flex items-center justify-center mx-auto text-3xl font-bold shadow-2xs">✨</div>
-      <h3 class="text-base font-bold text-slate-900">ផ្សេងៗ / មិនទាន់មានគម្រោង</h3>
-      <p class="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">ផ្នែកនេះទុកសម្រាប់ដាក់បញ្ចូលមុខងារថ្មីៗបន្ថែមទៀតទៅតាមតម្រូវការការងារជាក់ស្តែងនៃការិយាល័យទៅថ្ងៃអនាគត។</p>
+        <!-- TAB 3A: BUREAU 1 EXAMS TABLE -->
+        <div id="section-exams" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4 hidden">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-900">🎓 ការប្រឡងចូល និងចេញថ្នាក់ជាតិ</h3>
+            <span class="text-xs text-slate-400">កត់ត្រាសម័យប្រឡង និងបេក្ខជន</span>
+          </div>
+          <div class="border border-slate-200 rounded-2xl overflow-x-auto shadow-2xs">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3 w-10 text-center"><input type="checkbox" class="rounded text-emerald-600"></th>
+                  <th class="p-3">ប្រភេទ</th>
+                  <th class="p-3 min-w-[180px]">ជំនាញ / ឯកទេស</th>
+                  <th class="p-3">សម័យប្រឡង</th>
+                  <th class="p-3 text-center">បេក្ខជន</th>
+                  <th class="p-3 text-center">ស្ថានភាព</th>
+                  <th class="p-3 text-center">សកម្មភាព</th>
+                </tr>
+              </thead>
+              <tbody id="exams-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 3B: BUREAU 2 CONTINUING TRAINING TABLE -->
+        <div id="section-training" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4 hidden">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">🌐 របាយការណ៍វគ្គបណ្តុះបណ្តាលបន្ត</h3>
+              <p class="text-[11px] text-slate-400">ទិន្នន័យសិក្ខាកាម វគ្គសិក្សា កាលបរិច្ឆេទ និងប្រទេស</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <button onclick="exportTrainingExcel()" class="perm-download-el px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs">
+                📊 Excel (.xlsx)
+              </button>
+              <button onclick="exportTrainingCSV()" class="perm-download-el px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">
+                CSV
+              </button>
+              <button onclick="openPrintPreviewModal()" class="perm-download-el px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs">
+                👁️ Print / PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- HRMIS ADVANCED FILTER -->
+          <div class="bg-slate-50/70 p-3.5 rounded-2xl border border-slate-200/80 space-y-2.5 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
+              <div>
+                <input type="text" id="filter-training-search" oninput="renderTrainingList()" placeholder="🔍 ស្វែងរកឈ្មោះ/វគ្គ..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2 bg-white text-xs">
+              </div>
+              <div>
+                <select id="filter-training-country" onchange="renderTrainingList()" class="form-input-focus w-full border border-slate-200 rounded-xl p-2 bg-white text-xs">
+                  <option value="all">ប្រទេសទាំងអស់</option>
+                </select>
+              </div>
+              <div>
+                <select id="filter-training-sponsor" onchange="renderTrainingList()" class="form-input-focus w-full border border-slate-200 rounded-xl p-2 bg-white text-xs">
+                  <option value="all">អ្នកឧបត្ថម្ភទាំងអស់</option>
+                </select>
+              </div>
+              <div>
+                <select id="filter-training-order" onchange="renderTrainingList()" class="form-input-focus w-full border border-slate-200 rounded-xl p-2 bg-white text-xs">
+                  <option value="name">ឈ្មោះសិក្ខាកាម (A-Z)</option>
+                  <option value="country">ប្រទេស (Location)</option>
+                  <option value="duration">រយៈពេល</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="border border-slate-200 rounded-2xl overflow-x-auto shadow-2xs">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3 w-10 text-center"><input type="checkbox" class="rounded text-emerald-600"></th>
+                  <th class="p-3">ឈ្មោះ</th>
+                  <th class="p-3 min-w-[150px]">អង្គភាព</th>
+                  <th class="p-3 min-w-[170px]">វគ្គសិក្សា</th>
+                  <th class="p-3 text-center">រយៈពេល</th>
+                  <th class="p-3 text-center">កាលបរិច្ឆេទ</th>
+                  <th class="p-3 text-center">ប្រទេស</th>
+                  <th class="p-3">ឧបត្ថម្ភ</th>
+                  <th class="p-3 text-center">សកម្មភាព</th>
+                </tr>
+              </thead>
+              <tbody id="training-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 3C: BUREAU 3 CERTS TABLE -->
+        <div id="section-certs" class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4 hidden">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <h3 class="text-sm font-bold text-slate-900">📜 ចុះបញ្ជីការ និងកំណត់លេខសញ្ញាបត្រ</h3>
+            <span class="text-xs text-slate-400">កំណត់លេខកូដ និងផ្ទៀងផ្ទាត់ QR</span>
+          </div>
+          <div class="border border-slate-200 rounded-2xl overflow-x-auto shadow-2xs">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3 w-10 text-center"><input type="checkbox" class="rounded text-emerald-600"></th>
+                  <th class="p-3">លេខកូដសញ្ញាបត្រ</th>
+                  <th class="p-3 min-w-[160px]">ឈ្មោះសាមីខ្លួន</th>
+                  <th class="p-3 min-w-[180px]">ប្រភេទសញ្ញាបត្រ</th>
+                  <th class="p-3 text-center">កាលបរិច្ឆេទ</th>
+                  <th class="p-3">ហត្ថលេខា</th>
+                  <th class="p-3 text-center">សកម្មភាព</th>
+                </tr>
+              </thead>
+              <tbody id="certs-table-body" class="divide-y divide-slate-100 bg-white"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT PANEL: STICKY QUICK ENTRY PANEL (4 COLS ON DESKTOP, MATCHING IMAGE 1) -->
+      <div class="lg:col-span-4 sticky top-24">
+        <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+          
+          <!-- PANEL HEADER (EMERALD GREEN HEADER LIKE IMAGE 1 "MANAGE INVENTORY") -->
+          <div class="bg-[#1b503b] text-white p-4 text-center">
+            <h3 class="font-bold text-sm sm:text-base flex items-center justify-center gap-2" id="side-panel-header-title">
+              <span>✍️</span> ផ្ទាំងបញ្ចូលទិន្នន័យរហ័ស
+            </h3>
+            <p class="text-[11px] text-emerald-100/90 mt-0.5" id="side-panel-header-desc">Quick Entry Panel (Active Bureau)</p>
+          </div>
+
+          <!-- DYNAMIC FORM ADAPTS TO ACTIVE TAB -->
+          <div class="p-5 sm:p-6" id="side-form-container">
+            <!-- RENDERED BY JAVASCRIPT BASED ON ACTIVE TAB -->
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
   </main>
 
-  <!-- ================= SYSTEM TOOLS & SETTINGS MODAL ================= -->
+  <!-- ================= MOBILE BOTTOM NAVIGATION (IMAGE 2 SMARTPHONE VIEW) ================= -->
+  <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2 z-40 flex items-center justify-around text-xs shadow-lg">
+    <button onclick="switchBureauTab('docs')" class="flex flex-col items-center gap-1 text-slate-600 hover:text-emerald-700">
+      <span class="text-base">📚</span>
+      <span class="text-[10px] font-semibold">បណ្ណាល័យ</span>
+    </button>
+    <button onclick="switchBureauTab('dispatch')" class="flex flex-col items-center gap-1 text-slate-600 hover:text-emerald-700">
+      <span class="text-base">🔄</span>
+      <span class="text-[10px] font-semibold">ចេញ-ចូល</span>
+    </button>
+    <button onclick="switchBureauTab(activeBureauKey === 'bureau_1' ? 'exams' : (activeBureauKey === 'bureau_2' ? 'training' : 'certs'))" class="flex flex-col items-center gap-1 text-emerald-800">
+      <span class="text-base">🎯</span>
+      <span class="text-[10px] font-bold">ជំនាញ</span>
+    </button>
+    <button onclick="toggleScannerModal(true)" class="flex flex-col items-center gap-1 text-slate-600 hover:text-emerald-700">
+      <span class="text-base">📷</span>
+      <span class="text-[10px] font-semibold">ស្កេន QR</span>
+    </button>
+    <button onclick="openSystemModal('manual')" class="flex flex-col items-center gap-1 text-slate-600 hover:text-emerald-700">
+      <span class="text-base">⚙️</span>
+      <span class="text-[10px] font-semibold">Tools</span>
+    </button>
+  </nav>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. LOGIN MODAL -->
+  <div id="modal-login" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-5 text-center">
+      <div class="w-20 h-20 rounded-2xl border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs overflow-hidden">
+        <img src="Logo MOH_Ok_Background.png" onerror="this.src='photo_2026-10-16_22-06-11.jpg'" alt="MoH Logo" class="w-full h-full object-contain">
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900">ចូលប្រព័ន្ធតាមការិយាល័យ V2</h3>
+        <p class="text-xs text-emerald-800 font-semibold mt-0.5">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស - MoH</p>
+      </div>
+      <form onsubmit="handleLogin(event)" class="space-y-3.5 text-left">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះគណនី (Username)</label>
+          <input type="text" id="login-username" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50/50" placeholder="ឧ. admin">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">លេខសម្ងាត់ (Password)</label>
+          <input type="text" id="login-password" required class="form-input-focus password-mask w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50/50" placeholder="••••••••">
+        </div>
+        <p id="login-error" class="text-xs text-rose-600 font-medium hidden">ឈ្មោះគណនី ឬលេខសម្ងាត់មិនត្រឹមត្រូវ!</p>
+        <button type="submit" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl text-xs font-bold shadow-md transition">ចូលប្រព័ន្ធ (Sign In)</button>
+      </form>
+      <div class="pt-3 border-t border-slate-100 text-[10px] text-slate-400 space-y-1 text-left">
+        <div>👑 Admin: <strong class="text-slate-600">admin</strong> / <strong class="text-slate-600">admin123</strong> (គ្រប់គ្រងទាំង ៣)</div>
+        <div>🏢 ការិយាល័យទី១: <strong class="text-slate-600">user1</strong> / <strong class="text-slate-600">123</strong></div>
+        <div>🏢 ការិយាល័យទី២: <strong class="text-slate-600">user2</strong> / <strong class="text-slate-600">123</strong></div>
+        <div>🏢 ការិយាល័យទី៣: <strong class="text-slate-600">user3</strong> / <strong class="text-slate-600">123</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SYSTEM TOOLS MODAL -->
   <div id="modal-system-tools" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="bg-white rounded-3xl max-w-4xl w-full p-5 sm:p-7 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -374,7 +486,7 @@
 
       <!-- Navigation Tabs -->
       <div class="flex items-center gap-2 border-b border-slate-100 pb-2 overflow-x-auto scrollbar-none text-xs" id="system-tools-nav-bar">
-        <button onclick="switchSystemToolTab('settings')" id="systab-settings" class="admin-only-tab px-4 py-2 rounded-xl font-bold bg-[#0f3d2e] text-white">⚙️ Settings</button>
+        <button onclick="switchSystemToolTab('settings')" id="systab-settings" class="admin-only-tab px-4 py-2 rounded-xl font-bold bg-[#1b503b] text-white">⚙️ Settings</button>
         <button onclick="switchSystemToolTab('location')" id="systab-location" class="admin-only-tab px-4 py-2 rounded-xl font-bold bg-slate-100 text-slate-600">🌍 Location (ប្រទេស)</button>
         <button onclick="switchSystemToolTab('files')" id="systab-files" class="admin-only-tab px-4 py-2 rounded-xl font-bold bg-slate-100 text-slate-600">📁 File System</button>
         <button onclick="switchSystemToolTab('security')" id="systab-security" class="admin-only-tab px-4 py-2 rounded-xl font-bold bg-slate-100 text-slate-600">🛡️ Security</button>
@@ -382,18 +494,18 @@
         <button onclick="switchSystemToolTab('manual')" id="systab-manual" class="px-4 py-2 rounded-xl font-bold bg-slate-100 text-slate-600">📖 User Manual</button>
       </div>
 
-      <!-- 1. SETTINGS TAB (ADMIN ONLY) -->
+      <!-- Content Areas -->
       <div id="syscontent-settings" class="space-y-4 flex-1 overflow-y-auto pr-1">
-        <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 sm:p-5">
-          <h4 class="text-xs font-bold text-slate-800 mb-3">➕ បង្កើតគណនីមន្ត្រីថ្មី (ភ្ជាប់សិទ្ធិ Permissions ភ្លាមៗ)</h4>
-          <form onsubmit="handleCreateUser(event)" class="space-y-3.5">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4">
+          <h4 class="text-xs font-bold text-slate-800 mb-2.5">➕ បង្កើតគណនីមន្ត្រីថ្មី (ភ្ជាប់ Permissions ភ្លាមៗ)</h4>
+          <form onsubmit="handleCreateUser(event)" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
               <div>
                 <label class="block text-[10px] font-bold text-slate-600 mb-1">ឈ្មោះពេញមន្ត្រី *</label>
                 <input type="text" id="new-user-fullname" required placeholder="ឧ. វេជ្ជ. សុខ វិបុល" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
               </div>
               <div>
-                <label class="block text-[10px] font-bold text-slate-600 mb-1">ឈ្មោះគណនី (Username) *</label>
+                <label class="block text-[10px] font-bold text-slate-600 mb-1">Username *</label>
                 <input type="text" id="new-user-username" required placeholder="vibul.moh" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
               </div>
               <div>
@@ -410,36 +522,33 @@
                 </select>
               </div>
             </div>
-
             <!-- PERMISSIONS CHECKBOXES -->
-            <div class="p-3.5 bg-white border border-slate-200 rounded-xl space-y-2">
+            <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1.5">
               <label class="block text-[11px] font-bold text-slate-700">🔒 កំណត់សិទ្ធិប្រើប្រាស់ជាក់លាក់ (Permissions Assignment)៖</label>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-emerald-50/50 transition">
-                  <input type="checkbox" id="perm-admin" onchange="toggleAdminCheckbox(this.checked)" class="text-amber-600 rounded focus:ring-amber-500">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                  <input type="checkbox" id="perm-admin" onchange="toggleAdminCheckbox(this.checked)" class="text-amber-600 rounded">
                   <span class="font-bold text-amber-700">👑 Admin (ពេញលេញ)</span>
                 </label>
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-emerald-50/50 transition">
-                  <input type="checkbox" id="perm-read" checked class="text-blue-600 rounded focus:ring-blue-500">
+                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                  <input type="checkbox" id="perm-read" checked class="text-blue-600 rounded">
                   <span class="font-semibold text-blue-700">👁️ Read (មើល/អាន)</span>
                 </label>
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-emerald-50/50 transition">
-                  <input type="checkbox" id="perm-upload" checked class="text-emerald-600 rounded focus:ring-emerald-500">
-                  <span class="font-semibold text-emerald-700">📤 Upload (បង្ហោះ/បញ្ចូល)</span>
+                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                  <input type="checkbox" id="perm-upload" checked class="text-emerald-600 rounded">
+                  <span class="font-semibold text-emerald-700">📤 Upload (បញ្ចូល)</span>
                 </label>
-                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:bg-emerald-50/50 transition">
-                  <input type="checkbox" id="perm-download" checked class="text-purple-600 rounded focus:ring-purple-500">
+                <label class="flex items-center gap-1.5 p-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+                  <input type="checkbox" id="perm-download" checked class="text-purple-600 rounded">
                   <span class="font-semibold text-purple-700">📥 Download (ទាញយក)</span>
                 </label>
               </div>
             </div>
-
             <div class="flex justify-end pt-1">
-              <button type="submit" class="px-5 py-2.5 bg-[#0f3d2e] text-white rounded-xl text-xs font-bold hover:bg-[#1b4332] shadow-xs transition">+ បង្កើតគណនី</button>
+              <button type="submit" class="px-5 py-2.5 bg-[#1b503b] text-white rounded-xl text-xs font-bold hover:bg-[#143e2e] shadow-xs transition">+ បង្កើតគណនី</button>
             </div>
           </form>
         </div>
-
         <div class="border border-slate-200 rounded-2xl overflow-hidden text-xs shadow-2xs">
           <table class="w-full text-left">
             <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200">
@@ -456,32 +565,30 @@
         </div>
       </div>
 
-      <!-- 2. LOCATION TAB (ADMIN ONLY) -->
       <div id="syscontent-location" class="space-y-4 flex-1 overflow-y-auto pr-1 hidden">
-        <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 sm:p-5">
-          <h4 class="text-xs font-bold text-slate-800 mb-3">➕ បញ្ចូលប្រទេសថ្មី (នឹងបង្ហាញក្នុង Dropdown Form ស្វ័យប្រវត្តិ)</h4>
-          <form onsubmit="handleAddCountry(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+        <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4">
+          <h4 class="text-xs font-bold text-slate-800 mb-2.5">➕ បញ្ចូលប្រទេសថ្មី (នឹងបង្ហាញក្នុង Dropdown ស្វ័យប្រវត្តិ)</h4>
+          <form onsubmit="handleAddCountry(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-2.5 items-end">
             <div>
               <label class="block text-[10px] font-bold text-slate-600 mb-1">លេខកូដ (Code)</label>
               <input type="text" id="new-country-code" required placeholder="ឧ. KH, JP, AU" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
             </div>
             <div>
-              <label class="block text-[10px] font-bold text-slate-600 mb-1">ឈ្មោះជាភាសាខ្មែរ (Description Kh)</label>
+              <label class="block text-[10px] font-bold text-slate-600 mb-1">ឈ្មោះជាខ្មែរ (Kh)</label>
               <input type="text" id="new-country-kh" required placeholder="ឧ. កម្ពុជា, ជប៉ុន..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
             </div>
             <div>
-              <label class="block text-[10px] font-bold text-slate-600 mb-1">ឈ្មោះជាភាសាអង់គ្លេស (Description En)</label>
+              <label class="block text-[10px] font-bold text-slate-600 mb-1">ឈ្មោះជាអង់គ្លេស (En)</label>
               <input type="text" id="new-country-en" required placeholder="ឧ. Cambodia, Japan..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
             </div>
             <div>
-              <button type="submit" class="w-full py-2.5 bg-[#0f3d2e] text-white rounded-xl text-xs font-bold hover:bg-[#1b4332] shadow-xs transition">+ បន្ថែមប្រទេស</button>
+              <button type="submit" class="w-full py-2.5 bg-[#1b503b] text-white rounded-xl text-xs font-bold hover:bg-[#143e2e] shadow-xs transition">+ បន្ថែមប្រទេស</button>
             </div>
           </form>
         </div>
-
         <div class="border border-slate-200 rounded-2xl overflow-hidden text-xs">
           <table class="w-full text-left">
-            <thead class="bg-[#0f3d2e] text-white font-bold border-b border-slate-200">
+            <thead class="bg-[#1b503b] text-white font-bold border-b border-slate-200">
               <tr>
                 <th class="p-3 w-16">Code</th>
                 <th class="p-3">Description (Kh)</th>
@@ -494,18 +601,16 @@
         </div>
       </div>
 
-      <!-- 3. FILE SYSTEM & CLOUD BACKUPS (ADMIN ONLY) -->
       <div id="syscontent-files" class="space-y-4 flex-1 overflow-y-auto pr-1 hidden">
-        <div class="bg-blue-50/80 border border-blue-200 rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-4">
+        <div class="bg-blue-50/80 border border-blue-200 rounded-2xl p-4 flex items-center justify-between gap-4">
           <div>
             <h4 class="text-xs font-bold text-blue-900">💾 ទាញយកទិន្នន័យប្រព័ន្ធទាំងមូល (Full System Backup)</h4>
-            <p class="text-[11px] text-blue-700 mt-0.5">ទាញយកឯកសារបណ្ណាល័យ លិខិតចេញ-ចូល និងទិន្នន័យបណ្តុះបណ្តាលជា JSON</p>
+            <p class="text-[11px] text-blue-700 mt-0.5">ទាញយកឯកសារបណ្ណាល័យ លិខិត និងវគ្គបណ្តុះបណ្តាលជា JSON</p>
           </div>
-          <button onclick="backupEntireSystem()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs shrink-0">
+          <button onclick="backupEntireSystem()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs shrink-0">
             📥 Export Backup JSON
           </button>
         </div>
-
         <div class="border border-slate-200 rounded-2xl overflow-hidden text-xs">
           <div class="p-3.5 bg-slate-100 font-bold text-slate-700 border-b border-slate-200">
             📂 បញ្ជីឯកសារដែលបានផ្ទុកក្នុងប្រព័ន្ធ និង Google Drive
@@ -514,9 +619,8 @@
         </div>
       </div>
 
-      <!-- 4. SECURITY & PERMISSIONS (ADMIN ONLY) -->
       <div id="syscontent-security" class="space-y-3 flex-1 overflow-y-auto pr-1 hidden text-xs">
-        <div class="p-5 bg-emerald-50/80 border border-emerald-200 rounded-2xl space-y-2.5">
+        <div class="p-5 bg-emerald-50/80 border border-emerald-200 rounded-2xl space-y-2">
           <h4 class="font-bold text-emerald-900">🛡️ គោលការណ៍សុវត្ថិភាពទិន្នន័យ (Role-Based Access Control)</h4>
           <ul class="list-disc list-inside space-y-1.5 text-slate-700 leading-relaxed">
             <li><strong>Admin:</strong> មានសិទ្ធិគ្រប់គ្រងការិយាល័យទាំង ៣ បង្កើត User, កំណត់ Permissions, គ្រប់គ្រងប្រទេស និងចូលមើល Logging។</li>
@@ -527,7 +631,6 @@
         </div>
       </div>
 
-      <!-- 5. LOGGING TAB (ADMIN ONLY) -->
       <div id="syscontent-logging" class="space-y-2.5 flex-1 overflow-y-auto pr-1 hidden">
         <div class="flex justify-between items-center text-xs pb-1">
           <span class="text-slate-500 font-medium">កំណត់ត្រាសកម្មភាពមន្ត្រីក្នុងប្រព័ន្ធ</span>
@@ -548,277 +651,18 @@
         </div>
       </div>
 
-      <!-- 6. USER MANUAL TAB (ALL USERS) -->
       <div id="syscontent-manual" class="space-y-3.5 flex-1 overflow-y-auto pr-1 text-xs leading-relaxed text-slate-700">
         <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
-          <h4 class="font-bold text-slate-900 text-sm">📖 សៀវភៅណែនាំអ្នកប្រើប្រាស់សង្ខេប (User Manual)</h4>
-          <p><strong>១. ការបង្ហោះឯកសារ៖</strong> ឯកសារត្រូវមានទំហំ ≤ 10MB។ ប្រព័ន្ធនឹងបញ្ជូនទៅផ្ទុកក្នុង Google Drive ស្ថាប័នដោយស្វ័យប្រវត្តិ[cite: 17]។</p>
-          <p><strong>២. ការគ្រប់គ្រងវគ្គបណ្តុះបណ្តាល៖</strong> ជ្រើសរើស «ពីថ្ងៃខែឆ្នាំ ដល់ ថ្ងៃខែឆ្នាំ» លើប្រតិទិន និងជ្រើសរើសប្រទេសដែលបានកំណត់ក្នុងប្រព័ន្ធ[cite: 13, 17]។</p>
+          <h4 class="font-bold text-slate-900 text-sm">📖 សៀវភៅណែនាំអ្នកប្រើប្រាស់សង្ខេប V2 (User Manual)</h4>
+          <p><strong>១. ផ្ទាំងបញ្ចូលរហ័ស (Quick Entry Panel)៖</strong> អ្នកអាចបញ្ចូលឯកសារ ឬទិន្នន័យបានភ្លាមៗនៅលើផ្ទាំងខាងស្ដាំដៃ ដោយមិនចាំបាច់រង់ចាំបើកផ្ទាំង Pop-up ឡើយ។</p>
+          <p><strong>២. ការបង្ហោះឯកសារ៖</strong> ឯកសារត្រូវមានទំហំ ≤ 10MB។ ប្រព័ន្ធនឹងបញ្ជូនទៅផ្ទុកក្នុង Google Drive ស្ថាប័នដោយស្វ័យប្រវត្តិ[cite: 17]។</p>
           <p><strong>៣. ការទាញរបាយការណ៍៖</strong> អាច Export ជា Excel (.xlsx) ផ្លូវការ, CSV ឬចុចលើ Preview ដើម្បីផ្ទៀងផ្ទាត់ក្បាលសំបុត្រ និងហត្ថលេខាមុននឹងបោះពុម្ព។</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- LOGIN MODAL -->
-  <div id="modal-login" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-5 text-center">
-      <div class="w-20 h-20 rounded-2xl border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs overflow-hidden">
-        <img src="Logo MOH_Ok_Background.png" onerror="this.src='photo_2026-10-16_22-06-11.jpg'" alt="MoH Logo" class="w-full h-full object-contain">
-      </div>
-      <div>
-        <h3 class="text-base font-bold text-slate-900">ចូលប្រព័ន្ធតាមការិយាល័យ</h3>
-        <p class="text-xs text-emerald-800 font-semibold mt-0.5">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស - MoH</p>
-      </div>
-      <form onsubmit="handleLogin(event)" class="space-y-3.5 text-left">
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះគណនី (Username)</label>
-          <input type="text" id="login-username" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50/50" placeholder="ឧ. admin">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">លេខសម្ងាត់ (Password)</label>
-          <input type="text" id="login-password" required class="form-input-focus password-mask w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-slate-50/50" placeholder="••••••••">
-        </div>
-        <p id="login-error" class="text-xs text-rose-600 font-medium hidden">ឈ្មោះគណនី ឬលេខសម្ងាត់មិនត្រឹមត្រូវ!</p>
-        <button type="submit" class="w-full py-2.5 bg-[#0f3d2e] hover:bg-[#1b4332] text-white rounded-xl text-xs font-bold shadow-md transition">ចូលប្រព័ន្ធ (Sign In)</button>
-      </form>
-      <div class="pt-3 border-t border-slate-100 text-[10px] text-slate-400 space-y-1 text-left">
-        <div>👑 Admin: <strong class="text-slate-600">admin</strong> / <strong class="text-slate-600">admin123</strong> (គ្រប់គ្រងទាំង ៣)</div>
-        <div>🏢 ការិយាល័យទី១: <strong class="text-slate-600">user1</strong> / <strong class="text-slate-600">123</strong></div>
-        <div>🏢 ការិយាល័យទី២: <strong class="text-slate-600">user2</strong> / <strong class="text-slate-600">123</strong></div>
-        <div>🏢 ការិយាល័យទី៣: <strong class="text-slate-600">user3</strong> / <strong class="text-slate-600">123</strong></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- UPLOAD DOC MODAL -->
-  <div id="modal-doc" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-base font-bold text-slate-900">បង្ហោះឯកសារការិយាល័យ (Upload ≤ 10MB)</h3>
-        <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
-      </div>
-      <form onsubmit="handleSaveDoc(event)" class="space-y-3.5">
-        <div id="drop-zone" onclick="document.getElementById('doc-file-input').click()" class="border-2 border-dashed border-emerald-400/80 bg-emerald-50/40 rounded-2xl p-5 text-center cursor-pointer hover:bg-emerald-50/80 transition">
-          <input type="file" id="doc-file-input" onchange="handleFileSelected(event)" class="hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.png,.jpg,.jpeg">
-          <p id="file-label" class="text-xs font-bold text-slate-700">ចុចជ្រើសរើសហ្វាល ឬអូសទម្លាក់ចូល (Drag & Drop)</p>
-          <p id="file-sublabel" class="text-[11px] text-slate-500 mt-1">គាំទ្រទំហំអតិបរមាត្រឹម <strong>10MB ចុះក្រោម</strong> (រក្សាទុកក្នុង Google Drive អូតូ)</p>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">កូដឯកសារ</label>
-            <input type="text" id="doc-code" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" placeholder="DOC-2026-001">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទ</label>
-            <select id="doc-category" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-              <option value="ឯកសារបទដ្ឋាន">ឯកសារបទដ្ឋាន</option>
-              <option value="កម្មវិធីបណ្តុះបណ្តាល">កម្មវិធីបណ្តុះបណ្តាល</option>
-              <option value="វិញ្ញាសា/របាយការណ៍">វិញ្ញាសា/របាយការណ៍</option>
-              <option value="សេចក្តីណែនាំ">សេចក្តីណែនាំ</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ចំណងជើងឯកសារ</label>
-          <input type="text" id="doc-title" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">កំណត់ចំណាំ</label>
-          <textarea id="doc-notes" rows="2" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white"></textarea>
-        </div>
-        <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">បោះបង់</button>
-          <button type="submit" id="btn-save-doc" class="px-5 py-2.5 text-xs font-bold bg-[#0f3d2e] hover:bg-[#1b4332] text-white rounded-xl shadow-xs transition">រក្សាទុក</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- DISPATCH MODAL -->
-  <div id="modal-dispatch" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-base font-bold text-slate-900">កត់ត្រាឯកសារចេញ-ចូល (តាមដានទីតាំង)</h3>
-        <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
-      </div>
-      <form onsubmit="handleSaveDispatch(event)" class="space-y-3.5">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទ</label>
-            <select id="disp-type" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-              <option value="ចូល">📥 ឯកសារចូល</option>
-              <option value="ចេញ">📤 ឯកសារចេញ</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">លេខលិខិត</label>
-            <input type="text" id="disp-code" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" placeholder="ឧ. ១០៨ សខ.អធម">
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">កម្មវត្ថុ / ខ្លឹមសារលិខិត</label>
-          <input type="text" id="disp-title" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ដំណាក់កាល</label>
-            <select id="disp-stage" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-              <option value="រដ្ឋបាលទទួល">រដ្ឋបាលទទួល</option>
-              <option value="កំពុងពិនិត្យបច្ចេកទេស">កំពុងពិនិត្យបច្ចេកទេស</option>
-              <option value="រង់ចាំចំណារ/ហត្ថលេខា">រង់ចាំចំណារ/ហត្ថលេខា</option>
-              <option value="បញ្ចប់រួចរាល់">បញ្ចប់រួចរាល់</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">នៅទីណា (ទីតាំង)</label>
-            <select id="disp-location" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-              <option value="ការិយាល័យសាមី">ការិយាល័យសាមី</option>
-              <option value="ប្រធាននាយកដ្ឋាន (DHRD)">ប្រធាននាយកដ្ឋាន (DHRD)</option>
-              <option value="អគ្គនាយកដ្ឋានសុខាភិបាល">អគ្គនាយកដ្ឋានសុខាភិបាល</option>
-              <option value="ខុទ្ទកាល័យឯកឧត្តមរដ្ឋមន្ត្រី">ខុទ្ទកាល័យឯកឧត្តមរដ្ឋមន្ត្រី</option>
-              <option value="ទីស្តីការគណៈរដ្ឋមន្ត្រី">ទីស្តីការគណៈរដ្ឋមន្ត្រី</option>
-              <option value="ក្រសួងមុខងារសាធារណៈ">ក្រសួងមុខងារសាធារណៈ</option>
-              <option value="ស្ថាប័នខាងក្រៅ">ស្ថាប័នខាងក្រៅ</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ថ្ងៃណា (កាលបរិច្ឆេទ)</label>
-            <input type="date" id="disp-date" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">មន្ត្រីកាន់ការ</label>
-            <input type="text" id="disp-assignee" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" placeholder="ឈ្មោះមន្ត្រី...">
-          </div>
-        </div>
-        <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">បោះបង់</button>
-          <button type="submit" class="px-5 py-2.5 text-xs font-bold bg-[#0f3d2e] hover:bg-[#1b4332] text-white rounded-xl shadow-xs transition">រក្សាទុក</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- BUREAU 1: EXAM MODAL -->
-  <div id="modal-exam" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-base font-bold text-slate-900">កត់ត្រាការប្រឡងចូល និងចេញ</h3>
-        <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
-      </div>
-      <form onsubmit="handleSaveExam(event)" class="space-y-3.5">
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទការប្រឡង</label>
-          <select id="exam-type" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-            <option value="ប្រឡងចូល (Entrance Exam)">ប្រឡងចូល (Entrance Exam)</option>
-            <option value="ប្រឡងចេញថ្នាក់ជាតិ (National Exit Exam)">ប្រឡងចេញថ្នាក់ជាតិ (National Exit Exam)</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ជំនាញ / ឯកទេស</label>
-          <input type="text" id="exam-major" required placeholder="ឧ. វេជ្ជសាស្ត្រទូទៅ, ឱសថសាស្ត្រ..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">សម័យប្រឡង</label>
-            <input type="text" id="exam-session" required placeholder="ឧ. សម័យ ២០ តុលា ២០២៦" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ចំនួនបេក្ខជនសរុប</label>
-            <input type="number" id="exam-candidates" required placeholder="ឧ. 450" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ស្ថានភាព</label>
-          <select id="exam-status" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-            <option value="កំពុងរៀបចំវិញ្ញាសា">កំពុងរៀបចំវិញ្ញាសា</option>
-            <option value="កំពុងដំណើរការប្រឡង">កំពុងដំណើរការប្រឡង</option>
-            <option value="កំពុងកែសម្រួលពិន្ទុ">កំពុងកែសម្រួលពិន្ទុ</option>
-            <option value="ប្រកាសលទ្ធផលរួច">ប្រកាសលទ្ធផលរួច</option>
-          </select>
-        </div>
-        <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">បោះបង់</button>
-          <button type="submit" class="px-5 py-2.5 text-xs font-bold bg-[#0f3d2e] hover:bg-[#1b4332] text-white rounded-xl shadow-xs transition">រក្សាទុក</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- BUREAU 2: CONTINUING TRAINING MODAL -->
-  <div id="modal-training" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-base font-bold text-slate-900">បញ្ចូលទិន្នន័យវគ្គបណ្តុះបណ្តាលថ្មី</h3>
-        <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
-      </div>
-      <form onsubmit="handleSaveTraining(event)" class="space-y-3.5">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះសិក្ខាកាម *</label>
-            <input type="text" id="train-trainee" required placeholder="ឧ. លោកវេជ្ជ. នង មុន្នីពេជ្យ" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">តួនាទី និងអង្គភាព *</label>
-            <input type="text" id="train-unit" required placeholder="ឧ. មន្ទីរពេទ្យកាល់ម៉ែត" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">កម្មវិធី ឬឈ្មោះវគ្គសិក្សា *</label>
-          <input type="text" id="train-course" required placeholder="ឧ. Universal Health Coverage(UHS) JFY 2025" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">រយៈពេល (ខែ/ឆ្នាំ) *</label>
-            <input type="text" id="train-duration" required placeholder="ឧ. 6M, 1A ឬ 2A 3M" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទទីតាំង</label>
-            <select id="train-scope-input" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-              <option value="International">✈️ ក្រៅប្រទេស (International)</option>
-              <option value="Domestic">🇰🇭 ក្នុងប្រទេស (Domestic)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 bg-slate-50/80 p-3 rounded-2xl border border-slate-200">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">📅 ពីថ្ងៃខែឆ្នាំ (ចាប់ផ្តើម) *</label>
-            <input type="date" id="train-date-start" required class="form-input-focus w-full border border-slate-300 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">📅 ដល់ថ្ងៃខែឆ្នាំ (បញ្ចប់) *</label>
-            <input type="date" id="train-date-end" required class="form-input-focus w-full border border-slate-300 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <label class="block text-xs font-bold text-slate-700">ប្រទេស *</label>
-              <button type="button" id="btn-quick-add-country" onclick="openSystemModal('location')" class="admin-only-item text-[10px] text-blue-600 font-bold hover:underline">+ ថែមប្រទេស</button>
-            </div>
-            <select id="train-country-select" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white"></select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">ដៃគូឧបត្ថម្ភ *</label>
-            <input type="text" id="train-sponsor-input" required placeholder="ឧ. ទីភ្នាក់ងារជប៉ុន, សាមីខ្លួន..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-        </div>
-
-        <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">បោះបង់</button>
-          <button type="submit" class="px-5 py-2.5 text-xs font-bold bg-[#0f3d2e] hover:bg-[#1b4332] text-white rounded-xl shadow-xs transition">រក្សាទុក</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- PRINT PREVIEW & PDF MODAL -->
+  <!-- 3. PRINT PREVIEW & PDF MODAL -->
   <div id="modal-print-preview" class="fixed inset-0 bg-slate-900/80 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-6 hidden">
     <div class="bg-white rounded-3xl max-w-5xl w-full p-6 shadow-2xl flex flex-col max-h-[95vh]">
       <div class="flex justify-between items-center pb-3 border-b border-slate-200">
@@ -888,49 +732,7 @@
     </div>
   </div>
 
-  <!-- BUREAU 3: CERT & DEGREE MODAL -->
-  <div id="modal-cert" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
-      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <h3 class="text-base font-bold text-slate-900">ចុះបញ្ជីការ និងកំណត់លេខសញ្ញាបត្រ</h3>
-        <button onclick="closeModals()" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
-      </div>
-      <form onsubmit="handleSaveCert(event)" class="space-y-3.5">
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">លេខកូដសញ្ញាបត្រ/វិញ្ញាបនបត្រ</label>
-          <input type="text" id="cert-num" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" placeholder="ឧ. DHRD-DEG-2026-089">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះសាមីខ្លួន</label>
-          <input type="text" id="cert-recipient" required placeholder="ឈ្មោះសាមីខ្លួន..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទសញ្ញាបត្រ / វិញ្ញាបនបត្រ</label>
-          <select id="cert-type" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-            <option value="សញ្ញាបត្រវេជ្ជបណ្ឌិត">សញ្ញាបត្រវេជ្ជបណ្ឌិត</option>
-            <option value="វិញ្ញាបនបត្របណ្តុះបណ្តាលវេជ្ជសាស្ត្របន្ត (CME/CPD)">វិញ្ញាបនបត្របណ្តុះបណ្តាលវេជ្ជសាស្ត្របន្ត (CME/CPD)</option>
-            <option value="វិញ្ញាបនបត្របញ្ជាក់ការចុះបញ្ជិកាវិជ្ជាជីវៈ">វិញ្ញាបនបត្របញ្ជាក់ការចុះបញ្ជិកាវិជ្ជាជីវៈ</option>
-          </select>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">កាលបរិច្ឆេទចេញ</label>
-            <input type="date" id="cert-date" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">អ្នកចុះហត្ថលេខា</label>
-            <input type="text" id="cert-signer" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 text-xs bg-white" placeholder="ប្រធាននាយកដ្ឋាន">
-          </div>
-        </div>
-        <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-100">
-          <button type="button" onclick="closeModals()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl">បោះបង់</button>
-          <button type="submit" class="px-5 py-2.5 text-xs font-bold bg-[#0f3d2e] hover:bg-[#1b4332] text-white rounded-xl shadow-xs transition">រក្សាទុក</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- QR SCANNER MODAL -->
+  <!-- 4. QR SCANNER MODAL -->
   <div id="modal-scanner" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-3">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2">
@@ -944,7 +746,7 @@
     </div>
   </div>
 
-  <!-- ================= JAVASCRIPT MASTER CORE ENGINE ================= -->
+  <!-- ================= JAVASCRIPT MASTER CORE ENGINE V2 ================= -->
   <script>
     // 1. BUREAU DEFINITIONS & MAPPINGS
     const BUREAUS = {
@@ -956,8 +758,7 @@
         tabs: [
           { id: 'docs', label: '📚 បណ្ណាល័យរួម' },
           { id: 'dispatch', label: '🔄 ឯកសារចេញ-ចូល' },
-          { id: 'exams', label: '🎓 ការប្រឡងចូល និងចេញ' },
-          { id: 'other', label: '✨ ផ្សេងៗ / មិនទាន់មានគម្រោង' }
+          { id: 'exams', label: '🎓 ការប្រឡងចូល និងចេញ' }
         ]
       },
       bureau_2: {
@@ -968,8 +769,7 @@
         tabs: [
           { id: 'docs', label: '📚 បណ្ណាល័យរួម' },
           { id: 'dispatch', label: '🔄 ឯកសារចេញ-ចូល' },
-          { id: 'training', label: '🌐 បណ្តុះបណ្តាលក្នុង/ក្រៅប្រទេស' },
-          { id: 'other', label: '✨ ផ្សេងៗ / មិនទាន់មានគម្រោង' }
+          { id: 'training', label: '🌐 បណ្តុះបណ្តាលក្នុង/ក្រៅប្រទេស' }
         ]
       },
       bureau_3: {
@@ -980,8 +780,7 @@
         tabs: [
           { id: 'docs', label: '📚 បណ្ណាល័យរួម' },
           { id: 'dispatch', label: '🔄 ឯកសារចេញ-ចូល' },
-          { id: 'certs', label: '📜 ចុះបញ្ជី និងលេខសញ្ញាបត្រ' },
-          { id: 'other', label: '✨ ផ្សេងៗ / មិនទាន់មានគម្រោង' }
+          { id: 'certs', label: '📜 ចុះបញ្ជី និងលេខសញ្ញាបត្រ' }
         ]
       }
     };
@@ -989,18 +788,18 @@
     // 2. GOOGLE DRIVE AUTOMATIC WEBHOOK CONFIG
     const GOOGLE_DRIVE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw_ncL4DUer9_BbmX0DJZ72nW_MXGe1T4BX9MJanmEDoFdxHV5o_Mi-lIOYL9PsurvOXA/exec";
 
-    // 3. STORAGE & DEFAULT DATA
+    // 3. STORAGE & DATA DEFINITIONS
     const STORAGE_KEYS = {
-      DOCS: 'hrd_shared_docs_v21',
-      DISPATCH: 'hrd_bureau_disp_v21',
-      EXAMS: 'hrd_bureau_exams_v21',
-      TRAINING: 'hrd_bureau_train_v21',
-      CERTS: 'hrd_bureau_certs_v21',
-      USERS: 'hrd_bureau_users_v21',
-      LOGS: 'hrd_bureau_logs_v21',
-      COUNTRIES: 'hrd_bureau_countries_v21',
-      SESSION: 'hrd_bureau_session_v21',
-      ACTIVE_BUREAU: 'hrd_active_bureau_v21'
+      DOCS: 'hrd_shared_docs_v22',
+      DISPATCH: 'hrd_bureau_disp_v22',
+      EXAMS: 'hrd_bureau_exams_v22',
+      TRAINING: 'hrd_bureau_train_v22',
+      CERTS: 'hrd_bureau_certs_v22',
+      USERS: 'hrd_bureau_users_v22',
+      LOGS: 'hrd_bureau_logs_v22',
+      COUNTRIES: 'hrd_bureau_countries_v22',
+      SESSION: 'hrd_bureau_session_v22',
+      ACTIVE_BUREAU: 'hrd_active_bureau_v22'
     };
 
     function getLocal(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
@@ -1111,6 +910,7 @@
 
         applyUserPermissionsUI(isSuperAdmin);
         renderBureauWorkspace();
+        renderAnalyticsChart('training');
       }
     }
 
@@ -1130,11 +930,6 @@
       const downloadBtns = document.querySelectorAll('.perm-download-el');
       downloadBtns.forEach(btn => {
         btn.style.display = (perms.download || isAdmin) ? '' : 'none';
-      });
-
-      const deleteBtns = document.querySelectorAll('.admin-only-delete');
-      deleteBtns.forEach(btn => {
-        btn.style.display = isAdmin ? '' : 'none';
       });
     }
 
@@ -1190,15 +985,16 @@
       document.getElementById('active-bureau-select').value = activeBureauKey;
       document.getElementById('stat-bureau-badge').innerText = bureau.shortName;
 
+      // Render Dynamic Tabs
       const nav = document.getElementById('bureau-tabs-nav');
       nav.innerHTML = bureau.tabs.map(t => {
         const isActive = (t.id === activeTab);
         return '<button onclick="switchBureauTab(\'' + t.id + '\')" id="tab-btn-' + t.id + '" class="px-4 sm:px-5 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition whitespace-nowrap ' +
-            (isActive ? 'bg-[#0f3d2e] text-white shadow-xs' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80') +
+            (isActive ? 'bg-[#1b503b] text-white shadow-xs' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80') +
           '"><span>' + t.label + '</span></button>';
       }).join('');
 
-      ['docs', 'dispatch', 'exams', 'training', 'certs', 'other'].forEach(sec => {
+      ['docs', 'dispatch', 'exams', 'training', 'certs'].forEach(sec => {
         const el = document.getElementById('section-' + sec);
         if (el) el.classList.add('hidden');
       });
@@ -1211,6 +1007,8 @@
       if (activeBureauKey === 'bureau_1') renderExams();
       if (activeBureauKey === 'bureau_2') renderTrainingList();
       if (activeBureauKey === 'bureau_3') renderCerts();
+
+      renderSideForm();
     }
 
     function switchBureauTab(tabId) {
@@ -1218,174 +1016,234 @@
       renderBureauWorkspace();
     }
 
-    function toggleToolsMenu() {
-      const dd = document.getElementById('tools-dropdown');
-      dd.classList.toggle('hidden');
+    // 5. VISUAL ANALYTICS ENGINE (INSPIRED BY IMAGE 2)
+    function renderAnalyticsChart(type) {
+      const bars = document.getElementById('analytics-bars-container');
+      const labels = document.getElementById('analytics-labels-container');
+      if (!bars || !labels) return;
+
+      const btnT = document.getElementById('btn-chart-train');
+      const btnD = document.getElementById('btn-chart-docs');
+
+      if (type === 'training') {
+        btnT.className = 'px-3 py-1 rounded-lg font-bold bg-white text-emerald-800 shadow-2xs';
+        btnD.className = 'px-3 py-1 rounded-lg font-bold text-slate-600 hover:text-slate-900';
+
+        // Count trainees per country
+        const counts = {};
+        trainingData.forEach(t => {
+          counts[t.country] = (counts[t.country] || 0) + 1;
+        });
+
+        const sorted = Object.entries(counts).slice(0, 8);
+        const maxVal = Math.max(...sorted.map(s => s[1]), 5);
+
+        bars.innerHTML = sorted.map(([country, count]) => {
+          const heightPercent = Math.max(15, Math.round((count / maxVal) * 100));
+          return `
+            <div class="flex flex-col items-center justify-end h-full group relative">
+              <span class="text-[10px] font-bold text-emerald-800 mb-1 opacity-90 group-hover:scale-110 transition">${count}</span>
+              <div style="height: ${heightPercent}%;" class="w-full max-w-[36px] bg-gradient-to-t from-[#143e2e] to-[#2d6a4f] rounded-t-lg group-hover:brightness-110 transition shadow-xs"></div>
+            </div>
+          `;
+        }).join('');
+
+        labels.innerHTML = sorted.map(([country]) => `
+          <div class="truncate font-semibold" title="${country}">${country}</div>
+        `).join('');
+
+      } else {
+        btnD.className = 'px-3 py-1 rounded-lg font-bold bg-white text-emerald-800 shadow-2xs';
+        btnT.className = 'px-3 py-1 rounded-lg font-bold text-slate-600 hover:text-slate-900';
+
+        const bCounts = {
+          'ការិយាល័យទី១': docsData.filter(d => d.bureau === 'bureau_1').length,
+          'ការិយាល័យទី២': docsData.filter(d => d.bureau === 'bureau_2').length,
+          'ការិយាល័យទី៣': docsData.filter(d => d.bureau === 'bureau_3').length
+        };
+
+        const sorted = Object.entries(bCounts);
+        const maxVal = Math.max(...sorted.map(s => s[1]), 5);
+
+        bars.innerHTML = sorted.map(([bName, count]) => {
+          const heightPercent = Math.max(15, Math.round((count / maxVal) * 100));
+          return `
+            <div class="flex flex-col items-center justify-end h-full group relative col-span-2">
+              <span class="text-[10px] font-bold text-blue-800 mb-1 opacity-90">${count}</span>
+              <div style="height: ${heightPercent}%;" class="w-full max-w-[50px] bg-gradient-to-t from-blue-700 to-emerald-600 rounded-t-lg shadow-xs transition"></div>
+            </div>
+          `;
+        }).join('');
+
+        labels.innerHTML = sorted.map(([bName]) => `
+          <div class="truncate font-semibold col-span-2">${bName}</div>
+        `).join('');
+      }
     }
 
-    document.addEventListener('click', (e) => {
-      const container = document.getElementById('tools-menu-container');
-      if (container && !container.contains(e.target)) {
-        document.getElementById('tools-dropdown').classList.add('hidden');
-      }
-    });
+    // 6. STICKY QUICK ENTRY PANEL ENGINE (INSPIRED BY IMAGE 1)
+    function renderSideForm() {
+      const container = document.getElementById('side-form-container');
+      const titleEl = document.getElementById('side-panel-header-title');
+      const descEl = document.getElementById('side-panel-header-desc');
+      if (!container) return;
 
-    function openSystemModal(tab) {
-      tab = tab || 'settings';
-      document.getElementById('tools-dropdown').classList.add('hidden');
-      const isAdmin = (currentUser && currentUser.permissions && currentUser.permissions.admin === true) || (currentUser && currentUser.bureau === 'all');
-      
-      if (!isAdmin) {
-        tab = 'manual';
-      }
+      if (activeTab === 'training') {
+        titleEl.innerHTML = '<span>🌐</span> បញ្ចូលវគ្គបណ្តុះបណ្តាលរហ័ស';
+        descEl.innerText = 'Quick Add Continuing Training';
 
-      document.getElementById('modal-system-tools').classList.remove('hidden');
-      switchSystemToolTab(tab);
-    }
-
-    function closeSystemModal() {
-      document.getElementById('modal-system-tools').classList.add('hidden');
-    }
-
-    function switchSystemToolTab(tab) {
-      const isAdmin = (currentUser && currentUser.permissions && currentUser.permissions.admin === true) || (currentUser && currentUser.bureau === 'all');
-      if (!isAdmin) {
-        tab = 'manual';
-      }
-
-      const tabs = ['settings', 'location', 'files', 'security', 'logging', 'manual'];
-      tabs.forEach(t => {
-        const c = document.getElementById('syscontent-' + t);
-        const b = document.getElementById('systab-' + t);
-        if (c) c.classList.add('hidden');
-        if (b) {
-          b.classList.remove('bg-[#0f3d2e]', 'text-white');
-          b.classList.add('bg-slate-100', 'text-slate-600');
-        }
-      });
-
-      const activeC = document.getElementById('syscontent-' + tab);
-      const activeB = document.getElementById('systab-' + tab);
-      if (activeC) activeC.classList.remove('hidden');
-      if (activeB) {
-        activeB.classList.remove('bg-slate-100', 'text-slate-600');
-        activeB.classList.add('bg-[#0f3d2e]', 'text-white');
-      }
-
-      applyUserPermissionsUI(isAdmin);
-
-      if (isAdmin) {
-        if (tab === 'settings') renderUsersTable();
-        if (tab === 'location') renderCountriesTable();
-        if (tab === 'files') renderFilesSystemList();
-        if (tab === 'logging') renderLogsTable();
-      }
-    }
-
-    function renderCountriesTable() {
-      const tbody = document.getElementById('countries-table-body');
-      if (!tbody) return;
-      tbody.innerHTML = countriesData.map((c, idx) => `
-        <tr class="hover:bg-emerald-50/40 transition">
-          <td class="p-3 font-mono font-bold text-slate-700">${c.code}</td>
-          <td class="p-3 font-bold text-slate-900">${c.kh}</td>
-          <td class="p-3 text-slate-600">${c.en}</td>
-          <td class="p-3 text-right">
-            <button onclick="deleteCountry(${idx})" class="text-rose-600 hover:underline font-bold">លុប</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function handleAddCountry(e) {
-      e.preventDefault();
-      const code = document.getElementById('new-country-code').value.trim().toUpperCase();
-      const kh = document.getElementById('new-country-kh').value.trim();
-      const en = document.getElementById('new-country-en').value.trim();
-
-      if (countriesData.some(c => c.kh === kh || c.code === code)) {
-        alert('ប្រទេសនេះមានក្នុងបញ្ជីរួចរាល់ហើយ!');
-        return;
-      }
-
-      countriesData.push({ code, kh, en });
-      setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
-      logActivity('បន្ថែមប្រទេស', 'បានបន្ថែមប្រទេស ' + kh + ' (' + code + ')');
-      renderCountriesTable();
-      populateCountryDropdowns();
-      e.target.reset();
-      alert('✅ បានបញ្ចូលប្រទេស "' + kh + '" ដោយជោគជ័យ!');
-    }
-
-    function deleteCountry(idx) {
-      const c = countriesData[idx];
-      if (confirm('តើអ្នកពិតជាចង់លុបប្រទេស "' + c.kh + '" មែនទេ?')) {
-        countriesData.splice(idx, 1);
-        setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
-        logActivity('លុបប្រទេស', 'បានលុបប្រទេស ' + c.kh);
-        renderCountriesTable();
+        container.innerHTML = `
+          <form onsubmit="handleSaveTraining(event)" class="space-y-3.5 text-xs">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">ឈ្មោះសិក្ខាកាម *</label>
+              <input type="text" id="train-trainee" required placeholder="ឧ. លោកវេជ្ជ. នង មុន្នីពេជ្យ" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">តួនាទី និងអង្គភាព *</label>
+              <input type="text" id="train-unit" required placeholder="ឧ. មន្ទីរពេទ្យកាល់ម៉ែត" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">វគ្គសិក្សា *</label>
+              <input type="text" id="train-course" required placeholder="ឈ្មោះវគ្គសិក្សា..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-700 mb-1">រយៈពេល *</label>
+                <input type="text" id="train-duration" required placeholder="6M, 1A..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2 bg-slate-50/50">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-700 mb-1">ប្រភេទ</label>
+                <select id="train-scope-input" class="form-input-focus w-full border border-slate-200 rounded-xl p-2 bg-slate-50/50">
+                  <option value="International">✈️ ក្រៅប្រទេស</option>
+                  <option value="Domestic">🇰🇭 ក្នុងប្រទេស</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">📅 ចាប់ផ្តើម</label>
+                <input type="date" id="train-date-start" required class="form-input-focus w-full border border-slate-300 rounded-lg p-1.5 bg-white text-[11px]">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">📅 បញ្ចប់</label>
+                <input type="date" id="train-date-end" required class="form-input-focus w-full border border-slate-300 rounded-lg p-1.5 bg-white text-[11px]">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">ប្រទេស (Location) *</label>
+              <select id="train-country-select" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-white font-medium"></select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">ដៃគូឧបត្ថម្ភ (Sponsor) *</label>
+              <input type="text" id="train-sponsor-input" required placeholder="ឧ. ទីភ្នាក់ងារជប៉ុន, សាមីខ្លួន..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
+            </div>
+            <button type="submit" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2">
+              Submit Record / រក្សាទុក
+            </button>
+          </form>
+        `;
         populateCountryDropdowns();
+
+      } else if (activeTab === 'dispatch') {
+        titleEl.innerHTML = '<span>🔄</span> កត់ត្រាលិខិតចេញ-ចូលរហ័ស';
+        descEl.innerText = 'Quick Add Dispatch Letter';
+
+        container.innerHTML = `
+          <form onsubmit="handleSaveDispatch(event)" class="space-y-3.5 text-xs">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">ប្រភេទ</label>
+                <select id="disp-type" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
+                  <option value="ចូល">📥 ចូល</option>
+                  <option value="ចេញ">📤 ចេញ</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">លេខលិខិត</label>
+                <input type="text" id="disp-code" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50" placeholder="ឧ. ១០៨ សខ.អធម">
+              </div>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">កម្មវត្ថុ / ខ្លឹមសារ</label>
+              <input type="text" id="disp-title" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">ដំណាក់កាល</label>
+              <select id="disp-stage" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-white">
+                <option value="រដ្ឋបាលទទួល">រដ្ឋបាលទទួល</option>
+                <option value="កំពុងពិនិត្យបច្ចេកទេស">កំពុងពិនិត្យបច្ចេកទេស</option>
+                <option value="រង់ចាំចំណារ/ហត្ថលេខា">រង់ចាំចំណារ/ហត្ថលេខា</option>
+                <option value="បញ្ចប់រួចរាល់">បញ្ចប់រួចរាល់</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">នៅទីណា (ទីតាំង)</label>
+              <select id="disp-location" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-white">
+                <option value="ការិយាល័យសាមី">ការិយាល័យសាមី</option>
+                <option value="ប្រធាននាយកដ្ឋាន (DHRD)">ប្រធាននាយកដ្ឋាន (DHRD)</option>
+                <option value="អគ្គនាយកដ្ឋានសុខាភិបាល">អគ្គនាយកដ្ឋានសុខាភិបាល</option>
+                <option value="ខុទ្ទកាល័យឯកឧត្តមរដ្ឋមន្ត្រី">ខុទ្ទកាល័យឯកឧត្តមរដ្ឋមន្ត្រី</option>
+                <option value="ទីស្តីការគណៈរដ្ឋមន្ត្រី">ទីស្តីការគណៈរដ្ឋមន្ត្រី</option>
+                <option value="ក្រសួងមុខងារសាធារណៈ">ក្រសួងមុខងារសាធារណៈ</option>
+              </select>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[10px] font-bold text-slate-700 mb-1">កាលបរិច្ឆេទ</label>
+                <input type="date" id="disp-date" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2 bg-white">
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-slate-700 mb-1">មន្ត្រីកាន់ការ</label>
+                <input type="text" id="disp-assignee" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2 bg-slate-50/50" placeholder="ឈ្មោះមន្ត្រី...">
+              </div>
+            </div>
+            <button type="submit" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2">
+              Submit Letter / រក្សាទុក
+            </button>
+          </form>
+        `;
+
+      } else {
+        // DEFAULT: UPLOAD SHARED DOCUMENT (GOOGLE DRIVE AUTO)
+        titleEl.innerHTML = '<span>📚</span> បង្ហោះឯកសាររហ័ស (Drive)';
+        descEl.innerText = 'Upload Document (Auto Google Drive)';
+
+        container.innerHTML = `
+          <form onsubmit="handleSaveDoc(event)" class="space-y-3.5 text-xs">
+            <div id="drop-zone" onclick="document.getElementById('doc-file-input').click()" class="border-2 border-dashed border-emerald-400/80 bg-emerald-50/40 rounded-2xl p-4 text-center cursor-pointer hover:bg-emerald-50/80 transition">
+              <input type="file" id="doc-file-input" onchange="handleFileSelected(event)" class="hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.png,.jpg,.jpeg">
+              <p id="file-label" class="text-xs font-bold text-slate-700">ចុចជ្រើសរើសហ្វាល ឬទម្លាក់ចូល</p>
+              <p id="file-sublabel" class="text-[10px] text-slate-500 mt-1">គាំទ្រ ≤ 10MB (ហោះចូល Drive អូតូ)</p>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">កូដឯកសារ</label>
+              <input type="text" id="doc-code" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50" placeholder="DOC-2026-001">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">ប្រភេទ</label>
+              <select id="doc-category" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-white">
+                <option value="ឯកសារបទដ្ឋាន">ឯកសារបទដ្ឋាន</option>
+                <option value="កម្មវិធីបណ្តុះបណ្តាល">កម្មវិធីបណ្តុះបណ្តាល</option>
+                <option value="វិញ្ញាសា/របាយការណ៍">វិញ្ញាសា/របាយការណ៍</option>
+                <option value="សេចក្តីណែនាំ">សេចក្តីណែនាំ</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">ចំណងជើងឯកសារ</label>
+              <input type="text" id="doc-title" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
+            </div>
+            <button type="submit" id="btn-save-doc" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2">
+              Submit Document / រក្សាទុក
+            </button>
+          </form>
+        `;
       }
     }
 
-    function populateCountryDropdowns() {
-      const formSel = document.getElementById('train-country-select');
-      const filterSel = document.getElementById('filter-training-country');
-      if (!formSel || !filterSel) return;
-
-      const currentFilter = filterSel.value;
-
-      formSel.innerHTML = '<option value="">-- ជ្រើសរើសប្រទេស --</option>' + countriesData.map(c => `
-        <option value="${c.kh}">${c.kh} (${c.en})</option>
-      `).join('');
-
-      filterSel.innerHTML = '<option value="all">ប្រទេសទាំងអស់</option>' + countriesData.map(c => `
-        <option value="${c.kh}" ${c.kh === currentFilter ? 'selected' : ''}>${c.kh}</option>
-      `).join('');
-    }
-
-    function renderFilesSystemList() {
-      const list = document.getElementById('files-system-list');
-      if (!list) return;
-      if (docsData.length === 0) {
-        list.innerHTML = '<div class="p-4 text-center text-slate-400">មិនមានឯកសារឡើយ</div>';
-        return;
-      }
-      list.innerHTML = docsData.map(d => `
-        <div class="p-3.5 flex items-center justify-between hover:bg-slate-50 transition">
-          <div>
-            <p class="font-bold text-slate-800 text-xs">${d.title} (${d.code})</p>
-            <p class="text-[10px] text-slate-500">ការិយាល័យ៖ ${(BUREAUS[d.bureau] ? BUREAUS[d.bureau].shortName : d.bureau)} | ទំហំ៖ ${d.fileSize}</p>
-          </div>
-          <span class="text-[10px] px-2.5 py-1 rounded-lg ${d.driveLink ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'} font-mono font-bold">
-            ${d.driveLink ? '☁️ Google Drive' : 'Local File'}
-          </span>
-        </div>
-      `).join('');
-    }
-
-    function backupEntireSystem() {
-      const fullBackup = {
-        exportedAt: new Date().toISOString(),
-        users: usersData,
-        countries: countriesData,
-        documents: docsData,
-        dispatches: dispatchData,
-        exams: examsData,
-        trainings: trainingData,
-        certificates: certsData
-      };
-      const blob = new Blob([JSON.stringify(fullBackup, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'DHRD_SYSTEM_BACKUP_' + Date.now() + '.json';
-      a.click();
-      logActivity('ទាញយក Backup', 'បានទាញយកទិន្នន័យប្រព័ន្ធជា JSON');
-    }
-
+    // 7. RENDER TABLES (IMAGE 1 DATA TABLE STYLE)
     function renderDocs() {
-      const list = document.getElementById('docs-list');
-      if (!list) return;
+      const tbody = document.getElementById('docs-table-body');
+      if (!tbody) return;
       const search = (document.getElementById('doc-search') ? document.getElementById('doc-search').value : '').toLowerCase();
       const isAdmin = (currentUser && currentUser.permissions && currentUser.permissions.admin === true) || (currentUser && currentUser.bureau === 'all');
 
@@ -1397,29 +1255,35 @@
 
       document.getElementById('stat-bureau-docs').innerText = filtered.length;
 
-      list.innerHTML = filtered.map(d => {
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="p-6 text-center text-slate-400">មិនមានឯកសារឡើយ</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(d => {
         const bureauTag = BUREAUS[d.bureau] ? BUREAUS[d.bureau].shortName : d.bureau;
         return `
-          <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-xs hover:shadow-md transition flex flex-col justify-between group">
-            <div>
-              <div class="flex items-start justify-between gap-2 mb-2.5">
-                <span class="text-2xl group-hover:scale-110 transition">📕</span>
-                <span class="text-[10px] font-mono font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200">${d.code}</span>
-              </div>
-              <div class="flex items-center justify-between gap-1 mb-1">
-                <span class="text-[10px] font-bold text-emerald-800">${d.category}</span>
-                <span class="text-[9px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200 font-semibold">🏢 ${bureauTag}</span>
-              </div>
-              <h4 class="text-xs sm:text-sm font-bold text-slate-900 mt-1 leading-snug">${d.title}</h4>
-              <p class="text-[10px] text-slate-400 mt-2">ទំហំ៖ ${d.fileSize} | ផ្ទុក៖ ${(d.storage || '☁️ Google Drive')}</p>
-            </div>
-            <div class="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-              <button onclick="openDocFile('${d.driveLink || ''}', '${d.title}')" class="px-3.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-2xs">
-                👁️ មើល / ទាញយក
+          <tr class="hover:bg-emerald-50/40 transition">
+            <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600"></td>
+            <td class="p-3 font-mono font-bold text-slate-700">${d.code}</td>
+            <td class="p-3 font-bold text-slate-900">${d.title}</td>
+            <td class="p-3 text-center">
+              <span class="px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">${d.category}</span>
+            </td>
+            <td class="p-3 text-center">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${d.driveLink ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'}">
+                ${d.driveLink ? 'In Cloud' : 'Local'}
+              </span>
+            </td>
+            <td class="p-3 text-center font-mono text-[11px] text-slate-600">${d.fileSize}</td>
+            <td class="p-3 text-slate-600 font-medium">${bureauTag}</td>
+            <td class="p-3 text-center whitespace-nowrap">
+              <button onclick="openDocFile('${d.driveLink || ''}', '${d.title}')" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg text-xs font-bold transition">
+                👁️ មើល
               </button>
-              ${isAdmin ? `<button onclick="deleteDoc(${d.id})" class="text-slate-400 hover:text-rose-600 p-1">🗑️</button>` : ''}
-            </div>
-          </div>
+              ${isAdmin ? `<button onclick="deleteDoc(${d.id})" class="text-rose-600 hover:text-rose-800 ml-2 font-bold">លុប</button>` : ''}
+            </td>
+          </tr>
         `;
       }).join('');
     }
@@ -1433,92 +1297,62 @@
     }
 
     function renderDispatch() {
-      const list = document.getElementById('dispatch-list');
-      if (!list) return;
+      const tbody = document.getElementById('dispatch-table-body');
+      if (!tbody) return;
       const filtered = dispatchData.filter(d => d.bureau === activeBureauKey);
       const isAdmin = (currentUser && currentUser.permissions && currentUser.permissions.admin === true) || (currentUser && currentUser.bureau === 'all');
       document.getElementById('stat-bureau-disp').innerText = filtered.filter(d => d.stage !== 'បញ្ចប់រួចរាល់').length;
 
-      list.innerHTML = filtered.map(d => `
-        <div class="border border-slate-200/80 rounded-2xl p-4 sm:p-4.5 bg-white flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-xs hover:border-emerald-200 transition">
-          <div class="space-y-1">
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="px-2.5 py-0.5 rounded-lg text-xs font-bold ${d.type === 'ចូល' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}">${d.type}</span>
-              <span class="text-xs font-mono font-bold text-slate-800">${d.code}</span>
-              <span class="text-xs text-slate-400">| ថ្ងៃណា៖ <strong class="text-slate-600">${d.date}</strong></span>
-            </div>
-            <h4 class="text-sm font-bold text-slate-900">${d.title}</h4>
-            <div class="text-xs text-slate-600 flex items-center gap-2 pt-0.5 flex-wrap">
-              <span>📍 នៅទីណា៖ <strong class="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">${d.location}</strong></span>
-              <span>• មន្ត្រីកាន់ការ៖ <strong>${d.assignee}</strong></span>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="px-3 py-1 rounded-full text-xs font-semibold ${d.stage === 'បញ្ចប់រួចរាល់' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-50 text-amber-800 border border-amber-200'}">
-              ${d.stage}
-            </span>
-            ${isAdmin ? `<button onclick="deleteDispatch(${d.id})" class="p-1.5 text-slate-400 hover:text-rose-600">🗑️</button>` : ''}
-          </div>
-        </div>
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="p-6 text-center text-slate-400">មិនទាន់មានលិខិតឡើយ</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(d => `
+        <tr class="hover:bg-emerald-50/40 transition">
+          <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600"></td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${d.type === 'ចូល' ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800'}">${d.type}</span>
+          </td>
+          <td class="p-3 font-mono font-bold text-slate-800">${d.code}</td>
+          <td class="p-3 font-bold text-slate-900">${d.title}</td>
+          <td class="p-3 text-center">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${d.stage === 'បញ្ចប់រួចរាល់' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-50 text-amber-800 border border-amber-200'}">${d.stage}</span>
+          </td>
+          <td class="p-3 text-emerald-800 font-semibold">${d.location}</td>
+          <td class="p-3 text-center font-mono text-[11px] text-slate-500">${d.date}</td>
+          <td class="p-3 text-center">
+            ${isAdmin ? `<button onclick="deleteDispatch(${d.id})" class="text-rose-600 hover:text-rose-800 font-bold">លុប</button>` : '<span class="text-slate-300">-</span>'}
+          </td>
+        </tr>
       `).join('');
     }
 
     function renderExams() {
-      const list = document.getElementById('exams-list');
-      if (!list) return;
+      const tbody = document.getElementById('exams-table-body');
+      if (!tbody) return;
+      const isAdmin = (currentUser && currentUser.permissions && currentUser.permissions.admin === true) || (currentUser && currentUser.bureau === 'all');
       document.getElementById('stat-custom-label').innerText = 'សម័យប្រឡងសរុប';
       document.getElementById('stat-custom-val').innerText = examsData.length;
       document.getElementById('stat-custom-icon').innerText = '🎓';
 
-      list.innerHTML = examsData.map(e => `
-        <div class="border border-slate-200/80 rounded-2xl p-4 sm:p-5 bg-white space-y-2.5 shadow-xs hover:border-emerald-200 transition">
-          <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-bold ${e.type.indexOf('ចេញ') !== -1 ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${e.type}</span>
-          <h4 class="text-sm font-bold text-slate-900">${e.major}</h4>
-          <p class="text-xs text-slate-500">📅 ${e.session}</p>
-          <div class="flex justify-between items-center text-xs pt-2.5 border-t border-slate-100">
-            <span>បេក្ខជន៖ <strong class="text-slate-800">${e.candidates} នាក់</strong></span>
-            <span class="font-bold text-emerald-700">${e.status}</span>
-          </div>
-        </div>
+      tbody.innerHTML = examsData.map(e => `
+        <tr class="hover:bg-emerald-50/40 transition">
+          <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600"></td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${e.type.indexOf('ចេញ') !== -1 ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}">${e.type}</span>
+          </td>
+          <td class="p-3 font-bold text-slate-900">${e.major}</td>
+          <td class="p-3 text-slate-600 font-medium">${e.session}</td>
+          <td class="p-3 text-center font-bold text-slate-800">${e.candidates} នាក់</td>
+          <td class="p-3 text-center">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold text-emerald-700 bg-emerald-50">${e.status}</span>
+          </td>
+          <td class="p-3 text-center">
+            ${isAdmin ? `<button onclick="deleteExam(${e.id})" class="text-rose-600 hover:text-rose-800 font-bold">លុប</button>` : '<span class="text-slate-300">-</span>'}
+          </td>
+        </tr>
       `).join('');
-    }
-
-    function resetTrainingFilters() {
-      document.getElementById('filter-training-search').value = '';
-      document.getElementById('filter-training-country').value = 'all';
-      document.getElementById('filter-training-sponsor').value = 'all';
-      document.getElementById('filter-training-unit').value = '';
-      const defRadio = document.querySelector('input[name="train-scope"][value="all"]');
-      if (defRadio) defRadio.checked = true;
-      renderTrainingList();
-    }
-
-    function getFilteredTrainingData() {
-      const search = (document.getElementById('filter-training-search') ? document.getElementById('filter-training-search').value : '').toLowerCase();
-      const country = document.getElementById('filter-training-country') ? document.getElementById('filter-training-country').value : 'all';
-      const sponsor = document.getElementById('filter-training-sponsor') ? document.getElementById('filter-training-sponsor').value : 'all';
-      const unit = (document.getElementById('filter-training-unit') ? document.getElementById('filter-training-unit').value : '').toLowerCase();
-      const scopeRadio = document.querySelector('input[name="train-scope"]:checked');
-      const scope = scopeRadio ? scopeRadio.value : 'all';
-      const orderBy = document.getElementById('filter-training-order') ? document.getElementById('filter-training-order').value : 'name';
-
-      let result = trainingData.filter(t => {
-        const matchSearch = !search || t.trainee.toLowerCase().indexOf(search) !== -1 || t.course.toLowerCase().indexOf(search) !== -1;
-        const matchCountry = (country === 'all' || t.country === country);
-        const matchSponsor = (sponsor === 'all' || t.sponsor === sponsor);
-        const matchUnit = !unit || t.unit.toLowerCase().indexOf(unit) !== -1;
-        const matchScope = (scope === 'all' || (t.scope || 'International') === scope);
-        return matchSearch && matchCountry && matchSponsor && matchUnit && matchScope;
-      });
-
-      result.sort((a, b) => {
-        if (orderBy === 'country') return a.country.localeCompare(b.country);
-        if (orderBy === 'sponsor') return a.sponsor.localeCompare(b.sponsor);
-        if (orderBy === 'duration') return a.duration.localeCompare(b.duration);
-        return a.trainee.localeCompare(b.trainee);
-      });
-
-      return result;
     }
 
     function renderTrainingList() {
@@ -1542,158 +1376,54 @@
       document.getElementById('stat-custom-icon').innerText = '🌐';
 
       if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="p-6 text-center text-slate-400">មិនមានទិន្នន័យស្របតាមលក្ខខណ្ឌស្វែងរកឡើយ</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="p-6 text-center text-slate-400">មិនមានទិន្នន័យស្របតាមលក្ខខណ្ឌឡើយ</td></tr>';
         return;
       }
 
       tbody.innerHTML = filtered.map((t, idx) => `
-        <tr class="hover:bg-emerald-50/50 transition">
-          <td class="p-3 text-center font-bold text-slate-500 border-r border-slate-100">${idx + 1}</td>
-          <td class="p-3 font-bold text-slate-900 border-r border-slate-100">${t.trainee}</td>
-          <td class="p-3 text-slate-700 border-r border-slate-100">${t.unit}</td>
-          <td class="p-3 text-emerald-950 font-medium border-r border-slate-100">${t.course}</td>
-          <td class="p-3 text-center font-bold text-slate-600 border-r border-slate-100">${t.duration}</td>
-          <td class="p-3 text-center font-mono text-[11px] text-slate-600 border-r border-slate-100">${t.dates}</td>
-          <td class="p-3 text-center font-semibold text-slate-800 border-r border-slate-100">
+        <tr class="hover:bg-emerald-50/40 transition">
+          <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600"></td>
+          <td class="p-3 font-bold text-slate-900">${t.trainee}</td>
+          <td class="p-3 text-slate-700">${t.unit}</td>
+          <td class="p-3 text-emerald-950 font-medium">${t.course}</td>
+          <td class="p-3 text-center font-bold text-slate-600">${t.duration}</td>
+          <td class="p-3 text-center font-mono text-[11px] text-slate-600">${t.dates}</td>
+          <td class="p-3 text-center font-semibold text-slate-800">
             <span class="px-2.5 py-0.5 bg-slate-100 rounded-md">${t.country}</span>
           </td>
-          <td class="p-3 text-slate-700 border-r border-slate-100">${t.sponsor}</td>
+          <td class="p-3 text-slate-700">${t.sponsor}</td>
           <td class="p-3 text-center">
-            ${isAdmin ? `<button onclick="deleteTraining(${t.id})" class="text-rose-600 hover:text-rose-800 font-bold hover:underline">លុប</button>` : '<span class="text-slate-300">-</span>'}
+            ${isAdmin ? `<button onclick="deleteTraining(${t.id})" class="text-rose-600 hover:text-rose-800 font-bold">លុប</button>` : '<span class="text-slate-300">-</span>'}
           </td>
         </tr>
       `).join('');
-    }
-
-    function formatDateDisplay(dStr) {
-      if (!dStr) return '';
-      const parts = dStr.split('-');
-      return parts.length === 3 ? (parts[2] + '/' + parts[1] + '/' + parts[0].slice(-2)) : dStr;
-    }
-
-    function handleSaveTraining(e) {
-      e.preventDefault();
-      const dStart = document.getElementById('train-date-start').value;
-      const dEnd = document.getElementById('train-date-end').value;
-      const formattedDates = formatDateDisplay(dStart) + '-' + formatDateDisplay(dEnd);
-
-      const newT = {
-        id: Date.now(),
-        trainee: document.getElementById('train-trainee').value.trim(),
-        unit: document.getElementById('train-unit').value.trim(),
-        course: document.getElementById('train-course').value.trim(),
-        duration: document.getElementById('train-duration').value.trim(),
-        scope: document.getElementById('train-scope-input').value,
-        dates: formattedDates,
-        country: document.getElementById('train-country-select').value,
-        sponsor: document.getElementById('train-sponsor-input').value.trim()
-      };
-
-      trainingData.unshift(newT);
-      setLocal(STORAGE_KEYS.TRAINING, trainingData);
-      logActivity('កត់ត្រាវគ្គបណ្តុះបណ្តាល', newT.trainee + ' (' + newT.country + ')');
-      closeModals();
-      renderTrainingList();
-      alert('✅ បានរក្សាទុកទិន្នន័យសិក្ខាកាមដោយជោគជ័យ!');
-    }
-
-    function deleteTraining(id) {
-      if (confirm('តើអ្នកពិតជាចង់លុបទិន្នន័យសិក្ខាកាមនេះមែនទេ?')) {
-        trainingData = trainingData.filter(t => t.id !== id);
-        setLocal(STORAGE_KEYS.TRAINING, trainingData);
-        renderTrainingList();
-      }
-    }
-
-    function exportTrainingExcel() {
-      const filtered = getFilteredTrainingData();
-      const excelRows = filtered.map((t, idx) => ({
-        "ល.រ": idx + 1,
-        "ឈ្មោះ": t.trainee,
-        "តួនាទី និងអង្គភាព": t.unit,
-        "កម្មវិធី ឬឈ្មោះវគ្គសិក្សា": t.course,
-        "រយៈពេល": t.duration,
-        "កាលបរិច្ឆេទ នៃវគ្គ": t.dates,
-        "ប្រទេស": t.country,
-        "ឧបត្ថម្ភ": t.sponsor
-      }));
-
-      const worksheet = XLSX.utils.json_to_sheet(excelRows);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "វគ្គបណ្តុះបណ្តាលបន្ត");
-      XLSX.writeFile(workbook, 'របាយការណ៍_វគ្គបណ្តុះបណ្តាលបន្ត_' + Date.now() + '.xlsx');
-    }
-
-    function exportTrainingCSV() {
-      const filtered = getFilteredTrainingData();
-      let csv = "\uFEFFល.រ,ឈ្មោះ,តួនាទី និងអង្គភាព,កម្មវិធី ឬឈ្មោះវគ្គសិក្សា,រយៈពេល,កាលបរិច្ឆេទ,ប្រទេស,ឧបត្ថម្ភ\n";
-      filtered.forEach((t, idx) => {
-        csv += '"' + (idx + 1) + '","' + t.trainee + '","' + t.unit + '","' + t.course + '","' + t.duration + '","' + t.dates + '","' + t.country + '","' + t.sponsor + '"\n';
-      });
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = 'training_report_' + Date.now() + '.csv';
-      a.click();
-    }
-
-    function openPrintPreviewModal() {
-      const filtered = getFilteredTrainingData();
-      const tbody = document.getElementById('preview-table-body');
-      tbody.innerHTML = filtered.map((t, idx) => `
-        <tr>
-          <td class="border border-slate-300 p-2 text-center font-bold">${idx + 1}</td>
-          <td class="border border-slate-300 p-2 font-bold">${t.trainee}</td>
-          <td class="border border-slate-300 p-2">${t.unit}</td>
-          <td class="border border-slate-300 p-2">${t.course}</td>
-          <td class="border border-slate-300 p-2 text-center">${t.duration}</td>
-          <td class="border border-slate-300 p-2 text-center font-mono">${t.dates}</td>
-          <td class="border border-slate-300 p-2 text-center font-semibold">${t.country}</td>
-          <td class="border border-slate-300 p-2">${t.sponsor}</td>
-        </tr>
-      `).join('');
-
-      const now = new Date();
-      document.getElementById('preview-report-subtitle').innerText = 'ទិន្នន័យសរុប៖ ' + filtered.length + ' នាក់ | ទាញចេញនៅថ្ងៃទី ' + now.toLocaleDateString('km-KH');
-      document.getElementById('preview-sign-date').innerText = 'រាជធានីភ្នំពេញ, ថ្ងៃទី ' + now.getDate() + ' ខែ ' + (now.getMonth() + 1) + ' ឆ្នាំ២០២៦';
-      document.getElementById('modal-print-preview').classList.remove('hidden');
-    }
-
-    function closePrintPreviewModal() {
-      document.getElementById('modal-print-preview').classList.add('hidden');
-    }
-
-    function executePrintReport() {
-      window.print();
     }
 
     function renderCerts() {
-      const list = document.getElementById('certs-list');
-      if (!list) return;
+      const tbody = document.getElementById('certs-table-body');
+      if (!tbody) return;
       const isAdmin = (currentUser && currentUser.permissions && currentUser.permissions.admin === true) || (currentUser && currentUser.bureau === 'all');
       document.getElementById('stat-custom-label').innerText = 'សញ្ញាបត្របានចុះបញ្ជី';
       document.getElementById('stat-custom-val').innerText = certsData.length;
       document.getElementById('stat-custom-icon').innerText = '📜';
 
-      list.innerHTML = certsData.map(c => `
-        <div class="border border-slate-200/80 rounded-2xl p-4 sm:p-5 bg-white space-y-2 shadow-xs hover:border-emerald-200 transition">
-          <div class="flex justify-between items-start">
-            <div>
-              <span class="text-xs font-mono font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">${c.num}</span>
-              <h4 class="text-sm font-bold text-slate-900 mt-2">${c.recipient}</h4>
-            </div>
-            <button onclick="alert('🖨️ បោះពុម្ពសញ្ញាបត្រ៖ ' + '${c.num}')" class="px-3 py-1.5 border border-slate-200 rounded-xl text-xs hover:bg-slate-50 font-semibold transition">🖨️ បោះពុម្ព</button>
-          </div>
-          <p class="text-xs text-slate-600">${c.type}</p>
-          <div class="flex justify-between items-center text-xs text-slate-400 pt-2.5 border-t border-slate-100">
-            <span>កាលបរិច្ឆេទ៖ ${c.date}</span>
-            ${isAdmin ? `<button onclick="deleteCert(${c.id})" class="text-slate-400 hover:text-rose-600">🗑️</button>` : ''}
-          </div>
-        </div>
+      tbody.innerHTML = certsData.map(c => `
+        <tr class="hover:bg-emerald-50/40 transition">
+          <td class="p-3 text-center"><input type="checkbox" class="rounded text-emerald-600"></td>
+          <td class="p-3 font-mono font-bold text-emerald-800">${c.num}</td>
+          <td class="p-3 font-bold text-slate-900">${c.recipient}</td>
+          <td class="p-3 text-slate-700 font-medium">${c.type}</td>
+          <td class="p-3 text-center font-mono text-[11px] text-slate-500">${c.date}</td>
+          <td class="p-3 text-slate-600">${c.signer}</td>
+          <td class="p-3 text-center whitespace-nowrap">
+            <button onclick="alert('🖨️ បោះពុម្ពសញ្ញាបត្រ៖ ' + '${c.num}')" class="px-2.5 py-1 border border-slate-200 rounded-lg text-xs hover:bg-slate-50 font-semibold transition">🖨️ បោះពុម្ព</button>
+            ${isAdmin ? `<button onclick="deleteCert(${c.id})" class="text-rose-600 hover:text-rose-800 font-bold ml-2">លុប</button>` : ''}
+          </td>
+        </tr>
       `).join('');
     }
 
+    // 8. DATA ACTIONS & WEBHOOK SUBMISSION
     function handleFileSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1765,7 +1495,7 @@
         code: document.getElementById('doc-code').value.trim(),
         title: document.getElementById('doc-title').value.trim(),
         category: document.getElementById('doc-category').value,
-        notes: document.getElementById('doc-notes').value.trim(),
+        notes: '',
         date: new Date().toISOString().split('T')[0],
         fileSize: currentUploadedFile.size || '2.0 MB',
         fileName: currentUploadedFile.name || 'document.pdf',
@@ -1776,16 +1506,17 @@
 
       docsData.unshift(newDoc);
       setLocal(STORAGE_KEYS.DOCS, docsData);
-      logActivity('Upload ឯកសារ', newDoc.code + ' ចូល ' + storageType);
+      logActivity('Upload ឯកសារ V2', newDoc.code + ' ចូល ' + storageType);
 
-      closeModals();
       renderDocs();
+      renderAnalyticsChart('docs');
       e.target.reset();
       currentUploadedFile = { name: '', type: 'PDF', size: '', base64: null, rawFile: null };
-      document.getElementById('file-label').innerHTML = 'ចុចជ្រើសរើសហ្វាល ឬអូសទម្លាក់ចូល (Drag & Drop)';
+      document.getElementById('file-label').innerHTML = 'ចុចជ្រើសរើសហ្វាល ឬទម្លាក់ចូល';
+      document.getElementById('file-sublabel').innerText = 'គាំទ្រ ≤ 10MB (ហោះចូល Drive អូតូ)';
 
       saveBtn.disabled = false;
-      saveBtn.innerText = 'រក្សាទុក';
+      saveBtn.innerText = 'Submit Document / រក្សាទុក';
       alert('✅ ឯកសារត្រូវបាន Upload ចូល ' + storageType + ' ដោយស្វ័យប្រវត្តិ!');
     }
 
@@ -1794,6 +1525,49 @@
         docsData = docsData.filter(d => d.id !== id);
         setLocal(STORAGE_KEYS.DOCS, docsData);
         renderDocs();
+        renderAnalyticsChart('docs');
+      }
+    }
+
+    function formatDateDisplay(dStr) {
+      if (!dStr) return '';
+      const parts = dStr.split('-');
+      return parts.length === 3 ? (parts[2] + '/' + parts[1] + '/' + parts[0].slice(-2)) : dStr;
+    }
+
+    function handleSaveTraining(e) {
+      e.preventDefault();
+      const dStart = document.getElementById('train-date-start').value;
+      const dEnd = document.getElementById('train-date-end').value;
+      const formattedDates = formatDateDisplay(dStart) + '-' + formatDateDisplay(dEnd);
+
+      const newT = {
+        id: Date.now(),
+        trainee: document.getElementById('train-trainee').value.trim(),
+        unit: document.getElementById('train-unit').value.trim(),
+        course: document.getElementById('train-course').value.trim(),
+        duration: document.getElementById('train-duration').value.trim(),
+        scope: document.getElementById('train-scope-input').value,
+        dates: formattedDates,
+        country: document.getElementById('train-country-select').value,
+        sponsor: document.getElementById('train-sponsor-input').value.trim()
+      };
+
+      trainingData.unshift(newT);
+      setLocal(STORAGE_KEYS.TRAINING, trainingData);
+      logActivity('កត់ត្រាវគ្គបណ្តុះបណ្តាល V2', newT.trainee + ' (' + newT.country + ')');
+      renderTrainingList();
+      renderAnalyticsChart('training');
+      e.target.reset();
+      alert('✅ បានរក្សាទុកទិន្នន័យសិក្ខាកាមដោយជោគជ័យ!');
+    }
+
+    function deleteTraining(id) {
+      if (confirm('តើអ្នកពិតជាចង់លុបទិន្នន័យសិក្ខាកាមនេះមែនទេ?')) {
+        trainingData = trainingData.filter(t => t.id !== id);
+        setLocal(STORAGE_KEYS.TRAINING, trainingData);
+        renderTrainingList();
+        renderAnalyticsChart('training');
       }
     }
 
@@ -1813,8 +1587,9 @@
       dispatchData.unshift(newDisp);
       setLocal(STORAGE_KEYS.DISPATCH, dispatchData);
       logActivity('កត់ត្រាលិខិត', newDisp.code + ' នៅ ' + newDisp.location);
-      closeModals();
       renderDispatch();
+      e.target.reset();
+      alert('✅ បានកត់ត្រាលិខិតចេញ-ចូលជោគជ័យ!');
     }
 
     function deleteDispatch(id) {
@@ -1825,38 +1600,12 @@
       }
     }
 
-    function handleSaveExam(e) {
-      e.preventDefault();
-      const newExam = {
-        id: Date.now(),
-        type: document.getElementById('exam-type').value,
-        major: document.getElementById('exam-major').value,
-        session: document.getElementById('exam-session').value,
-        candidates: parseInt(document.getElementById('exam-candidates').value),
-        status: document.getElementById('exam-status').value
-      };
-      examsData.unshift(newExam);
-      setLocal(STORAGE_KEYS.EXAMS, examsData);
-      logActivity('កត់ត្រាប្រឡង', newExam.type + ' - ' + newExam.major);
-      closeModals();
-      renderExams();
-    }
-
-    function handleSaveCert(e) {
-      e.preventDefault();
-      const newC = {
-        id: Date.now(),
-        num: document.getElementById('cert-num').value,
-        recipient: document.getElementById('cert-recipient').value,
-        type: document.getElementById('cert-type').value,
-        date: document.getElementById('cert-date').value,
-        signer: document.getElementById('cert-signer').value || 'ប្រធាននាយកដ្ឋាន'
-      };
-      certsData.unshift(newC);
-      setLocal(STORAGE_KEYS.CERTS, certsData);
-      logActivity('ចុះបញ្ជីសញ្ញាបត្រ', newC.num + ' - ' + newC.recipient);
-      closeModals();
-      renderCerts();
+    function deleteExam(id) {
+      if (confirm('តើអ្នកចង់លុបសម័យប្រឡងនេះមែនទេ?')) {
+        examsData = examsData.filter(e => e.id !== id);
+        setLocal(STORAGE_KEYS.EXAMS, examsData);
+        renderExams();
+      }
     }
 
     function deleteCert(id) {
@@ -1865,6 +1614,168 @@
         setLocal(STORAGE_KEYS.CERTS, certsData);
         renderCerts();
       }
+    }
+
+    // 9. LOCATION & TOOLS ENGINE
+    function toggleToolsMenu() {
+      document.getElementById('tools-dropdown').classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('tools-menu-container');
+      if (container && !container.contains(e.target)) {
+        document.getElementById('tools-dropdown').classList.add('hidden');
+      }
+    });
+
+    function openSystemModal(tab) {
+      tab = tab || 'settings';
+      document.getElementById('tools-dropdown').classList.add('hidden');
+      const isAdmin = (currentUser && currentUser.permissions && currentUser.permissions.admin === true) || (currentUser && currentUser.bureau === 'all');
+      if (!isAdmin) tab = 'manual';
+
+      document.getElementById('modal-system-tools').classList.remove('hidden');
+      switchSystemToolTab(tab);
+    }
+
+    function closeSystemModal() {
+      document.getElementById('modal-system-tools').classList.add('hidden');
+    }
+
+    function switchSystemToolTab(tab) {
+      const isAdmin = (currentUser && currentUser.permissions && currentUser.permissions.admin === true) || (currentUser && currentUser.bureau === 'all');
+      if (!isAdmin) tab = 'manual';
+
+      const tabs = ['settings', 'location', 'files', 'security', 'logging', 'manual'];
+      tabs.forEach(t => {
+        const c = document.getElementById('syscontent-' + t);
+        const b = document.getElementById('systab-' + t);
+        if (c) c.classList.add('hidden');
+        if (b) {
+          b.classList.remove('bg-[#1b503b]', 'text-white');
+          b.classList.add('bg-slate-100', 'text-slate-600');
+        }
+      });
+
+      const activeC = document.getElementById('syscontent-' + tab);
+      const activeB = document.getElementById('systab-' + tab);
+      if (activeC) activeC.classList.remove('hidden');
+      if (activeB) {
+        activeB.classList.remove('bg-slate-100', 'text-slate-600');
+        activeB.classList.add('bg-[#1b503b]', 'text-white');
+      }
+
+      applyUserPermissionsUI(isAdmin);
+
+      if (isAdmin) {
+        if (tab === 'settings') renderUsersTable();
+        if (tab === 'location') renderCountriesTable();
+        if (tab === 'files') renderFilesSystemList();
+        if (tab === 'logging') renderLogsTable();
+      }
+    }
+
+    function renderCountriesTable() {
+      const tbody = document.getElementById('countries-table-body');
+      if (!tbody) return;
+      tbody.innerHTML = countriesData.map((c, idx) => `
+        <tr class="hover:bg-emerald-50/40 transition">
+          <td class="p-3 font-mono font-bold text-slate-700">${c.code}</td>
+          <td class="p-3 font-bold text-slate-900">${c.kh}</td>
+          <td class="p-3 text-slate-600">${c.en}</td>
+          <td class="p-3 text-right">
+            <button onclick="deleteCountry(${idx})" class="text-rose-600 hover:underline font-bold">លុប</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function handleAddCountry(e) {
+      e.preventDefault();
+      const code = document.getElementById('new-country-code').value.trim().toUpperCase();
+      const kh = document.getElementById('new-country-kh').value.trim();
+      const en = document.getElementById('new-country-en').value.trim();
+
+      if (countriesData.some(c => c.kh === kh || c.code === code)) {
+        alert('ប្រទេសនេះមានក្នុងបញ្ជីរួចរាល់ហើយ!');
+        return;
+      }
+
+      countriesData.push({ code, kh, en });
+      setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
+      logActivity('បន្ថែមប្រទេស', 'បានបន្ថែមប្រទេស ' + kh + ' (' + code + ')');
+      renderCountriesTable();
+      populateCountryDropdowns();
+      e.target.reset();
+      alert('✅ បានបញ្ចូលប្រទេស "' + kh + '" ដោយជោគជ័យ!');
+    }
+
+    function deleteCountry(idx) {
+      const c = countriesData[idx];
+      if (confirm('តើអ្នកពិតជាចង់លុបប្រទេស "' + c.kh + '" មែនទេ?')) {
+        countriesData.splice(idx, 1);
+        setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
+        logActivity('លុបប្រទេស', 'បានលុបប្រទេស ' + c.kh);
+        renderCountriesTable();
+        populateCountryDropdowns();
+      }
+    }
+
+    function populateCountryDropdowns() {
+      const formSel = document.getElementById('train-country-select');
+      const filterSel = document.getElementById('filter-training-country');
+      if (!formSel) return;
+
+      const currentVal = formSel.value;
+      formSel.innerHTML = '<option value="">-- ជ្រើសរើសប្រទេស --</option>' + countriesData.map(c => `
+        <option value="${c.kh}" ${c.kh === currentVal ? 'selected' : ''}>${c.kh} (${c.en})</option>
+      `).join('');
+
+      if (filterSel) {
+        const curFilter = filterSel.value;
+        filterSel.innerHTML = '<option value="all">ប្រទេសទាំងអស់</option>' + countriesData.map(c => `
+          <option value="${c.kh}" ${c.kh === curFilter ? 'selected' : ''}>${c.kh}</option>
+        `).join('');
+      }
+    }
+
+    function renderFilesSystemList() {
+      const list = document.getElementById('files-system-list');
+      if (!list) return;
+      if (docsData.length === 0) {
+        list.innerHTML = '<div class="p-4 text-center text-slate-400">មិនមានឯកសារឡើយ</div>';
+        return;
+      }
+      list.innerHTML = docsData.map(d => `
+        <div class="p-3.5 flex items-center justify-between hover:bg-slate-50 transition">
+          <div>
+            <p class="font-bold text-slate-800 text-xs">${d.title} (${d.code})</p>
+            <p class="text-[10px] text-slate-500">ការិយាល័យ៖ ${(BUREAUS[d.bureau] ? BUREAUS[d.bureau].shortName : d.bureau)} | ទំហំ៖ ${d.fileSize}</p>
+          </div>
+          <span class="text-[10px] px-2.5 py-1 rounded-lg ${d.driveLink ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'} font-mono font-bold">
+            ${d.driveLink ? '☁️ Google Drive' : 'Local File'}
+          </span>
+        </div>
+      `).join('');
+    }
+
+    function backupEntireSystem() {
+      const fullBackup = {
+        exportedAt: new Date().toISOString(),
+        users: usersData,
+        countries: countriesData,
+        documents: docsData,
+        dispatches: dispatchData,
+        exams: examsData,
+        trainings: trainingData,
+        certificates: certsData
+      };
+      const blob = new Blob([JSON.stringify(fullBackup, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'DHRD_SYSTEM_BACKUP_V2_' + Date.now() + '.json';
+      a.click();
+      logActivity('ទាញយក Backup V2', 'បានទាញយកទិន្នន័យប្រព័ន្ធជា JSON');
     }
 
     function handleCreateUser(e) {
@@ -1965,23 +1876,31 @@
       }
     }
 
-    function openDocModal() { document.getElementById('modal-doc').classList.remove('hidden'); }
-    function openDispatchModal() { document.getElementById('modal-dispatch').classList.remove('hidden'); }
-    function openExamModal() { document.getElementById('modal-exam').classList.remove('hidden'); }
-    function openTrainingModal() { 
-      document.getElementById('modal-training').classList.remove('hidden'); 
-      populateCountryDropdowns();
-    }
-    function openCertModal() { document.getElementById('modal-cert').classList.remove('hidden'); }
-    function closeModals() {
-      ['modal-doc', 'modal-dispatch', 'modal-exam', 'modal-training', 'modal-cert'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add('hidden');
+    function getFilteredTrainingData() {
+      const search = (document.getElementById('filter-training-search') ? document.getElementById('filter-training-search').value : '').toLowerCase();
+      const country = document.getElementById('filter-training-country') ? document.getElementById('filter-training-country').value : 'all';
+      const sponsor = document.getElementById('filter-training-sponsor') ? document.getElementById('filter-training-sponsor').value : 'all';
+      const orderBy = document.getElementById('filter-training-order') ? document.getElementById('filter-training-order').value : 'name';
+
+      let result = trainingData.filter(t => {
+        const matchSearch = !search || t.trainee.toLowerCase().indexOf(search) !== -1 || t.course.toLowerCase().indexOf(search) !== -1;
+        const matchCountry = (country === 'all' || t.country === country);
+        const matchSponsor = (sponsor === 'all' || t.sponsor === sponsor);
+        return matchSearch && matchCountry && matchSponsor;
       });
+
+      result.sort((a, b) => {
+        if (orderBy === 'country') return a.country.localeCompare(b.country);
+        if (orderBy === 'sponsor') return a.sponsor.localeCompare(b.sponsor);
+        if (orderBy === 'duration') return a.duration.localeCompare(b.duration);
+        return a.trainee.localeCompare(b.trainee);
+      });
+
+      return result;
     }
 
     function exportCSV(type) {
-      let csv = "\uFEFFកូដ,ចំណងជើង,ការិយាល័យម្ចាស់ឯកសារ,ប្រភេទ,កាលបរិច្ឆេទ,ទំហំ,ផ្ទុកនៅ\n";
+      let csv = "\uFEFFDoc ID,ចំណងជើង,ការិយាល័យ,ប្រភេទ,កាលបរិច្ឆេទ,ទំហំ,កន្លែងផ្ទុក\n";
       docsData.forEach(d => {
         const bName = BUREAUS[d.bureau] ? BUREAUS[d.bureau].name : d.bureau;
         csv += '"' + d.code + '","' + d.title + '","' + bName + '","' + d.category + '","' + d.date + '","' + d.fileSize + '","' + (d.storage || 'Google Drive') + '"\n';
@@ -1990,8 +1909,71 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = 'dhrd_shared_library_' + Date.now() + '.csv';
+      a.download = 'dhrd_docs_' + Date.now() + '.csv';
       a.click();
+    }
+
+    function exportTrainingExcel() {
+      const filtered = getFilteredTrainingData();
+      const excelRows = filtered.map((t, idx) => ({
+        "ល.រ": idx + 1,
+        "ឈ្មោះ": t.trainee,
+        "តួនាទី និងអង្គភាព": t.unit,
+        "កម្មវិធី ឬឈ្មោះវគ្គសិក្សា": t.course,
+        "រយៈពេល": t.duration,
+        "កាលបរិច្ឆេទ នៃវគ្គ": t.dates,
+        "ប្រទេស": t.country,
+        "ឧបត្ថម្ភ": t.sponsor
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(excelRows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "វគ្គបណ្តុះបណ្តាលបន្ត");
+      XLSX.writeFile(workbook, 'របាយការណ៍_វគ្គបណ្តុះបណ្តាលបន្ត_' + Date.now() + '.xlsx');
+    }
+
+    function exportTrainingCSV() {
+      const filtered = getFilteredTrainingData();
+      let csv = "\uFEFFល.រ,ឈ្មោះ,តួនាទី និងអង្គភាព,កម្មវិធី ឬឈ្មោះវគ្គសិក្សា,រយៈពេល,កាលបរិច្ឆេទ,ប្រទេស,ឧបត្ថម្ភ\n";
+      filtered.forEach((t, idx) => {
+        csv += '"' + (idx + 1) + '","' + t.trainee + '","' + t.unit + '","' + t.course + '","' + t.duration + '","' + t.dates + '","' + t.country + '","' + t.sponsor + '"\n';
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = 'training_report_' + Date.now() + '.csv';
+      a.click();
+    }
+
+    function openPrintPreviewModal() {
+      const filtered = getFilteredTrainingData();
+      const tbody = document.getElementById('preview-table-body');
+      tbody.innerHTML = filtered.map((t, idx) => `
+        <tr>
+          <td class="border border-slate-300 p-2 text-center font-bold">${idx + 1}</td>
+          <td class="border border-slate-300 p-2 font-bold">${t.trainee}</td>
+          <td class="border border-slate-300 p-2">${t.unit}</td>
+          <td class="border border-slate-300 p-2">${t.course}</td>
+          <td class="border border-slate-300 p-2 text-center">${t.duration}</td>
+          <td class="border border-slate-300 p-2 text-center font-mono">${t.dates}</td>
+          <td class="border border-slate-300 p-2 text-center font-semibold">${t.country}</td>
+          <td class="border border-slate-300 p-2">${t.sponsor}</td>
+        </tr>
+      `).join('');
+
+      const now = new Date();
+      document.getElementById('preview-report-subtitle').innerText = 'ទិន្នន័យសរុប៖ ' + filtered.length + ' នាក់ | ទាញចេញនៅថ្ងៃទី ' + now.toLocaleDateString('km-KH');
+      document.getElementById('preview-sign-date').innerText = 'រាជធានីភ្នំពេញ, ថ្ងៃទី ' + now.getDate() + ' ខែ ' + (now.getMonth() + 1) + ' ឆ្នាំ២០២៦';
+      document.getElementById('modal-print-preview').classList.remove('hidden');
+    }
+
+    function closePrintPreviewModal() {
+      document.getElementById('modal-print-preview').classList.add('hidden');
+    }
+
+    function executePrintReport() {
+      window.print();
     }
 
     let html5QrcodeScanner = null;
@@ -2018,6 +2000,7 @@
       }
     }
 
+    // BOOTSTRAP V2
     window.addEventListener('DOMContentLoaded', () => {
       checkAuth();
       populateCountryDropdowns();
