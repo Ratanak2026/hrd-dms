@@ -54,7 +54,7 @@
   <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
       
-      <!-- Institutional Logo & Titles (លុបស្លាក Supabase Connected ចេញរួចរាល់) -->
+      <!-- Institutional Logo & Titles (គ្មានស្លាក Supabase Connected) -->
       <div class="flex items-center space-x-3 min-w-0">
         <div class="h-12 w-12 sm:h-13 sm:w-13 min-w-[48px] rounded-2xl border border-emerald-600/20 p-1 flex items-center justify-center bg-emerald-50/40 shadow-xs overflow-hidden shrink-0">
           <img src="Logo MOH_Ok_Background.png" onerror="this.src='photo_2026-10-16_22-06-11.jpg'" alt="MoH Logo" class="h-full w-full object-contain">
@@ -786,7 +786,7 @@
       }
     };
 
-    // ៤. ឈ្មោះថេរសម្រាប់ CACHE LOCALSTORAGE (លែងប្តូរ Version នាំឱ្យបាត់ទិន្នន័យ)
+    // ៤. STORAGE KEYS
     const STORAGE_KEYS = {
       DOCS: 'hrd_moh_docs_cache',
       DISPATCH: 'hrd_moh_disp_cache',
@@ -839,13 +839,11 @@
     ]);
 
     let dispatchData = getLocal(STORAGE_KEYS.DISPATCH, [
-      { id: 1, bureau: 'bureau_1', type: 'ចូល', code: '១០៨ សខ.អធម', title: 'សំណើសុំរៀបចំសម័យប្រឡងចេញថ្នាក់ជាតិ', stage: 'កំពុងពិនិត្យបច្ចេកទេស', location: 'អគ្គនាយកដ្ឋានសុខាភិបាល', date: '2026-10-20', assignee: 'លោក អ៊ុក សុវណ្ណ' },
-      { id: 2, bureau: 'bureau_2', type: 'ចេញ', code: '២៥ prosecution រប.អធម', title: 'របាយការណ៍ស្តីពីអាហារូបករណ៍ JICA ប្រទេសជប៉ុន', stage: 'រង់ចាំចំណារ/ហត្ថលេខា', location: 'ខុទ្ទកាល័យឯកឧត្តមរដ្ឋមន្ត្រី', date: '2026-10-18', assignee: 'កញ្ញា ម៉ៅ ពិសី' }
+      { id: 1, bureau: 'bureau_1', type: 'ចូល', code: '១០៨ សខ.អធម', title: 'សំណើសុំរៀបចំសម័យប្រឡងចេញថ្នាក់ជាតិ', stage: 'កំពុងពិនិត្យបច្ចេកទេស', location: 'អគ្គនាយកដ្ឋានសុខាភិបាល', date: '2026-10-20', assignee: 'លោក អ៊ុក សុវណ្ណ' }
     ]);
 
     let examsData = getLocal(STORAGE_KEYS.EXAMS, [
-      { id: 1, major: 'វេជ្ជសាស្ត្រទូទៅ (General Medicine)', type: 'ប្រឡងចេញថ្នាក់ជាតិ (National Exit Exam)', session: 'សម័យប្រឡង ២៥ តុលា ២០២៦', candidates: 320, status: 'កំពុងរៀបចំវិញ្ញាសា' },
-      { id: 2, major: 'ឱសថសាស្ត្រ (Pharmacy)', type: 'ប្រឡងចូល (Entrance Exam)', session: 'សម័យប្រឡង ១៥ វិច្ឆិកា ២០២៦', candidates: 180, status: 'កំពុងដំណើរការប្រឡង' }
+      { id: 1, major: 'វេជ្ជសាស្ត្រទូទៅ (General Medicine)', type: 'ប្រឡងចេញថ្នាក់ជាតិ (National Exit Exam)', session: 'សម័យប្រឡង ២៥ តុលា ២០២៦', candidates: 320, status: 'កំពុងរៀបចំវិញ្ញាសា' }
     ]);
 
     let trainingData = getLocal(STORAGE_KEYS.TRAINING, [
@@ -862,8 +860,6 @@
     // ៥. NON-BLOCKING ASYNC BACKGROUND SYNC FROM SUPABASE
     function syncFromSupabase() {
       if (!db) return;
-      
-      // ប្រើ Promise.allSettled ដោយស្ងាត់ៗ មិនធ្វើឱ្យ Web គាំង ឬយឺតឡើយ
       Promise.allSettled([
         db.from('docs').select('*').order('id', { ascending: false }),
         db.from('trainings').select('*').order('id', { ascending: false }),
@@ -1142,7 +1138,7 @@
         descEl.innerText = 'Quick Add Continuing Training';
 
         container.innerHTML = `
-          <form onsubmit="handleSaveTraining(event)" class="space-y-3.5 text-xs">
+          <form id="form-quick-training" onsubmit="handleSaveTraining(event)" class="space-y-3.5 text-xs">
             <div>
               <label class="block text-[11px] font-bold text-slate-700 mb-1">ឈ្មោះសិក្ខាកាម *</label>
               <input type="text" id="train-trainee" required placeholder="ឧ. លោកវេជ្ជ. នង មុន្នីពេជ្យ" class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
@@ -1186,8 +1182,8 @@
               <label class="block text-[11px] font-bold text-slate-700 mb-1">ដៃគូឧបត្ថម្ភ (Sponsor) *</label>
               <input type="text" id="train-sponsor-input" required placeholder="ឧ. ទីភ្នាក់ងារជប៉ុន, សាមីខ្លួន..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
             </div>
-            <button type="submit" id="btn-save-training" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2">
-              Submit Record / រក្សាទុក
+            <button type="submit" id="btn-save-training" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5">
+              <span>Submit Record / រក្សាទុក</span>
             </button>
           </form>
         `;
@@ -1198,7 +1194,7 @@
         descEl.innerText = 'Quick Add Dispatch Letter';
 
         container.innerHTML = `
-          <form onsubmit="handleSaveDispatch(event)" class="space-y-3.5 text-xs">
+          <form id="form-quick-dispatch" onsubmit="handleSaveDispatch(event)" class="space-y-3.5 text-xs">
             <div class="grid grid-cols-2 gap-2">
               <div>
                 <label class="block text-[11px] font-bold text-slate-700 mb-1">ប្រភេទ</label>
@@ -1246,8 +1242,8 @@
                 <input type="text" id="disp-assignee" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2 bg-slate-50/50" placeholder="ឈ្មោះមន្ត្រី...">
               </div>
             </div>
-            <button type="submit" id="btn-save-disp" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2">
-              Submit Letter / រក្សាទុក
+            <button type="submit" id="btn-save-disp" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5">
+              <span>Submit Letter / រក្សាទុក</span>
             </button>
           </form>
         `;
@@ -1257,14 +1253,14 @@
         descEl.innerText = 'Upload Document (Auto Google Drive)';
 
         container.innerHTML = `
-          <form onsubmit="handleSaveDoc(event)" class="space-y-3.5 text-xs">
+          <form id="form-quick-doc" onsubmit="handleSaveDoc(event)" class="space-y-3.5 text-xs">
             <div id="drop-zone" onclick="document.getElementById('doc-file-input').click()" class="border-2 border-dashed border-emerald-400/80 bg-emerald-50/40 rounded-2xl p-4 text-center cursor-pointer hover:bg-emerald-50/80 transition">
               <input type="file" id="doc-file-input" onchange="handleFileSelected(event)" class="hidden" accept=".pdf,.docx,.doc,.xlsx,.xls,.png,.jpg,.jpeg">
               <p id="file-label" class="text-xs font-bold text-slate-700">ចុចជ្រើសរើសហ្វាល ឬទម្លាក់ចូល</p>
               <p id="file-sublabel" class="text-[10px] text-slate-500 mt-1">គាំទ្រ ≤ 10MB (ហោះចូល Drive អូតូ)</p>
             </div>
             <div>
-              <label class="block text-[11px] font-bold text-slate-700 mb-1">កូដឯកសារ</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">កូដឯកសារ *</label>
               <input type="text" id="doc-code" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50" placeholder="DOC-2026-001">
             </div>
             <div>
@@ -1277,11 +1273,11 @@
               </select>
             </div>
             <div>
-              <label class="block text-[11px] font-bold text-slate-700 mb-1">ចំណងជើងឯកសារ</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">ចំណងជើងឯកសារ *</label>
               <input type="text" id="doc-title" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
             </div>
-            <button type="submit" id="btn-save-doc" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2">
-              Submit Document / រក្សាទុក
+            <button type="submit" id="btn-save-doc" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5">
+              <span>Submit Document / រក្សាទុក</span>
             </button>
           </form>
         `;
@@ -1471,7 +1467,7 @@
       `).join('');
     }
 
-    // ១០. រក្សាទុកទិន្នន័យ (LOCAL-FIRST & NON-BLOCKING CLOUD SYNC)
+    // ១០. រក្សាទុកទិន្នន័យ (NON-BLOCKING + AUTO CLEAR TEXT + ប៊ូតុង រួចរាល់)
     function handleFileSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1509,80 +1505,93 @@
         return;
       }
 
-      saveBtn.disabled = true;
-      saveBtn.innerText = '⏳ កំពុង Upload ចូល Google Drive...';
+      const docCodeInput = document.getElementById('doc-code');
+      const docTitleInput = document.getElementById('doc-title');
+      const docCatInput = document.getElementById('doc-category');
 
-      let fileDriveLink = '';
-      let storageType = '☁️ Google Drive';
-
-      try {
-        const resp = await fetch(GOOGLE_DRIVE_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            fileName: currentUploadedFile.name,
-            mimeType: currentUploadedFile.type,
-            base64: currentUploadedFile.base64
-          })
-        });
-
-        const result = await resp.json();
-        if (result.status === 'success') {
-          fileDriveLink = result.webViewLink;
-        } else {
-          storageType = 'Local File';
-        }
-      } catch (err) {
-        console.warn('Drive fallback:', err);
-        storageType = 'Local File';
-      }
+      const codeVal = docCodeInput.value.trim();
+      const titleVal = docTitleInput.value.trim();
+      const catVal = docCatInput.value;
+      const fileSnapshot = { ...currentUploadedFile };
 
       const newDoc = {
         id: Date.now(),
         bureau: activeBureauKey,
-        code: document.getElementById('doc-code').value.trim(),
-        title: document.getElementById('doc-title').value.trim(),
-        category: document.getElementById('doc-category').value,
-        fileSize: currentUploadedFile.size || '2.0 MB',
-        fileName: currentUploadedFile.name || 'document.pdf',
-        storage: storageType,
-        driveLink: fileDriveLink,
+        code: codeVal,
+        title: titleVal,
+        category: catVal,
+        fileSize: fileSnapshot.size || '2.0 MB',
+        fileName: fileSnapshot.name || 'document.pdf',
+        storage: '☁️ Google Drive',
+        driveLink: '',
         createdBy: currentUser ? currentUser.username : 'user'
       };
 
-      // ១. រក្សាទុកក្នុង Local ភ្លាមៗ (មិនឱ្យ UI កកស្ទះឡើយ)
+      // ១. រក្សាទុកក្នុងតារាងភ្លាមៗក្នុងពេល ០.១ វិនាទី (Local-First មិនឱ្យយឺត)
       docsData.unshift(newDoc);
       setLocal(STORAGE_KEYS.DOCS, docsData);
       renderDocs();
       renderAnalyticsChart('docs');
-      logActivity('Upload ឯកសារ V2', newDoc.code + ' ចូល ' + storageType);
+      logActivity('Upload ឯកសារ V2', newDoc.code);
 
-      // ២. បញ្ជូនទៅ Supabase Cloud ដោយស្ងាត់ៗពីក្រោយខ្នង (Background Async)
-      if (db) {
-        db.from('docs').insert([{
-          id: newDoc.id,
-          bureau: newDoc.bureau,
-          code: newDoc.code,
-          title: newDoc.title,
-          category: newDoc.category,
-          file_size: newDoc.fileSize,
-          file_name: newDoc.fileName,
-          drive_link: newDoc.driveLink,
-          storage: newDoc.storage,
-          created_by: newDoc.createdBy
-        }]).then(() => {
-          console.log("Synced doc to Supabase successfully");
-        }).catch(e => console.warn("Supabase background sync:", e));
-      }
-
-      e.target.reset();
-      currentUploadedFile = { name: '', type: 'PDF', size: '', base64: null, rawFile: null };
+      // ២. សម្អាតប្រអប់ (CLEAR TEXT) ភ្លាមៗ ដើម្បីត្រៀម Upload ឯកសារថ្មី
+      docCodeInput.value = '';
+      docTitleInput.value = '';
+      const fileInputEl = document.getElementById('doc-file-input');
+      if (fileInputEl) fileInputEl.value = '';
       document.getElementById('file-label').innerHTML = 'ចុចជ្រើសរើសហ្វាល ឬទម្លាក់ចូល';
       document.getElementById('file-sublabel').innerText = 'គាំទ្រ ≤ 10MB (ហោះចូល Drive អូតូ)';
+      currentUploadedFile = { name: '', type: 'PDF', size: '', base64: null, rawFile: null };
 
-      saveBtn.disabled = false;
-      saveBtn.innerText = 'Submit Document / រក្សាទុក';
-      alert('✅ ឯកសារត្រូវបាន Upload ចូល ' + storageType + ' ដោយជោគជ័យ!');
+      // ៣. បង្ហាញពាក្យ «✅ រួចរាល់!» លើប៊ូតុង
+      saveBtn.className = "w-full py-2.5 bg-emerald-700 text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5";
+      saveBtn.innerHTML = '<span>✅ រួចរាល់! (Saved)</span>';
+      setTimeout(() => {
+        saveBtn.className = "w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5";
+        saveBtn.innerHTML = '<span>Submit Document / រក្សាទុក</span>';
+      }, 2500);
+
+      // ៤. បញ្ជូនហ្វាលទៅកាន់ Google Drive និង Supabase ពីក្រោយខ្នង (Background Sync ជាមួយ Timeout 8 វិនាទី)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+      fetch(GOOGLE_DRIVE_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          fileName: fileSnapshot.name,
+          mimeType: fileSnapshot.type,
+          base64: fileSnapshot.base64
+        }),
+        signal: controller.signal
+      }).then(r => r.json()).then(res => {
+        clearTimeout(timeoutId);
+        if (res.status === 'success' && res.webViewLink) {
+          const item = docsData.find(d => d.id === newDoc.id);
+          if (item) {
+            item.driveLink = res.webViewLink;
+            setLocal(STORAGE_KEYS.DOCS, docsData);
+            renderDocs();
+          }
+          if (db) {
+            db.from('docs').upsert([{
+              id: newDoc.id,
+              bureau: newDoc.bureau,
+              code: newDoc.code,
+              title: newDoc.title,
+              category: newDoc.category,
+              file_size: newDoc.fileSize,
+              file_name: newDoc.fileName,
+              drive_link: res.webViewLink,
+              storage: '☁️ Google Drive',
+              created_by: newDoc.createdBy
+            }]).catch(e => console.warn(e));
+          }
+        }
+      }).catch(err => {
+        clearTimeout(timeoutId);
+        console.warn('Background Drive upload fallback:', err);
+      });
     }
 
     function deleteDoc(id) {
@@ -1605,36 +1614,61 @@
 
     function handleSaveTraining(e) {
       e.preventDefault();
+      const saveBtn = document.getElementById('btn-save-training');
       const dStart = document.getElementById('train-date-start').value;
       const dEnd = document.getElementById('train-date-end').value;
       const formattedDates = formatDateDisplay(dStart) + '-' + formatDateDisplay(dEnd);
 
+      const traineeEl = document.getElementById('train-trainee');
+      const unitEl = document.getElementById('train-unit');
+      const courseEl = document.getElementById('train-course');
+      const durationEl = document.getElementById('train-duration');
+      const scopeEl = document.getElementById('train-scope-input');
+      const countryEl = document.getElementById('train-country-select');
+      const sponsorEl = document.getElementById('train-sponsor-input');
+
       const newT = {
         id: Date.now(),
-        trainee: document.getElementById('train-trainee').value.trim(),
-        unit: document.getElementById('train-unit').value.trim(),
-        course: document.getElementById('train-course').value.trim(),
-        duration: document.getElementById('train-duration').value.trim(),
-        scope: document.getElementById('train-scope-input').value,
+        trainee: traineeEl.value.trim(),
+        unit: unitEl.value.trim(),
+        course: courseEl.value.trim(),
+        duration: durationEl.value.trim(),
+        scope: scopeEl.value,
         dates: formattedDates,
-        country: document.getElementById('train-country-select').value,
-        sponsor: document.getElementById('train-sponsor-input').value.trim()
+        country: countryEl.value,
+        sponsor: sponsorEl.value.trim()
       };
 
-      // រក្សាទុកភ្លាមៗ
+      // ១. រក្សាទុកភ្លាមៗក្នុងពេល ០.១ វិនាទី
       trainingData.unshift(newT);
       setLocal(STORAGE_KEYS.TRAINING, trainingData);
       renderTrainingList();
       renderAnalyticsChart('training');
       logActivity('កត់ត្រាវគ្គបណ្តុះបណ្តាល V2', newT.trainee + ' (' + newT.country + ')');
 
-      // Sync ទៅ Supabase ពីក្រោយខ្នង
+      // ២. សម្អាតប្រអប់ (CLEAR TEXT) ទាំងអស់ភ្លាមៗ
+      traineeEl.value = '';
+      unitEl.value = '';
+      courseEl.value = '';
+      durationEl.value = '';
+      sponsorEl.value = '';
+      document.getElementById('train-date-start').value = '';
+      document.getElementById('train-date-end').value = '';
+
+      // ៣. បង្ហាញពាក្យ «✅ រួចរាល់!» លើប៊ូតុង
+      if (saveBtn) {
+        saveBtn.className = "w-full py-2.5 bg-emerald-700 text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5";
+        saveBtn.innerHTML = '<span>✅ រួចរាល់! (Saved)</span>';
+        setTimeout(() => {
+          saveBtn.className = "w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5";
+          saveBtn.innerHTML = '<span>Submit Record / រក្សាទុក</span>';
+        }, 2500);
+      }
+
+      // ៤. Sync ទៅ Supabase ពីក្រោយខ្នង
       if (db) {
         db.from('trainings').insert([newT]).catch(e => console.warn(e));
       }
-
-      e.target.reset();
-      alert('✅ បានរក្សាទុកទិន្នន័យសិក្ខាកាមដោយជោគជ័យ!');
     }
 
     function deleteTraining(id) {
@@ -1651,31 +1685,48 @@
 
     function handleSaveDispatch(e) {
       e.preventDefault();
+      const saveBtn = document.getElementById('btn-save-disp');
+      const dispCodeEl = document.getElementById('disp-code');
+      const dispTitleEl = document.getElementById('disp-title');
+      const dispAssigneeEl = document.getElementById('disp-assignee');
+
       const newDisp = {
         id: Date.now(),
         bureau: activeBureauKey,
         type: document.getElementById('disp-type').value,
-        code: document.getElementById('disp-code').value,
-        title: document.getElementById('disp-title').value,
+        code: dispCodeEl.value.trim(),
+        title: dispTitleEl.value.trim(),
         stage: document.getElementById('disp-stage').value,
         location: document.getElementById('disp-location').value,
         date: document.getElementById('disp-date').value,
-        assignee: document.getElementById('disp-assignee').value
+        assignee: dispAssigneeEl.value.trim()
       };
 
-      // រក្សាទុកភ្លាមៗ
+      // ១. រក្សាទុកភ្លាមៗ
       dispatchData.unshift(newDisp);
       setLocal(STORAGE_KEYS.DISPATCH, dispatchData);
       renderDispatch();
       logActivity('កត់ត្រាលិខិត', newDisp.code + ' នៅ ' + newDisp.location);
 
-      // Sync ទៅ Supabase ពីក្រោយខ្នង
+      // ២. សម្អាតប្រអប់
+      dispCodeEl.value = '';
+      dispTitleEl.value = '';
+      dispAssigneeEl.value = '';
+
+      // ៣. បង្ហាញពាក្យ «✅ រួចរាល់!»
+      if (saveBtn) {
+        saveBtn.className = "w-full py-2.5 bg-emerald-700 text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5";
+        saveBtn.innerHTML = '<span>✅ រួចរាល់! (Saved)</span>';
+        setTimeout(() => {
+          saveBtn.className = "w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2 flex items-center justify-center gap-1.5";
+          saveBtn.innerHTML = '<span>Submit Letter / រក្សាទុក</span>';
+        }, 2500);
+      }
+
+      // ៤. Sync ទៅ Supabase ពីក្រោយខ្នង
       if (db) {
         db.from('dispatches').insert([newDisp]).catch(e => console.warn(e));
       }
-
-      e.target.reset();
-      alert('✅ បានកត់ត្រាលិខិតចេញ-ចូលជោគជ័យ!');
     }
 
     function deleteDispatch(id) {
@@ -2113,11 +2164,11 @@
       }
     }
 
-    // BOOTSTRAP V2 (LOADS INSTANTLY)
+    // BOOTSTRAP V2
     window.addEventListener('DOMContentLoaded', () => {
       checkAuth();
       populateCountryDropdowns();
-      syncFromSupabase(); // ដំណើរការពីខាងក្រោយខ្នងដោយស្ងាត់ៗ មិនទាញឱ្យយឺតឡើយ
+      syncFromSupabase();
     });
   </script>
 </body>
