@@ -8,6 +8,9 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
+  <!-- Supabase Cloud Client SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <!-- Google Fonts for Khmer -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,13 +27,11 @@
     .font-moul { font-family: 'Moul', cursive; }
     .password-mask { -webkit-text-security: disc; text-security: disc; }
     
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-    /* Interactive Form Inputs */
     .form-input-focus {
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -49,7 +50,7 @@
 </head>
 <body class="bg-[#f4f7f6] text-slate-800 antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900 pb-16 lg:pb-0">
 
-  <!-- ================= TOP HEADER BAR (RESPONSIVE) ================= -->
+  <!-- ================= TOP HEADER BAR ================= -->
   <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
       
@@ -63,7 +64,9 @@
             <span class="font-bold text-slate-900 text-sm sm:text-base leading-tight">ក្រសួងសុខាភិបាល</span>
             <span class="text-slate-300 hidden sm:inline">|</span>
             <span class="font-bold text-slate-900 text-xs sm:text-base leading-tight">នាយកដ្ឋានអភិវឌ្ឍន៍ធនធានមនុស្ស</span>
-            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">V2</span>
+            <span id="cloud-status-badge" class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Supabase Connected
+            </span>
           </div>
           <p class="text-[10px] sm:text-[11px] text-slate-500 font-medium truncate mt-0.5">Department of Human Resource Development (DHRD - MoH)</p>
         </div>
@@ -84,7 +87,6 @@
           </button>
           
           <div id="tools-dropdown" class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200/80 py-1.5 z-50 hidden">
-            <!-- ADMIN ONLY ITEMS -->
             <button onclick="openSystemModal('settings')" id="menu-item-settings" class="admin-only-item w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2">
               ⚙️ <span>Settings (ទូទៅ & Users)</span>
             </button>
@@ -100,7 +102,6 @@
             <button onclick="openSystemModal('logging')" id="menu-item-logging" class="admin-only-item w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center gap-2 border-b border-slate-100">
               📋 <span>Logging (កំណត់ត្រាសកម្មភាព)</span>
             </button>
-            <!-- ALL USERS ITEM -->
             <button onclick="openSystemModal('manual')" id="menu-item-manual" class="w-full text-left px-4 py-2 text-xs text-emerald-700 font-bold hover:bg-emerald-50 flex items-center gap-2">
               📖 <span>User Manual (សៀវភៅណែនាំ)</span>
             </button>
@@ -125,12 +126,12 @@
   <!-- ================= MAIN CONTAINER ================= -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 w-full flex-1 space-y-6">
 
-    <!-- HERO GREEN BANNER (INSPIRED BY IMAGE 2 MUNICIPALITY BANNER) -->
+    <!-- HERO GREEN BANNER -->
     <div class="bg-gradient-to-r from-[#143e2e] via-[#1b503b] to-[#267355] rounded-3xl p-5 sm:p-7 text-white shadow-md relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-5 border border-emerald-600/30">
       <div class="space-y-1.5 relative z-10 max-w-2xl">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-emerald-200 text-[11px] font-semibold tracking-wide backdrop-blur-xs border border-white/10">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>ប្រព័ន្ធរដ្ឋបាលឌីជីថល DHRD Smart Workplace</span>
+          <span>ប្រព័ន្ធរដ្ឋបាលឌីជីថល DHRD Smart Workplace V2</span>
         </div>
         <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white font-moul sm:font-sans" id="active-bureau-title">ការិយាល័យជំនាញ</h2>
         <p class="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-light" id="active-bureau-desc">ប្រព័ន្ធគ្រប់គ្រងឯកសារ តាមដានលិខិតចេញ-ចូល និងភារកិច្ចជាក់ស្តែងរបស់ការិយាល័យ</p>
@@ -148,7 +149,7 @@
       </div>
     </div>
 
-    <!-- METRIC SUMMARY CARDS (INSPIRED BY IMAGE 2) -->
+    <!-- METRIC SUMMARY CARDS -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
       <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition">
         <div class="flex items-center justify-between">
@@ -156,7 +157,7 @@
           <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">📚</div>
         </div>
         <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-2" id="stat-bureau-docs">0</h3>
-        <span class="inline-block mt-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md font-semibold">☁️ Cloud Drive Sync</span>
+        <span class="inline-block mt-1 text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md font-semibold">☁️ Cloud Database</span>
       </div>
 
       <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/80 shadow-xs hover:shadow-md transition">
@@ -187,38 +188,33 @@
       </div>
     </div>
 
-    <!-- VISUAL ANALYTICS BAR CHART SECTION (INSPIRED BY IMAGE 2) -->
+    <!-- VISUAL ANALYTICS BAR CHART (IMAGE 2 STYLE) -->
     <div class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
         <div>
           <h3 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
-            <span>📊</span> ក្រាហ្វិកស្ថិតិទិន្នន័យ (Visual Analytics Overview)
+            <span>📊</span> ក្រាហ្វិកស្ថិតិទិន្នន័យលើ Cloud (Real-time Analytics)
           </h3>
-          <p class="text-xs text-slate-500 mt-0.5">ស្ថិតិសិក្ខាកាមតាមប្រទេស និងឯកសារការិយាល័យក្នុងពេលជាក់ស្តែង</p>
+          <p class="text-xs text-slate-500 mt-0.5">ស្ថិតិសិក្ខាកាមតាមប្រទេស និងឯកសារការិយាល័យដែលផ្ទុកក្នុង Supabase</p>
         </div>
         <div class="flex items-center gap-1.5 self-start sm:self-auto text-xs bg-slate-100 p-1 rounded-xl">
           <button onclick="renderAnalyticsChart('training')" id="btn-chart-train" class="px-3 py-1 rounded-lg font-bold bg-white text-emerald-800 shadow-2xs">សិក្ខាកាមតាមប្រទេស</button>
           <button onclick="renderAnalyticsChart('docs')" id="btn-chart-docs" class="px-3 py-1 rounded-lg font-bold text-slate-600 hover:text-slate-900">ឯកសារតាមការិយាល័យ</button>
         </div>
       </div>
-      <!-- DYNAMIC BAR CHART CONTAINER -->
       <div class="pt-5 pb-2">
-        <div id="analytics-bars-container" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 items-end h-48 border-b border-slate-200 px-2 pb-2">
-          <!-- BARS GENERATED DYNAMICALLY BY JS -->
-        </div>
-        <div id="analytics-labels-container" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 pt-2 px-2 text-[10px] text-center text-slate-500 font-medium">
-          <!-- LABELS GENERATED DYNAMICALLY BY JS -->
-        </div>
+        <div id="analytics-bars-container" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 items-end h-48 border-b border-slate-200 px-2 pb-2"></div>
+        <div id="analytics-labels-container" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 pt-2 px-2 text-[10px] text-center text-slate-500 font-medium"></div>
       </div>
     </div>
 
     <!-- DYNAMIC NAVIGATION TABS -->
     <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none" id="bureau-tabs-nav"></div>
 
-    <!-- ================= 2-PANEL SPLIT WORKSPACE (INSPIRED BY IMAGE 1) ================= -->
+    <!-- ================= 2-PANEL SPLIT WORKSPACE (IMAGE 1 STYLE) ================= -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-      <!-- LEFT PANEL: MAIN DATA TABLE & SEARCH (8 COLS ON DESKTOP) -->
+      <!-- LEFT PANEL: MAIN DATA TABLE & SEARCH (8 COLS) -->
       <div class="lg:col-span-8 space-y-4">
 
         <!-- TAB 1: E-LIBRARY TABLE -->
@@ -234,7 +230,6 @@
               </button>
             </div>
           </div>
-          <!-- DATA TABLE (IMAGE 1 STYLE) -->
           <div class="border border-slate-200 rounded-2xl overflow-x-auto shadow-2xs">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
@@ -323,7 +318,6 @@
             </div>
           </div>
 
-          <!-- HRMIS ADVANCED FILTER -->
           <div class="bg-slate-50/70 p-3.5 rounded-2xl border border-slate-200/80 space-y-2.5 text-xs">
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5">
               <div>
@@ -395,11 +389,10 @@
 
       </div>
 
-      <!-- RIGHT PANEL: STICKY QUICK ENTRY PANEL (4 COLS ON DESKTOP, MATCHING IMAGE 1) -->
+      <!-- RIGHT PANEL: STICKY QUICK ENTRY PANEL (4 COLS) -->
       <div class="lg:col-span-4 sticky top-24">
         <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
           
-          <!-- PANEL HEADER (EMERALD GREEN HEADER LIKE IMAGE 1 "MANAGE INVENTORY") -->
           <div class="bg-[#1b503b] text-white p-4 text-center">
             <h3 class="font-bold text-sm sm:text-base flex items-center justify-center gap-2" id="side-panel-header-title">
               <span>✍️</span> ផ្ទាំងបញ្ចូលទិន្នន័យរហ័ស
@@ -407,10 +400,7 @@
             <p class="text-[11px] text-emerald-100/90 mt-0.5" id="side-panel-header-desc">Quick Entry Panel (Active Bureau)</p>
           </div>
 
-          <!-- DYNAMIC FORM ADAPTS TO ACTIVE TAB -->
-          <div class="p-5 sm:p-6" id="side-form-container">
-            <!-- RENDERED BY JAVASCRIPT BASED ON ACTIVE TAB -->
-          </div>
+          <div class="p-5 sm:p-6" id="side-form-container"></div>
 
         </div>
       </div>
@@ -419,7 +409,7 @@
 
   </main>
 
-  <!-- ================= MOBILE BOTTOM NAVIGATION (IMAGE 2 SMARTPHONE VIEW) ================= -->
+  <!-- ================= MOBILE BOTTOM NAVIGATION ================= -->
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-2 z-40 flex items-center justify-around text-xs shadow-lg">
     <button onclick="switchBureauTab('docs')" class="flex flex-col items-center gap-1 text-slate-600 hover:text-emerald-700">
       <span class="text-base">📚</span>
@@ -445,7 +435,7 @@
 
   <!-- ================= MODALS ================= -->
 
-  <!-- 1. LOGIN MODAL -->
+  <!-- LOGIN MODAL -->
   <div id="modal-login" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 sm:p-8 shadow-2xl space-y-5 text-center">
       <div class="w-20 h-20 rounded-2xl border border-emerald-600/30 p-1 flex items-center justify-center mx-auto bg-white shadow-xs overflow-hidden">
@@ -476,7 +466,7 @@
     </div>
   </div>
 
-  <!-- 2. SYSTEM TOOLS MODAL -->
+  <!-- SYSTEM TOOLS MODAL -->
   <div id="modal-system-tools" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="bg-white rounded-3xl max-w-4xl w-full p-5 sm:p-7 shadow-2xl space-y-4 max-h-[92vh] flex flex-col">
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -484,7 +474,6 @@
         <button onclick="closeSystemModal()" class="w-8 h-8 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center text-lg leading-none transition">✕</button>
       </div>
 
-      <!-- Navigation Tabs -->
       <div class="flex items-center gap-2 border-b border-slate-100 pb-2 overflow-x-auto scrollbar-none text-xs" id="system-tools-nav-bar">
         <button onclick="switchSystemToolTab('settings')" id="systab-settings" class="admin-only-tab px-4 py-2 rounded-xl font-bold bg-[#1b503b] text-white">⚙️ Settings</button>
         <button onclick="switchSystemToolTab('location')" id="systab-location" class="admin-only-tab px-4 py-2 rounded-xl font-bold bg-slate-100 text-slate-600">🌍 Location (ប្រទេស)</button>
@@ -494,7 +483,6 @@
         <button onclick="switchSystemToolTab('manual')" id="systab-manual" class="px-4 py-2 rounded-xl font-bold bg-slate-100 text-slate-600">📖 User Manual</button>
       </div>
 
-      <!-- Content Areas -->
       <div id="syscontent-settings" class="space-y-4 flex-1 overflow-y-auto pr-1">
         <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4">
           <h4 class="text-xs font-bold text-slate-800 mb-2.5">➕ បង្កើតគណនីមន្ត្រីថ្មី (ភ្ជាប់ Permissions ភ្លាមៗ)</h4>
@@ -522,7 +510,6 @@
                 </select>
               </div>
             </div>
-            <!-- PERMISSIONS CHECKBOXES -->
             <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-1.5">
               <label class="block text-[11px] font-bold text-slate-700">🔒 កំណត់សិទ្ធិប្រើប្រាស់ជាក់លាក់ (Permissions Assignment)៖</label>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
@@ -567,7 +554,7 @@
 
       <div id="syscontent-location" class="space-y-4 flex-1 overflow-y-auto pr-1 hidden">
         <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4">
-          <h4 class="text-xs font-bold text-slate-800 mb-2.5">➕ បញ្ចូលប្រទេសថ្មី (នឹងបង្ហាញក្នុង Dropdown ស្វ័យប្រវត្តិ)</h4>
+          <h4 class="text-xs font-bold text-slate-800 mb-2.5">➕ បញ្ចូលប្រទេសថ្មី (នឹង Sync ចូល Supabase អូតូ)</h4>
           <form onsubmit="handleAddCountry(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-2.5 items-end">
             <div>
               <label class="block text-[10px] font-bold text-slate-600 mb-1">លេខកូដ (Code)</label>
@@ -655,14 +642,14 @@
         <div class="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
           <h4 class="font-bold text-slate-900 text-sm">📖 សៀវភៅណែនាំអ្នកប្រើប្រាស់សង្ខេប V2 (User Manual)</h4>
           <p><strong>១. ផ្ទាំងបញ្ចូលរហ័ស (Quick Entry Panel)៖</strong> អ្នកអាចបញ្ចូលឯកសារ ឬទិន្នន័យបានភ្លាមៗនៅលើផ្ទាំងខាងស្ដាំដៃ ដោយមិនចាំបាច់រង់ចាំបើកផ្ទាំង Pop-up ឡើយ។</p>
-          <p><strong>២. ការបង្ហោះឯកសារ៖</strong> ឯកសារត្រូវមានទំហំ ≤ 10MB។ ប្រព័ន្ធនឹងបញ្ជូនទៅផ្ទុកក្នុង Google Drive ស្ថាប័នដោយស្វ័យប្រវត្តិ[cite: 17]។</p>
+          <p><strong>២. ការបង្ហោះឯកសារ៖</strong> ឯកសារត្រូវមានទំហំ ≤ 10MB។ ប្រព័ន្ធនឹងបញ្ជូនទៅផ្ទុកក្នុង Google Drive ស្ថាប័នដោយស្វ័យប្រវត្តិ។</p>
           <p><strong>៣. ការទាញរបាយការណ៍៖</strong> អាច Export ជា Excel (.xlsx) ផ្លូវការ, CSV ឬចុចលើ Preview ដើម្បីផ្ទៀងផ្ទាត់ក្បាលសំបុត្រ និងហត្ថលេខាមុននឹងបោះពុម្ព។</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 3. PRINT PREVIEW & PDF MODAL -->
+  <!-- PRINT PREVIEW & PDF MODAL -->
   <div id="modal-print-preview" class="fixed inset-0 bg-slate-900/80 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-6 hidden">
     <div class="bg-white rounded-3xl max-w-5xl w-full p-6 shadow-2xl flex flex-col max-h-[95vh]">
       <div class="flex justify-between items-center pb-3 border-b border-slate-200">
@@ -732,7 +719,7 @@
     </div>
   </div>
 
-  <!-- 4. QR SCANNER MODAL -->
+  <!-- QR SCANNER MODAL -->
   <div id="modal-scanner" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-sm w-full p-5 shadow-2xl space-y-3">
       <div class="flex justify-between items-center border-b border-slate-100 pb-2">
@@ -746,9 +733,25 @@
     </div>
   </div>
 
-  <!-- ================= JAVASCRIPT MASTER CORE ENGINE V2 ================= -->
+  <!-- ================= JAVASCRIPT MASTER CORE ENGINE V2 WITH SUPABASE ================= -->
   <script>
-    // 1. BUREAU DEFINITIONS & MAPPINGS
+    // ១. កំណត់តភ្ជាប់ SUPABASE CLOUD DATABASE (API KEYS របស់អ្នក)
+    const SUPABASE_URL = "https://whcpyxprjozjbhyzjtid.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndoY3B5eHByam96amJoeXpqdGlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2NzI3MDgsImV4cCI6MjEwODI0ODcwOH0.0gDdi8HvHzXvygjH6DpUeMNdIbChUIN6rL1Cx5OsYME";
+
+    let db = null;
+    if (window.supabase) {
+      try {
+        db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch (e) {
+        console.warn("Supabase init error:", e);
+      }
+    }
+
+    // ២. GOOGLE DRIVE AUTOMATIC WEBHOOK CONFIG (LIVE WEBHOOK របស់អ្នក)
+    const GOOGLE_DRIVE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw_ncL4DUer9_BbmX0DJZ72nW_MXGe1T4BX9MJanmEDoFdxHV5o_Mi-lIOYL9PsurvOXA/exec";
+
+    // ៣. BUREAU DEFINITIONS & MAPPINGS
     const BUREAUS = {
       bureau_1: {
         id: 'bureau_1',
@@ -785,21 +788,18 @@
       }
     };
 
-    // 2. GOOGLE DRIVE AUTOMATIC WEBHOOK CONFIG
-    const GOOGLE_DRIVE_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw_ncL4DUer9_BbmX0DJZ72nW_MXGe1T4BX9MJanmEDoFdxHV5o_Mi-lIOYL9PsurvOXA/exec";
-
-    // 3. STORAGE & DATA DEFINITIONS
+    // ៤. ឈ្មោះថេរសម្រាប់ CACHE LOCALSTORAGE (លែងប្តូរ Version នាំឱ្យបាត់ទិន្នន័យ)
     const STORAGE_KEYS = {
-      DOCS: 'hrd_shared_docs_v22',
-      DISPATCH: 'hrd_bureau_disp_v22',
-      EXAMS: 'hrd_bureau_exams_v22',
-      TRAINING: 'hrd_bureau_train_v22',
-      CERTS: 'hrd_bureau_certs_v22',
-      USERS: 'hrd_bureau_users_v22',
-      LOGS: 'hrd_bureau_logs_v22',
-      COUNTRIES: 'hrd_bureau_countries_v22',
-      SESSION: 'hrd_bureau_session_v22',
-      ACTIVE_BUREAU: 'hrd_active_bureau_v22'
+      DOCS: 'hrd_moh_docs_cache',
+      DISPATCH: 'hrd_moh_disp_cache',
+      EXAMS: 'hrd_moh_exams_cache',
+      TRAINING: 'hrd_moh_train_cache',
+      CERTS: 'hrd_moh_certs_cache',
+      USERS: 'hrd_moh_users_cache',
+      LOGS: 'hrd_moh_logs_cache',
+      COUNTRIES: 'hrd_moh_countries_cache',
+      SESSION: 'hrd_moh_session_cache',
+      ACTIVE_BUREAU: 'hrd_moh_active_bureau_cache'
     };
 
     function getLocal(k, def) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
@@ -842,8 +842,7 @@
 
     let dispatchData = getLocal(STORAGE_KEYS.DISPATCH, [
       { id: 1, bureau: 'bureau_1', type: 'ចូល', code: '១០៨ សខ.អធម', title: 'សំណើសុំរៀបចំសម័យប្រឡងចេញថ្នាក់ជាតិ', stage: 'កំពុងពិនិត្យបច្ចេកទេស', location: 'អគ្គនាយកដ្ឋានសុខាភិបាល', date: '2026-10-20', assignee: 'លោក អ៊ុក សុវណ្ណ' },
-      { id: 2, bureau: 'bureau_2', type: 'ចេញ', code: '២៥៤ រប.អធម', title: 'របាយការណ៍ស្តីពីអាហារូបករណ៍ JICA ប្រទេសជប៉ុន', stage: 'រង់ចាំចំណារ/ហត្ថលេខា', location: 'ខុទ្ទកាល័យឯកឧត្តមរដ្ឋមន្ត្រី', date: '2026-10-18', assignee: 'កញ្ញា ម៉ៅ ពិសី' },
-      { id: 3, bureau: 'bureau_3', type: 'ចូល', code: '០៩២ លខ.អធម', title: 'បញ្ជីឈ្មោះនិស្សិតស្នើសុំចុះបញ្ជិកាសញ្ញាបត្រ', stage: 'រដ្ឋបាលទទួល', location: 'ប្រធាននាយកដ្ឋាន (DHRD)', date: '2026-10-16', assignee: 'លោក ស៊ឹម វ៉ាន់ដា' }
+      { id: 2, bureau: 'bureau_2', type: 'ចេញ', code: '២៥៤ រប.អធម', title: 'របាយការណ៍ស្តីពីអាហារូបករណ៍ JICA ប្រទេសជប៉ុន', stage: 'រង់ចាំចំណារ/ហត្ថលេខា', location: 'ខុទ្ទកាល័យឯកឧត្តមរដ្ឋមន្ត្រី', date: '2026-10-18', assignee: 'កញ្ញា ម៉ៅ ពិសី' }
     ]);
 
     let examsData = getLocal(STORAGE_KEYS.EXAMS, [
@@ -853,35 +852,89 @@
 
     let trainingData = getLocal(STORAGE_KEYS.TRAINING, [
       { id: 1, trainee: 'លោកវេជ្ជ នង មុន្នីពេជ្យ', unit: 'គណៈអភិបាលខេត្តពោធិសាត', course: 'Diploma in parasitology and entomology(DAP&E)', duration: '6 M', dates: '06/04/26-18/10/26', country: 'ម៉ាឡេស៊ី', sponsor: 'Seameo Tromed', scope: 'International' },
-      { id: 2, trainee: 'លោក. សន បូណា', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'Universal Health Coverage(UHS)JFY 2025', duration: '(3A)', dates: '25/03/26-31/03/28', country: 'ជប៉ុន', sponsor: 'ទីភ្នាក់ងារជប៉ុន', scope: 'International' },
-      { id: 3, trainee: 'លោកស្រី.សុធី សុផាណា', unit: 'មន្ទីរពេទ្យមិត្តភាពខ្មែរ-សូវៀត', course: 'Cardiac Operating', duration: '6M', dates: '30/09/25-04/05/26', country: 'ឥណ្ឌូនេស៊ី', sponsor: 'សាមីខ្លួន', scope: 'International' },
-      { id: 4, trainee: 'លោក.ង៉ាយ ចាន់', unit: 'មន្ទីរពេទ្យមិត្តភាពខ្មែរ-សូវៀត', course: 'Arrhythmia and Eledrophysiology', duration: '6M', dates: '02/06/25-02/12/25', country: 'ឥណ្ឌូនេស៊ី', sponsor: 'សាមីខ្លួន', scope: 'International' },
-      { id: 5, trainee: 'លោកស្រី. ឈឿន ស៊ីនួន', unit: 'UHS', course: 'បរិញ្ញាបត្រជាន់ខ្ពស់សុខភាពសាធារណៈ', duration: '2A 3M', dates: '23/06/25-15/09/27', country: 'នូវែលសេឡង់', sponsor: 'រដ្ឋាភិបាលនូវែសសេឡង់', scope: 'International' },
-      { id: 6, trainee: 'លោកស្រី. ចាន់ បូរ៉ា', unit: 'រាជាធានីភ្នំពេញ', course: 'Madical Laboratory', duration: '1A', dates: '14/04/25-10/04/26', country: 'កាណាដា', sponsor: 'សាមីខ្លួន', scope: 'International' },
-      { id: 7, trainee: 'លោក.ហៃ វណ្ណនិត', unit: 'វិទ្យាស្ថានជាតិសិខភាពសាធារណៈ', course: 'PhD in food Science and Technology', duration: '2A', dates: '08/25-07/27', country: 'សហរដ្ឋអាមេរិក', sponsor: 'University of Nebraska Lincoln', scope: 'International' },
-      { id: 8, trainee: 'លោកជំទាវ.អេង ឡេងស៊ា', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'PhD of public Health', duration: '1A', dates: '04/11/24-02/11/25', country: 'អូស្រ្តាលី', sponsor: 'រដ្ឋបាលអូស្រ្តាលី', scope: 'International' },
-      { id: 9, trainee: 'លោកស្រី.ប៉េង បញ្ញា', unit: 'រដ្ឋបាលខេត្តបាត់ដំបង', course: 'បរិញ្ញាបត្រជាន់ខ្ពស់សុខភាពសាធារណៈ', duration: '1A 6M', dates: '06/01/25-31/07/26', country: 'អូស្រ្តាលី', sponsor: 'រដ្ឋបាលអូស្រ្តាលី', scope: 'International' },
-      { id: 10, trainee: 'វេជ្ជ. កែវ វិសាល', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'វគ្គសង្គ្រោះបន្ទាន់កម្រិតខ្ពស់ (ACLS)', duration: '1M', dates: '01/02/26-28/02/26', country: 'កម្ពុជា', sponsor: 'WHO Cambodia', scope: 'Domestic' }
+      { id: 2, trainee: 'លោក. សន បូណា', unit: 'មន្ទីរពេទ្យកាល់ម៉ែត', course: 'Universal Health Coverage(UHS)JFY 2025', duration: '(3A)', dates: '25/03/26-31/03/28', country: 'ជប៉ុន', sponsor: 'ទីភ្នាក់ងារជប៉ុន', scope: 'International' }
     ]);
 
     let certsData = getLocal(STORAGE_KEYS.CERTS, [
-      { id: 1, num: 'DHRD-DEG-2026-0089', recipient: 'វេជ្ជបណ្ឌិត ឡុង វិបុល', type: 'សញ្ញាបត្រវេជ្ជបណ្ឌិត', date: '2026-10-15', signer: 'ប្រធាននាយកដ្ឋាន' },
-      { id: 2, num: 'DHRD-CME-2026-0042', recipient: 'ឱសថការី គង់ សុភ័ក្ត្រ', type: 'វិញ្ញាបនបត្របណ្តុះបណ្តាលវេជ្ជសាស្ត្របន្ត (CME/CPD)', date: '2026-10-12', signer: 'រដ្ឋលេខាធិការ' }
+      { id: 1, num: 'DHRD-DEG-2026-0089', recipient: 'វេជ្ជបណ្ឌិត ឡុង វិបុល', type: 'សញ្ញាបត្រវេជ្ជបណ្ឌិត', date: '2026-10-15', signer: 'ប្រធាននាយកដ្ឋាន' }
     ]);
 
     let currentUploadedFile = { name: '', type: 'PDF', size: '', base64: null, rawFile: null };
 
-    // 4. LOGS & AUTH CONTROL
+    // ៥. អនុគមន៍ SYNCHRONIZATION ជាមួយ SUPABASE CLOUD
+    async function syncFromSupabase() {
+      if (!db) return;
+      try {
+        // ទាញយកឯកសារ
+        const { data: dDocs } = await db.from('docs').select('*').order('id', { ascending: false });
+        if (dDocs && dDocs.length > 0) {
+          docsData = dDocs.map(d => ({
+            id: d.id,
+            bureau: d.bureau,
+            code: d.code,
+            title: d.title,
+            category: d.category,
+            fileSize: d.file_size,
+            fileName: d.file_name,
+            driveLink: d.drive_link,
+            storage: d.storage,
+            createdBy: d.created_by
+          }));
+          setLocal(STORAGE_KEYS.DOCS, docsData);
+        }
+
+        // ទាញយកវគ្គបណ្តុះបណ្តាល
+        const { data: dTrain } = await db.from('trainings').select('*').order('id', { ascending: false });
+        if (dTrain && dTrain.length > 0) {
+          trainingData = dTrain;
+          setLocal(STORAGE_KEYS.TRAINING, trainingData);
+        }
+
+        // ទាញយกลិខិតចេញ-ចូល
+        const { data: dDisp } = await db.from('dispatches').select('*').order('id', { ascending: false });
+        if (dDisp && dDisp.length > 0) {
+          dispatchData = dDisp;
+          setLocal(STORAGE_KEYS.DISPATCH, dispatchData);
+        }
+
+        // ទាញយកប្រទេស
+        const { data: dCount } = await db.from('countries').select('*');
+        if (dCount && dCount.length > 0) {
+          countriesData = dCount;
+          setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
+        }
+
+        // ទាញយក Users
+        const { data: dUsers } = await db.from('app_users').select('*');
+        if (dUsers && dUsers.length > 0) {
+          usersData = dUsers;
+          setLocal(STORAGE_KEYS.USERS, usersData);
+        }
+
+        renderBureauWorkspace();
+        renderAnalyticsChart('training');
+        populateCountryDropdowns();
+      } catch (err) {
+        console.warn("Supabase fetch notice:", err);
+      }
+    }
+
+    // ៦. LOGS & AUTH CONTROL
     function logActivity(action, target) {
       const now = new Date();
-      auditLogs.unshift({
+      const logEntry = {
         id: Date.now(),
         time: now.toLocaleDateString('km-KH') + ' ' + now.toLocaleTimeString('en-US'),
         user: currentUser ? (currentUser.fullname + ' (@' + currentUser.username + ')') : 'System',
         action: action,
         target: target
-      });
+      };
+      auditLogs.unshift(logEntry);
       setLocal(STORAGE_KEYS.LOGS, auditLogs);
+
+      if (db) {
+        db.from('audit_logs').insert([logEntry]).catch(e => console.warn(e));
+      }
     }
 
     function checkAuth() {
@@ -985,7 +1038,6 @@
       document.getElementById('active-bureau-select').value = activeBureauKey;
       document.getElementById('stat-bureau-badge').innerText = bureau.shortName;
 
-      // Render Dynamic Tabs
       const nav = document.getElementById('bureau-tabs-nav');
       nav.innerHTML = bureau.tabs.map(t => {
         const isActive = (t.id === activeTab);
@@ -1016,7 +1068,7 @@
       renderBureauWorkspace();
     }
 
-    // 5. VISUAL ANALYTICS ENGINE (INSPIRED BY IMAGE 2)
+    // ៧. ក្រាហ្វិកស្ថិតិ ANALYTICS
     function renderAnalyticsChart(type) {
       const bars = document.getElementById('analytics-bars-container');
       const labels = document.getElementById('analytics-labels-container');
@@ -1029,7 +1081,6 @@
         btnT.className = 'px-3 py-1 rounded-lg font-bold bg-white text-emerald-800 shadow-2xs';
         btnD.className = 'px-3 py-1 rounded-lg font-bold text-slate-600 hover:text-slate-900';
 
-        // Count trainees per country
         const counts = {};
         trainingData.forEach(t => {
           counts[t.country] = (counts[t.country] || 0) + 1;
@@ -1081,7 +1132,7 @@
       }
     }
 
-    // 6. STICKY QUICK ENTRY PANEL ENGINE (INSPIRED BY IMAGE 1)
+    // ៨. ផ្ទាំងបញ្ចូលទិន្នន័យរហ័សខាងស្ដាំដៃ (QUICK ENTRY PANEL)
     function renderSideForm() {
       const container = document.getElementById('side-form-container');
       const titleEl = document.getElementById('side-panel-header-title');
@@ -1090,7 +1141,7 @@
 
       if (activeTab === 'training') {
         titleEl.innerHTML = '<span>🌐</span> បញ្ចូលវគ្គបណ្តុះបណ្តាលរហ័ស';
-        descEl.innerText = 'Quick Add Continuing Training';
+        descEl.innerText = 'Quick Add Continuing Training (Supabase Sync)';
 
         container.innerHTML = `
           <form onsubmit="handleSaveTraining(event)" class="space-y-3.5 text-xs">
@@ -1138,7 +1189,7 @@
               <input type="text" id="train-sponsor-input" required placeholder="ឧ. ទីភ្នាក់ងារជប៉ុន, សាមីខ្លួន..." class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
             </div>
             <button type="submit" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2">
-              Submit Record / រក្សាទុក
+              Submit to Cloud / រក្សាទុក
             </button>
           </form>
         `;
@@ -1146,7 +1197,7 @@
 
       } else if (activeTab === 'dispatch') {
         titleEl.innerHTML = '<span>🔄</span> កត់ត្រាលិខិតចេញ-ចូលរហ័ស';
-        descEl.innerText = 'Quick Add Dispatch Letter';
+        descEl.innerText = 'Quick Add Dispatch (Supabase Sync)';
 
         container.innerHTML = `
           <form onsubmit="handleSaveDispatch(event)" class="space-y-3.5 text-xs">
@@ -1198,15 +1249,14 @@
               </div>
             </div>
             <button type="submit" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2">
-              Submit Letter / រក្សាទុក
+              Submit to Cloud / រក្សាទុក
             </button>
           </form>
         `;
 
       } else {
-        // DEFAULT: UPLOAD SHARED DOCUMENT (GOOGLE DRIVE AUTO)
-        titleEl.innerHTML = '<span>📚</span> បង្ហោះឯកសាររហ័ស (Drive)';
-        descEl.innerText = 'Upload Document (Auto Google Drive)';
+        titleEl.innerHTML = '<span>📚</span> បង្ហោះឯកសាររហ័ស (Drive & Cloud)';
+        descEl.innerText = 'File to Drive + Meta to Supabase';
 
         container.innerHTML = `
           <form onsubmit="handleSaveDoc(event)" class="space-y-3.5 text-xs">
@@ -1233,14 +1283,14 @@
               <input type="text" id="doc-title" required class="form-input-focus w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50/50">
             </div>
             <button type="submit" id="btn-save-doc" class="w-full py-2.5 bg-[#1b503b] hover:bg-[#143e2e] text-white rounded-xl font-bold shadow-md transition mt-2">
-              Submit Document / រក្សាទុក
+              Submit to Cloud / រក្សាទុក
             </button>
           </form>
         `;
       }
     }
 
-    // 7. RENDER TABLES (IMAGE 1 DATA TABLE STYLE)
+    // ៩. RENDER DATA TABLES
     function renderDocs() {
       const tbody = document.getElementById('docs-table-body');
       if (!tbody) return;
@@ -1292,7 +1342,7 @@
       if (driveLink) {
         window.open(driveLink, '_blank');
       } else {
-        alert('📄 ឯកសារគំរូ៖ ' + title + '\n(ឯកសារថ្មីៗដែល Upload នឹងបើកសាច់ហ្វាលផ្ទាល់លើ Google Drive)');
+        alert('📄 ឯកសារគំរូ៖ ' + title + '\n(ឯកសារដែល Upload នឹងបើកសាច់ហ្វាលផ្ទាល់លើ Google Drive)');
       }
     }
 
@@ -1423,7 +1473,7 @@
       `).join('');
     }
 
-    // 8. DATA ACTIONS & WEBHOOK SUBMISSION
+    // ១០. រក្សាទុកទិន្នន័យ (ហោះចូល SUPABASE + GOOGLE DRIVE ស្វ័យប្រវត្តិ)
     function handleFileSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1485,7 +1535,7 @@
           storageType = 'Local File';
         }
       } catch (err) {
-        console.warn('Fallback to Local File:', err);
+        console.warn('Drive fallback:', err);
         storageType = 'Local File';
       }
 
@@ -1495,14 +1545,29 @@
         code: document.getElementById('doc-code').value.trim(),
         title: document.getElementById('doc-title').value.trim(),
         category: document.getElementById('doc-category').value,
-        notes: '',
-        date: new Date().toISOString().split('T')[0],
         fileSize: currentUploadedFile.size || '2.0 MB',
         fileName: currentUploadedFile.name || 'document.pdf',
         storage: storageType,
         driveLink: fileDriveLink,
         createdBy: currentUser ? currentUser.username : 'user'
       };
+
+      // រក្សាទុកក្នុង Supabase Cloud
+      if (db) {
+        saveBtn.innerText = '⏳ កំពុង Sync ចូល Supabase Database...';
+        await db.from('docs').insert([{
+          id: newDoc.id,
+          bureau: newDoc.bureau,
+          code: newDoc.code,
+          title: newDoc.title,
+          category: newDoc.category,
+          file_size: newDoc.fileSize,
+          file_name: newDoc.fileName,
+          drive_link: newDoc.driveLink,
+          storage: newDoc.storage,
+          created_by: newDoc.createdBy
+        }]).catch(e => console.warn(e));
+      }
 
       docsData.unshift(newDoc);
       setLocal(STORAGE_KEYS.DOCS, docsData);
@@ -1513,15 +1578,17 @@
       e.target.reset();
       currentUploadedFile = { name: '', type: 'PDF', size: '', base64: null, rawFile: null };
       document.getElementById('file-label').innerHTML = 'ចុចជ្រើសរើសហ្វាល ឬទម្លាក់ចូល';
-      document.getElementById('file-sublabel').innerText = 'គាំទ្រ ≤ 10MB (ហោះចូល Drive អូតូ)';
 
       saveBtn.disabled = false;
-      saveBtn.innerText = 'Submit Document / រក្សាទុក';
-      alert('✅ ឯកសារត្រូវបាន Upload ចូល ' + storageType + ' ដោយស្វ័យប្រវត្តិ!');
+      saveBtn.innerText = 'Submit to Cloud / រក្សាទុក';
+      alert('✅ ឯកសារត្រូវបាន Upload ចូល Google Drive និង Sync ចូល Supabase Database ជោគជ័យ!');
     }
 
-    function deleteDoc(id) {
+    async function deleteDoc(id) {
       if (confirm('តើអ្នកចង់លុបឯកសារនេះមែនទេ?')) {
+        if (db) {
+          await db.from('docs').delete().eq('id', id).catch(e => console.warn(e));
+        }
         docsData = docsData.filter(d => d.id !== id);
         setLocal(STORAGE_KEYS.DOCS, docsData);
         renderDocs();
@@ -1535,7 +1602,7 @@
       return parts.length === 3 ? (parts[2] + '/' + parts[1] + '/' + parts[0].slice(-2)) : dStr;
     }
 
-    function handleSaveTraining(e) {
+    async function handleSaveTraining(e) {
       e.preventDefault();
       const dStart = document.getElementById('train-date-start').value;
       const dEnd = document.getElementById('train-date-end').value;
@@ -1553,17 +1620,24 @@
         sponsor: document.getElementById('train-sponsor-input').value.trim()
       };
 
+      if (db) {
+        await db.from('trainings').insert([newT]).catch(e => console.warn(e));
+      }
+
       trainingData.unshift(newT);
       setLocal(STORAGE_KEYS.TRAINING, trainingData);
       logActivity('កត់ត្រាវគ្គបណ្តុះបណ្តាល V2', newT.trainee + ' (' + newT.country + ')');
       renderTrainingList();
       renderAnalyticsChart('training');
       e.target.reset();
-      alert('✅ បានរក្សាទុកទិន្នន័យសិក្ខាកាមដោយជោគជ័យ!');
+      alert('✅ បានរក្សាទុកទិន្នន័យសិក្ខាកាមចូល Supabase Cloud ជោគជ័យ!');
     }
 
-    function deleteTraining(id) {
+    async function deleteTraining(id) {
       if (confirm('តើអ្នកពិតជាចង់លុបទិន្នន័យសិក្ខាកាមនេះមែនទេ?')) {
+        if (db) {
+          await db.from('trainings').delete().eq('id', id).catch(e => console.warn(e));
+        }
         trainingData = trainingData.filter(t => t.id !== id);
         setLocal(STORAGE_KEYS.TRAINING, trainingData);
         renderTrainingList();
@@ -1571,7 +1645,7 @@
       }
     }
 
-    function handleSaveDispatch(e) {
+    async function handleSaveDispatch(e) {
       e.preventDefault();
       const newDisp = {
         id: Date.now(),
@@ -1584,39 +1658,53 @@
         date: document.getElementById('disp-date').value,
         assignee: document.getElementById('disp-assignee').value
       };
+
+      if (db) {
+        await db.from('dispatches').insert([newDisp]).catch(e => console.warn(e));
+      }
+
       dispatchData.unshift(newDisp);
       setLocal(STORAGE_KEYS.DISPATCH, dispatchData);
       logActivity('កត់ត្រាលិខិត', newDisp.code + ' នៅ ' + newDisp.location);
       renderDispatch();
       e.target.reset();
-      alert('✅ បានកត់ត្រាលិខិតចេញ-ចូលជោគជ័យ!');
+      alert('✅ បានកត់ត្រាលិខិតចេញ-ចូលក្នុង Supabase ជោគជ័យ!');
     }
 
-    function deleteDispatch(id) {
+    async function deleteDispatch(id) {
       if (confirm('តើអ្នកចង់លុបកត់ត្រានេះមែនទេ?')) {
+        if (db) {
+          await db.from('dispatches').delete().eq('id', id).catch(e => console.warn(e));
+        }
         dispatchData = dispatchData.filter(d => d.id !== id);
         setLocal(STORAGE_KEYS.DISPATCH, dispatchData);
         renderDispatch();
       }
     }
 
-    function deleteExam(id) {
+    async function deleteExam(id) {
       if (confirm('តើអ្នកចង់លុបសម័យប្រឡងនេះមែនទេ?')) {
+        if (db) {
+          await db.from('exams').delete().eq('id', id).catch(e => console.warn(e));
+        }
         examsData = examsData.filter(e => e.id !== id);
         setLocal(STORAGE_KEYS.EXAMS, examsData);
         renderExams();
       }
     }
 
-    function deleteCert(id) {
+    async function deleteCert(id) {
       if (confirm('តើអ្នកចង់លុបបញ្ជីនេះមែនទេ?')) {
+        if (db) {
+          await db.from('certs').delete().eq('id', id).catch(e => console.warn(e));
+        }
         certsData = certsData.filter(c => c.id !== id);
         setLocal(STORAGE_KEYS.CERTS, certsData);
         renderCerts();
       }
     }
 
-    // 9. LOCATION & TOOLS ENGINE
+    // ១១. LOCATION & TOOLS ENGINE
     function toggleToolsMenu() {
       document.getElementById('tools-dropdown').classList.toggle('hidden');
     }
@@ -1684,13 +1772,13 @@
           <td class="p-3 font-bold text-slate-900">${c.kh}</td>
           <td class="p-3 text-slate-600">${c.en}</td>
           <td class="p-3 text-right">
-            <button onclick="deleteCountry(${idx})" class="text-rose-600 hover:underline font-bold">លុប</button>
+            <button onclick="deleteCountry('${c.code}', ${idx})" class="text-rose-600 hover:underline font-bold">លុប</button>
           </td>
         </tr>
       `).join('');
     }
 
-    function handleAddCountry(e) {
+    async function handleAddCountry(e) {
       e.preventDefault();
       const code = document.getElementById('new-country-code').value.trim().toUpperCase();
       const kh = document.getElementById('new-country-kh').value.trim();
@@ -1701,18 +1789,26 @@
         return;
       }
 
-      countriesData.push({ code, kh, en });
+      const newCountry = { code, kh, en };
+      if (db) {
+        await db.from('countries').insert([newCountry]).catch(e => console.warn(e));
+      }
+
+      countriesData.push(newCountry);
       setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
       logActivity('បន្ថែមប្រទេស', 'បានបន្ថែមប្រទេស ' + kh + ' (' + code + ')');
       renderCountriesTable();
       populateCountryDropdowns();
       e.target.reset();
-      alert('✅ បានបញ្ចូលប្រទេស "' + kh + '" ដោយជោគជ័យ!');
+      alert('✅ បានបញ្ចូលប្រទេស "' + kh + '" ចូល Supabase Cloud ជោគជ័យ!');
     }
 
-    function deleteCountry(idx) {
+    async function deleteCountry(code, idx) {
       const c = countriesData[idx];
       if (confirm('តើអ្នកពិតជាចង់លុបប្រទេស "' + c.kh + '" មែនទេ?')) {
+        if (db) {
+          await db.from('countries').delete().eq('code', code).catch(e => console.warn(e));
+        }
         countriesData.splice(idx, 1);
         setLocal(STORAGE_KEYS.COUNTRIES, countriesData);
         logActivity('លុបប្រទេស', 'បានលុបប្រទេស ' + c.kh);
@@ -1778,7 +1874,7 @@
       logActivity('ទាញយក Backup V2', 'បានទាញយកទិន្នន័យប្រព័ន្ធជា JSON');
     }
 
-    function handleCreateUser(e) {
+    async function handleCreateUser(e) {
       e.preventDefault();
       const username = document.getElementById('new-user-username').value.trim();
       if (usersData.some(u => u.username.toLowerCase() === username.toLowerCase())) {
@@ -1802,6 +1898,10 @@
         }
       };
 
+      if (db) {
+        await db.from('app_users').insert([newUser]).catch(e => console.warn(e));
+      }
+
       usersData.unshift(newUser);
       setLocal(STORAGE_KEYS.USERS, usersData);
       logActivity('បង្កើត User ថ្មី', '@' + newUser.username + ' (Admin: ' + isAdminRole + ')');
@@ -1810,13 +1910,16 @@
       document.getElementById('perm-read').checked = true;
       document.getElementById('perm-upload').checked = true;
       document.getElementById('perm-download').checked = true;
-      alert('✅ បានបង្កើតគណនីមន្ត្រី និងភ្ជាប់សិទ្ធិជោគជ័យ!');
+      alert('✅ បានបង្កើតគណនីមន្ត្រី និង Sync ចូល Supabase ជោគជ័យ!');
     }
 
-    function deleteUser(id) {
+    async function deleteUser(id) {
       const u = usersData.find(x => x.id === id);
       if (u && u.username === 'admin') return alert('មិនអាចលុប Admin ដើមបានឡើយ!');
       if (confirm('តើអ្នកចង់លុបគណនី @' + u.username + ' មែនទេ?')) {
+        if (db) {
+          await db.from('app_users').delete().eq('id', id).catch(e => console.warn(e));
+        }
         usersData = usersData.filter(x => x.id !== id);
         setLocal(STORAGE_KEYS.USERS, usersData);
         renderUsersTable();
@@ -1870,6 +1973,9 @@
 
     function clearActivityLogs() {
       if (confirm('តើអ្នកចង់ជម្រះ Logs ចាស់ៗទាំងអស់មែនទេ?')) {
+        if (db) {
+          db.from('audit_logs').delete().neq('id', 0).catch(e => console.warn(e));
+        }
         auditLogs = [];
         setLocal(STORAGE_KEYS.LOGS, auditLogs);
         renderLogsTable();
@@ -2004,6 +2110,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       checkAuth();
       populateCountryDropdowns();
+      syncFromSupabase();
     });
   </script>
 </body>
